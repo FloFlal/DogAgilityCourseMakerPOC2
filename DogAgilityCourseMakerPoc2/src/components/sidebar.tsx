@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useDrawingStore } from '../store/useDrawingStore';
-import { Square, Circle, Trash2, Download, Update } from 'lucide-react';
+import { Square, Circle, Trash2, Download, Upload } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
     const {
@@ -10,7 +10,7 @@ export const Sidebar: React.FC = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleExport = () => {
-        const dataStr = "data:text/json;charset=utf-8," + encodedURIComponent(exportToJson());
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(exportToJson());
         const downloadAnchor = document.createElement('a');
         downloadAnchor.setAttribute("href",dataStr);
         downloadAnchor.setAttribute("download", "myCourse.dacm.json");
@@ -52,11 +52,14 @@ export const Sidebar: React.FC = () => {
             <div className="flex flex-col gap-2">
                 <label className="text-ws font-semibold text-slate-400 uppercase tracking-wider">Tools</label>
                 <div className="grid grid-cols-2 gap-2">
-                    <button onClick={() => setCurrentShapeType('rectangle')} className={`flex items-center gap-2 p-3 rounded-lg border text-sm font-medium transition ${currentShapeType === 'rectangle' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}>
-                        <Square size={16} /> Rectangle
+                    <button onClick={() => setCurrentShapeType('jump')} className={`flex items-center gap-2 p-3 rounded-lg border text-sm font-medium transition ${currentShapeType === 'jump' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}>
+                        <Square size={16} /> Jump
                     </button>
-                    <button onClick={() => setCurrentShapeType('circle')} className={`flex items-center gap-2 p-3 rounded-lg border text-sm font-medium transition ${currentShapeType === 'circle' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}>
+                    <button onClick={() => setCurrentShapeType('seesaw')} className={`flex items-center gap-2 p-3 rounded-lg border text-sm font-medium transition ${currentShapeType === 'circle' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}>
                         <Circle size={16} /> Circle
+                    </button>
+                    <button onClick={() => setCurrentShapeType('longJump')} className={`flex items-center gap-2 p-3 rounded-lg border text-sm font-medium transition ${currentShapeType === 'circle' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}>
+                        <Circle size={16} /> User Badge
                     </button>
                 </div>
             </div>
@@ -71,7 +74,7 @@ export const Sidebar: React.FC = () => {
             </div>
 
             {/*obstacle actions*/}
-            {selectId && (
+            {selectedId && (
                 <div className="flex flex-col gap-2 mt-2 p-4 bg-slate-900/50 rounded-lg border border-red-900/30">
                     <label className="text-xs font-semibold text-red-400 uppercase tracking-wider">Selected Element</label>
                     <button onClick={() => deleteShape(selectedId)} className="flex items-center justify-center gap-2 w-full bg-red-600/20 hover:bg-red-600 text-red-200 hover:text-white p2.5 rounded-lg border border-red-500/30 transition text-sm font-medium">
@@ -94,5 +97,6 @@ export const Sidebar: React.FC = () => {
                     <input type="file" ref={fileInputRef} onChange={handleImport} accept="json" className="hidden" />
                 </div>
             </div>
+        </div>
     )
 }
