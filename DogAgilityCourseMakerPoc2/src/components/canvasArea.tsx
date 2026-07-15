@@ -5,6 +5,8 @@ import Konva from 'konva';
 import { UserBadge } from '../obstacles/test';
 import { Jump } from '../obstacles/jump';
 import { Seesaw } from '../obstacles/seesaw';
+import { DogWalk } from '../obstacles/dogWalk';
+import { AFrame } from '../obstacles/aFrame';
 
 export const CanvasArea: React.FC = () => {
     const { obstacles: shapes, gridSize, selectedId, setSelectedId, addShape, updateShape } = useDrawingStore();
@@ -108,8 +110,10 @@ export const CanvasArea: React.FC = () => {
                             return <Jump {...commonProps} key={shape.id} barWidth={130} barThickess={5}  hurdleWidth={50} hurdleDepth={40} hurdleThickness={10} />
                         } else if (shape.type === 'seesaw') {
                             return <Seesaw {...commonProps} key={shape.id} width={30} length={370} zoneLength={90}/>
-                        } else if (shape.type === 'userBadge') {
-                            return <UserBadge {...commonProps} key={shape.id} name="FloFlal" isSelected={false} shapeRef={shapeRef}/>
+                        } else if (shape.type === 'dogWalk') {
+                            return <DogWalk {...commonProps} key={shape.id} width={30} elementLength={370} zoneLength={90}/>
+                        } else if (shape.type === 'aFrame') {
+                            return <AFrame {...commonProps} key={shape.id} width={90} elementLength={270} zoneLength={106}/>
                         } 
                     })}
 

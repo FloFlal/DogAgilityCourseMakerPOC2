@@ -55,11 +55,14 @@ export const Sidebar: React.FC = () => {
                     <button onClick={() => setCurrentShapeType('jump')} className={`flex items-center gap-2 p-3 rounded-lg border text-sm font-medium transition ${currentShapeType === 'jump' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}>
                         <Square size={16} /> Jump
                     </button>
-                    <button onClick={() => setCurrentShapeType('seesaw')} className={`flex items-center gap-2 p-3 rounded-lg border text-sm font-medium transition ${currentShapeType === 'circle' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}>
-                        <Circle size={16} /> Circle
+                    <button onClick={() => setCurrentShapeType('seesaw')} className={`flex items-center gap-2 p-3 rounded-lg border text-sm font-medium transition ${currentShapeType === 'seesaw' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}>
+                        <Circle size={16} /> See Saw
                     </button>
-                    <button onClick={() => setCurrentShapeType('longJump')} className={`flex items-center gap-2 p-3 rounded-lg border text-sm font-medium transition ${currentShapeType === 'circle' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}>
-                        <Circle size={16} /> User Badge
+                    <button onClick={() => setCurrentShapeType('dogWalk')} className={`flex items-center gap-2 p-3 rounded-lg border text-sm font-medium transition ${currentShapeType === 'dogWalk' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}>
+                        <Circle size={16} /> Dog Walk
+                    </button>
+                    <button onClick={() => setCurrentShapeType('aFrame')} className={`flex items-center gap-2 p-3 rounded-lg border text-sm font-medium transition ${currentShapeType === 'aFrame' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}>
+                        <Circle size={16} /> A Frame
                     </button>
                 </div>
             </div>
