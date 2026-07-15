@@ -65,7 +65,7 @@ export const CanvasArea: React.FC = () => {
                     x={x}
                     y={0}
                     points={[0, 0, 0, gridHeight]}
-                    stroke="#fff"
+                    stroke="#000"
                     strokeWidth={1}
                     opacity={0.1}
                     listening={false}
@@ -81,7 +81,7 @@ export const CanvasArea: React.FC = () => {
                     x={0}
                     y={y}
                     points={[0, 0, gridWidth, 0]}
-                    stroke="#fff"
+                    stroke="#000"
                     strokeWidth={1}
                     opacity={0.1}
                     listening={false}
