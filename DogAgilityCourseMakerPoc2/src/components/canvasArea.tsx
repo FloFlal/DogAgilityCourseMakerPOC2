@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import { Stage, Layer, Rect, Circle, Transformer } from 'react-konva';
+import React, { useRef, useEffect, useMemo } from 'react';
+import { Stage, Layer, Rect, Circle, Transformer, Line } from 'react-konva';
 import { useDrawingStore, type Obstacle } from '../store/useDrawingStore';
 import Konva from 'konva';
 import { UserBadge } from '../obstacles/test';
@@ -50,21 +50,60 @@ export const CanvasArea: React.FC = () => {
         }
     };
 
+    // Create grid lines
+    const gridWidth = window.innerWidth - 320;
+    const gridHeight = window.innerHeight;
+    
+    const gridLines = useMemo(() => {
+        const lines = [];
+        
+        // Vertical lines
+        for (let x = 0; x <= gridWidth; x += gridSize) {
+            lines.push(
+                <Line
+                    key={`v-${x}`}
+                    x={x}
+                    y={0}
+                    points={[0, 0, 0, gridHeight]}
+                    stroke="#fff"
+                    strokeWidth={1}
+                    opacity={0.1}
+                    listening={false}
+                />
+            );
+        }
+        
+        // Horizontal lines
+        for (let y = 0; y <= gridHeight; y += gridSize) {
+            lines.push(
+                <Line
+                    key={`h-${y}`}
+                    x={0}
+                    y={y}
+                    points={[0, 0, gridWidth, 0]}
+                    stroke="#fff"
+                    strokeWidth={1}
+                    opacity={0.1}
+                    listening={false}
+                />
+            );
+        }
+        
+        return lines;
+    }, [gridSize, gridWidth, gridHeight]);
+
     return (
         <div className="flew-1 h-screen bg-slate-950 relatvie overflow-hidden">
-            {/* Grid on the backgroud, CSS only for lightness */}
-            <div className="absolute inset-0 pointer-events-none opacity-10"
-                style={{
-                    backgroundImage: `linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #ffffff, 1px, transparent 1px)`,
-                    backgroundSize: `${gridSize}px ${gridSize}px`
-                }} 
-            />
-
-            <Stage width={window.innerWidth - 320} // width minus sidebar
-                height={window.innerHeight}
+            <Stage width={gridWidth} // width minus sidebar
+                height={gridHeight}
                 ref={stageRef}
                 onClick={handleStageClick}
             >
+                {/* Grid layer - limited to drawing area */}
+                <Layer>
+                    {gridLines}
+                </Layer>
+                
                 <Layer>
                     {shapes.map((shape: Obstacle) => {
                         const isSlected = shape.id === selectedId;
