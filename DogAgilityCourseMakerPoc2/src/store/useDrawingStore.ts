@@ -36,7 +36,7 @@ interface DrawingState {
 export const useDrawingStore = create<DrawingState> ((set, get) => ({
     obstacles: [],
     selectedId: null,
-    gridSize: 40,
+    gridSize: 25,
     currentColor: '#3b82f6',
     currentShapeType: 'jump',
 
