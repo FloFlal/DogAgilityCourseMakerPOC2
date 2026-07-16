@@ -117,8 +117,8 @@ export const CanvasArea: React.FC = () => {
                             rotation: shape.rotation,
                             draggable: true,
                             isSlected: isSlected,
-                            primaryColor: "#FFFF00",
-                            secondaryColor: "#aaa",
+                            primaryColor: "#1155FF",
+                            secondaryColor: "#FFFF00",
                             onClick: (e: any) => {
                                 e.cancelBubble = true; // avoid click on Stage
                                 setSelectedId(shape.id);

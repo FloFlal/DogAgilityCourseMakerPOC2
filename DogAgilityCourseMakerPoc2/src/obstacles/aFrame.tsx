@@ -1,9 +1,21 @@
-import { Group, Rect } from "react-konva"
+import { Group, Line, Rect } from "react-konva"
 
 export const AFrame = ({id, ratio, x, y, rotation, width, elementLength, primaryColor, zoneLength, secondaryColor, onClick, onDragEnd, onTransformEnd, onDrag}) => {
     const upDownVisibleLength = Math.sqrt(elementLength*elementLength - 170 * 170);
     const ratioVisible = upDownVisibleLength / elementLength;
     const zoneVisibleLength = zoneLength * ratioVisible;
+    let slats:number[] = [];
+    // slats for both zone
+    for (let i = (upDownVisibleLength - zoneVisibleLength + 12.5) ; i < upDownVisibleLength ; i += 25) {
+        slats.push(i);
+        slats.push(-i);
+    }
+    // slats for both up down
+    for (let i = (upDownVisibleLength - zoneVisibleLength - 12.5) ; i > 0 ; i -= 25) {
+        slats.push(i);
+        slats.push(-i);
+    }
+
     return (
         <Group type="aFrame" id={id} x={x} y={y} rotation={rotation} onClick={onClick} onTap={onClick} draggable onDragEnd={onDragEnd} onTransformEnd={onTransformEnd} onDragMove={onDrag}>
             {/* 1st zone */}
@@ -12,12 +24,22 @@ export const AFrame = ({id, ratio, x, y, rotation, width, elementLength, primary
             {/* 1st upDown main body */}
             <Rect strokeEnabled={false} fill={primaryColor} x={(-upDownVisibleLength + zoneVisibleLength) / ratio} y={-(width / 2 / ratio)} width={(upDownVisibleLength - zoneVisibleLength) / ratio} height={width / ratio} />
 
+            {/* Add middle line */}
+            <Line strokeWidth={2} stroke="#333" x={0} y={-(width / 2 / ratio)} points={[0, 0, 0, width / ratio]} />
+
             {/* 2nd upDown main body */}
             <Rect strokeEnabled={false} fill={primaryColor} x={0} y={-(width / 2 / ratio)} width={(upDownVisibleLength - zoneVisibleLength) / ratio} height={width / ratio} />
 
             {/* 2nd zone */}
             <Rect strokeEnabled={false} fill={secondaryColor} x={ (upDownVisibleLength - zoneVisibleLength) / ratio} y={-(width / 2 / ratio)} width={zoneVisibleLength / ratio} height={width / ratio} />
 
+            
+            {/* Add middle line */}
+            {
+                slats.map((i: number) => {
+                    return <Line strokeWidth={2} opacity={0.1} stroke="#333" x={i / ratio} y={-(width / 2 / ratio)} points={[0, 0, 0, width / ratio]} />
+                })
+            }
         </Group>
     )
 }
