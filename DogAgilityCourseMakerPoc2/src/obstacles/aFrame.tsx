@@ -1,23 +1,53 @@
 import { Group, Line, Rect } from "react-konva"
+import { AFrameProps } from "../types/obstacleTypes"
 
-export const AFrame = ({id, ratio, x, y, rotation, width, elementLength, primaryColor, zoneLength, secondaryColor, onClick, onDragEnd, onTransformEnd, onDrag}) => {
-    const upDownVisibleLength = Math.sqrt(elementLength*elementLength - 170 * 170);
+export const AFrame: React.FC<AFrameProps> = ({
+  id,
+  ratio,
+  x,
+  y,
+  rotation,
+  width,
+  elementLength,
+  primaryColor,
+  zoneLength,
+  secondaryColor,
+  onClick,
+  onDragEnd,
+  onTransformEnd,
+  onDrag,
+  draggable = true
+}) => {
+    const upDownVisibleLength = Math.sqrt(elementLength * elementLength - 170 * 170);
     const ratioVisible = upDownVisibleLength / elementLength;
     const zoneVisibleLength = zoneLength * ratioVisible;
-    let slats:number[] = [];
+    const slats: number[] = [];
+    
     // slats for both zone
-    for (let i = (upDownVisibleLength - zoneVisibleLength + 12.5) ; i < upDownVisibleLength ; i += 25) {
+    for (let i = (upDownVisibleLength - zoneVisibleLength + 12.5); i < upDownVisibleLength; i += 25) {
         slats.push(i);
         slats.push(-i);
     }
     // slats for both up down
-    for (let i = (upDownVisibleLength - zoneVisibleLength - 12.5) ; i > 0 ; i -= 25) {
+    for (let i = (upDownVisibleLength - zoneVisibleLength - 12.5); i > 0; i -= 25) {
         slats.push(i);
         slats.push(-i);
     }
 
     return (
-        <Group type="aFrame" id={id} x={x} y={y} rotation={rotation} onClick={onClick} onTap={onClick} draggable onDragEnd={onDragEnd} onTransformEnd={onTransformEnd} onDragMove={onDrag}>
+        <Group 
+          type="aFrame" 
+          id={id} 
+          x={x} 
+          y={y} 
+          rotation={rotation} 
+          onClick={onClick} 
+          onTap={onClick} 
+          draggable={draggable}
+          onDragEnd={onDragEnd} 
+          onTransformEnd={onTransformEnd} 
+          onDragMove={onDrag}
+        >
             {/* 1st zone */}
             <Rect strokeEnabled={false} fill={secondaryColor} x={-upDownVisibleLength / ratio} y={-(width / 2 / ratio)} width={zoneVisibleLength / ratio} height={width / ratio} />
 
@@ -31,15 +61,20 @@ export const AFrame = ({id, ratio, x, y, rotation, width, elementLength, primary
             <Rect strokeEnabled={false} fill={primaryColor} x={0} y={-(width / 2 / ratio)} width={(upDownVisibleLength - zoneVisibleLength) / ratio} height={width / ratio} />
 
             {/* 2nd zone */}
-            <Rect strokeEnabled={false} fill={secondaryColor} x={ (upDownVisibleLength - zoneVisibleLength) / ratio} y={-(width / 2 / ratio)} width={zoneVisibleLength / ratio} height={width / ratio} />
+            <Rect strokeEnabled={false} fill={secondaryColor} x={(upDownVisibleLength - zoneVisibleLength) / ratio} y={-(width / 2 / ratio)} width={zoneVisibleLength / ratio} height={width / ratio} />
 
-            
             {/* Add middle line */}
-            {
-                slats.map((i: number) => {
-                    return <Line strokeWidth={2} opacity={0.1} stroke="#333" x={i / ratio} y={-(width / 2 / ratio)} points={[0, 0, 0, width / ratio]} />
-                })
-            }
+            {slats.map((i: number) => (
+                <Line 
+                  key={`slat-${i}`}
+                  strokeWidth={2} 
+                  opacity={0.1} 
+                  stroke="#333" 
+                  x={i / ratio} 
+                  y={-(width / 2 / ratio)} 
+                  points={[0, 0, 0, width / ratio]} 
+                />
+            ))}
         </Group>
     )
 }

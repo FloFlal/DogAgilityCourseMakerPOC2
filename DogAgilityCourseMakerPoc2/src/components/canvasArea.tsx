@@ -1,30 +1,29 @@
 import React, { useRef, useEffect, useMemo } from 'react';
-import { Stage, Layer, Rect, Circle, Transformer, Line } from 'react-konva';
+import { Stage, Layer, Transformer, Line } from 'react-konva';
 import { useDrawingStore, type Obstacle } from '../store/useDrawingStore';
 import Konva from 'konva';
-import { UserBadge } from '../obstacles/test';
 import { Jump } from '../obstacles/jump';
 import { Seesaw } from '../obstacles/seesaw';
 import { DogWalk } from '../obstacles/dogWalk';
 import { AFrame } from '../obstacles/aFrame';
+import { KonvaMouseEvent, KonvaDragEvent, KonvaTransformEvent } from '../types/obstacleTypes';
 
 export const CanvasArea: React.FC = () => {
     const { obstacles: shapes, gridSize, selectedId, setSelectedId, addShape, updateShape } = useDrawingStore();
     const transformerRef = useRef<Konva.Transformer>(null);
     const stageRef = useRef<Konva.Stage>(null);
-    const shapeRef = useRef<Konva.Shape>(null);
 
     // Update Konva Transformer when selection changes
     useEffect(() => {
-        if(transformerRef.current) {
+        if (transformerRef.current) {
             const stage = transformerRef.current.getStage();
 
-            if(!stage) return;
+            if (!stage) return;
 
-            if(selectedId) {
+            if (selectedId) {
                 const selectedNode = stage.findOne('#' + selectedId);
 
-                if(selectedNode) {
+                if (selectedNode) {
                     transformerRef.current.nodes([selectedNode]);
                     transformerRef.current.getLayer()?.batchDraw();
                     return;
@@ -36,14 +35,14 @@ export const CanvasArea: React.FC = () => {
         }
     }, [selectedId, shapes]);
 
-    const handleStageClick = (e: any) => {
+    const handleStageClick = (e: KonvaMouseEvent): void => {
         // unselect obstacle when click on background
-        if(e.target === e.target.getStage()) {
-            if(selectedId) {
+        if (e.target === e.target.getStage()) {
+            if (selectedId) {
                 setSelectedId(null);
             } else {
                 const pointer = stageRef.current?.getPointerPosition();
-                if(pointer) {
+                if (pointer) {
                     addShape(pointer.x, pointer.y);
                 }
             }
@@ -55,7 +54,7 @@ export const CanvasArea: React.FC = () => {
     const gridHeight = window.innerHeight;
     
     const gridLines = useMemo(() => {
-        const lines = [];
+        const lines: JSX.Element[] = [];
         
         // Vertical lines
         for (let x = 0; x <= gridWidth; x += gridSize) {
@@ -93,8 +92,9 @@ export const CanvasArea: React.FC = () => {
     }, [gridSize, gridWidth, gridHeight]);
 
     return (
-        <div className="flew-1 h-screen bg-slate-950 relatvie overflow-hidden">
-            <Stage width={gridWidth} // width minus sidebar
+        <div className="flex-1 h-screen bg-slate-950 relative overflow-hidden">
+            <Stage 
+                width={gridWidth} // width minus sidebar
                 height={gridHeight}
                 ref={stageRef}
                 onClick={handleStageClick}
@@ -106,7 +106,7 @@ export const CanvasArea: React.FC = () => {
                 
                 <Layer>
                     {shapes.map((shape: Obstacle) => {
-                        const isSlected = shape.id === selectedId;
+                        const isSelected = shape.id === selectedId;
                         
                         const commonProps = {
                             ratio: 2.5,
@@ -116,37 +116,36 @@ export const CanvasArea: React.FC = () => {
                             fill: shape.fill,
                             rotation: shape.rotation,
                             draggable: true,
-                            isSlected: isSlected,
+                            isSelected: isSelected,
                             primaryColor: "#1155FF",
                             secondaryColor: "#FFFF00",
-                            onClick: (e: any) => {
+                            onClick: (e: KonvaMouseEvent): void => {
                                 e.cancelBubble = true; // avoid click on Stage
                                 setSelectedId(shape.id);
                             },
-                            onDragEnd: (e: any) => {
+                            onDragEnd: (e: KonvaDragEvent): void => {
                                 updateShape(shape.id, {
                                     x: e.target.x(),
                                     y: e.target.y()
                                 });
                             },
-                            onDrag: (e: any) => {
-                                if (!isSlected) {
+                            onDrag: (/* eslint-disable @typescript-eslint/no-unused-vars */ e: KonvaDragEvent): void => {
+                                if (!isSelected) {
                                     setSelectedId(shape.id);
                                 }
                             },
-                            onTransformEnd: (e: any) => {
+                            onTransformEnd: (e: KonvaTransformEvent): void => {
                                 // handle the end of rotation
-                                const node = e.target;
                                 updateShape(shape.id, {
-                                    x: node.x(),
-                                    y: node.y(),
-                                    rotation: node.rotation(),
-                                })
+                                    x: e.target.x(),
+                                    y: e.target.y(),
+                                    rotation: e.target.rotation(),
+                                });
                             }
                         };
                         
                         if (shape.type === 'jump') {
-                            return <Jump {...commonProps} key={shape.id} barWidth={130} barThickess={5}  hurdleWidth={50} hurdleDepth={40} hurdleThickness={10} />
+                            return <Jump {...commonProps} key={shape.id} barWidth={130} barThickness={5} hurdleWidth={50} hurdleDepth={40} hurdleThickness={10} />
                         } else if (shape.type === 'seesaw') {
                             return <Seesaw {...commonProps} key={shape.id} width={30} length={370} zoneLength={90}/>
                         } else if (shape.type === 'dogWalk') {
@@ -157,8 +156,10 @@ export const CanvasArea: React.FC = () => {
                     })}
 
                     {/*The component that surround the obstacle*/}
-                    <Transformer ref={transformerRef} boundBoxFunc={(oldBox, newBox) => {
-                            if(newBox.width < 10 || newBox.height < 10) {
+                    <Transformer 
+                        ref={transformerRef} 
+                        boundBoxFunc={(oldBox, newBox) => {
+                            if (newBox.width < 10 || newBox.height < 10) {
                                 return oldBox;
                             }
                             return newBox;
