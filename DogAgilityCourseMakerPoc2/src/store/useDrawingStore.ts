@@ -1,21 +1,9 @@
-import {create} from 'zustand';
-
-type ObstacleType = 'jump'|'oxer'|'seesaw'|'dogWalk'|'aFrame'|'weavePols'|'semiWeavePols'|'tunnel6m'|'tunnel5m'|'tunnel4m'|'tunnel3m'|'longJump'|'tire';
-
-export interface Obstacle {
-    id: string;
-    type: ObstacleType;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    fill: string;
-    rotation: number;
-}
+import { create } from 'zustand';
+import { ObstacleType, Obstacle } from '../types/obstacleTypes';
 
 interface DrawingState {
-    obstacles: Obstacle[]
-    selectedId: string|null;
+    obstacles: Obstacle[];
+    selectedId: string | null;
     gridSize: number;
     currentColor: string;
     currentShapeType: ObstacleType;
@@ -24,7 +12,7 @@ interface DrawingState {
     addShape: (x: number, y: number) => void;
     updateShape: (id: string, newAttrs: Partial<Obstacle>) => void;
     deleteShape: (id: string) => void;
-    setSelectedId: (id: string|null) => void;
+    setSelectedId: (id: string | null) => void;
     setCurrentColor: (color: string) => void;
     setCurrentShapeType: (type: ObstacleType) => void;
 
@@ -33,7 +21,7 @@ interface DrawingState {
     importFromJson: (jsonString: string) => boolean;
 }
 
-export const useDrawingStore = create<DrawingState> ((set, get) => ({
+export const useDrawingStore = create<DrawingState>((set, get) => ({
     obstacles: [],
     selectedId: null,
     gridSize: 25,
@@ -41,7 +29,7 @@ export const useDrawingStore = create<DrawingState> ((set, get) => ({
     currentShapeType: 'jump',
 
     // Actions
-    addShape: (x, y) => {
+    addShape: (x: number, y: number): void => {
         const { gridSize, currentColor, currentShapeType } = get();
 
         const newShape: Obstacle = {
@@ -55,39 +43,52 @@ export const useDrawingStore = create<DrawingState> ((set, get) => ({
             rotation: 0,
         };
 
-        set((state) => ({ obstacles: [...state.obstacles, newShape], selectedId: newShape.id}));
+        set((state) => ({ 
+            obstacles: [...state.obstacles, newShape], 
+            selectedId: newShape.id 
+        }));
     },
 
-    updateShape: (id, newAttrs) => set((state) => ({
-        obstacles: state.obstacles.map((shape) => {
-            if(shape.id !== id) { return shape; }
-            
-            // if we move the object, optionnaly allign it on the grid
-            const updated = {...shape, ...newAttrs};
+    updateShape: (id: string, newAttrs: Partial<Obstacle>): void => {
+        set((state) => ({
+            obstacles: state.obstacles.map((shape: Obstacle) => {
+                if (shape.id !== id) { 
+                    return shape; 
+                }
+                
+                // if we move the object, optionally align it on the grid
+                const updated: Obstacle = { ...shape, ...newAttrs };
 
-            return updated;
-        })
-    })),
+                return updated;
+            })
+        }));
+    },
 
+    deleteShape: (id: string): void => {
+        set((state) => ({
+            obstacles: state.obstacles.filter((shape: Obstacle) => shape.id !== id),
+            selectedId: state.selectedId === id ? null : state.selectedId,
+        }));
+    },
 
+    setSelectedId: (id: string | null): void => {
+        set({ selectedId: id });
+    },
 
-    deleteShape: (id) => set((state) => ({
-        obstacles: state.obstacles.filter((shape) => shape.id !== id),
-        selectedId: state.selectedId === id ? null : state.selectedId,
-    })),
+    setCurrentColor: (color: string): void => {
+        set({ currentColor: color });
+    },
 
-    setSelectedId: (id) => set({selectedId: id}),
+    setCurrentShapeType: (type: ObstacleType): void => {
+        set({ currentShapeType: type });
+    },
 
-    setCurrentColor: (color) => set({currentColor: color}),
-
-    setCurrentShapeType: (type) => set({currentShapeType: type}),
-
-    exportToJson: () => {
+    exportToJson: (): string => {
         return JSON.stringify(get().obstacles, null, 2);
     },
 
-    importFromJson: (jsonString) => {
-        try{
+    importFromJson: (jsonString: string): boolean => {
+        try {
             const parsed = JSON.parse(jsonString);
             if (Array.isArray(parsed)) {
                 set({ obstacles: parsed, selectedId: null });
@@ -100,5 +101,4 @@ export const useDrawingStore = create<DrawingState> ((set, get) => ({
             return false;
         }
     },
-
 }));
