@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import { useDrawingStore } from '../store/useDrawingStore';
 import { Square, Circle, Trash2, Download, Upload, AlertTriangle } from 'lucide-react';
 import { ObstacleType } from '../types/obstacleTypes';
-import toast from 'react-hot-toast';
 
 export const Sidebar: React.FC = () => {
     const {
@@ -29,8 +28,6 @@ export const Sidebar: React.FC = () => {
         document.body.appendChild(downloadAnchor);
         downloadAnchor.click();
         downloadAnchor.remove();
-        
-        toast.success('Course exported successfully!');
     };
 
     const handleImport = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -43,12 +40,7 @@ export const Sidebar: React.FC = () => {
         reader.onload = (event: ProgressEvent<FileReader>): void => {
             const result = event.target?.result;
             if (typeof result === 'string') {
-                const { success, error } = importFromJson(result);
-                if (success) { 
-                    toast.success('Course imported successfully!');
-                } else {
-                    toast.error(error || 'Failed to import course');
-                }
+                importFromJson(result);
             }
         };
         reader.readAsText(file);
@@ -144,7 +136,6 @@ export const Sidebar: React.FC = () => {
                     <button 
                         onClick={() => {
                             deleteShape(selectedId);
-                            toast.success('Obstacle deleted');
                         }} 
                         className="flex items-center justify-center gap-2 w-full bg-red-600/20 hover:bg-red-600 text-red-200 hover:text-white p-2.5 rounded-lg border border-red-500/30 transition text-sm font-medium"
                     >

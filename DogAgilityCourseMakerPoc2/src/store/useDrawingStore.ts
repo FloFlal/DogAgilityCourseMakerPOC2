@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { ObstacleType, Obstacle } from '../types/obstacleTypes';
-import { validateCourseData } from '../schemas/courseSchema';
+import { validateCourseData, ValidCourse } from '../schemas/courseSchema';
 
 interface DrawingState {
     obstacles: Obstacle[];
@@ -100,7 +100,7 @@ export const useDrawingStore = create<DrawingState>((set, get) => ({
         
         if (result.success && result.data) {
             set({ 
-                obstacles: result.data, 
+                obstacles: result.data as unknown as Obstacle[], 
                 selectedId: null,
                 importError: null 
             });
@@ -108,7 +108,6 @@ export const useDrawingStore = create<DrawingState>((set, get) => ({
         } else {
             const errorMessage = result.error || 'Failed to import course data';
             set({ importError: errorMessage });
-            console.error('Import failed:', errorMessage);
             return { success: false, error: errorMessage };
         }
     },

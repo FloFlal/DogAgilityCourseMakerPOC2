@@ -9,8 +9,8 @@ export const obstacleSchema = z.object({
     'weavePols', 'semiWeavePols', 'tunnel6m', 'tunnel5m', 
     'tunnel4m', 'tunnel3m', 'longJump', 'tire'
   ] as [ObstacleType, ...ObstacleType[]]),
-  x: z.number().finite('Obstacle x position must be a finite number'),
-  y: z.number().finite('Obstacle y position must be a finite number'),
+  x: z.number().finite('Obstacle x position must be a finite number').nonnegative('Obstacle x position must be non-negative'),
+  y: z.number().finite('Obstacle y position must be a finite number').nonnegative('Obstacle y position must be non-negative'),
   width: z.number().positive('Obstacle width must be positive'),
   height: z.number().positive('Obstacle height must be positive'),
   fill: z.string().regex(/^#[0-9A-Fa-f]{6}$/, 'Fill must be a valid hex color'),
@@ -23,6 +23,15 @@ export const courseSchema = z.array(obstacleSchema);
 // Type dérivé du schema
 export type ValidObstacle = z.infer<typeof obstacleSchema>;
 export type ValidCourse = z.infer<typeof courseSchema>;
+
+// Helper function to format Zod v4 errors
+function formatZodError(error: z.ZodError): string {
+  const errorMessages = error.issues.map(issue => {
+    const path = issue.path.length > 0 ? issue.path.join('.') : 'root';
+    return `${path}: ${issue.message}`;
+  });
+  return `Validation errors:\n${errorMessages.join('\n')}`;
+}
 
 // Fonction pour valider un JSON de parcours
 export function validateCourseData(jsonString: string): { success: boolean; data?: ValidCourse; error?: string } {
@@ -46,15 +55,9 @@ export function validateCourseData(jsonString: string): { success: boolean; data
         data: result.data 
       };
     } else {
-      // Formater les erreurs de validation
-      const errorMessages = result.error.errors.map(err => {
-        const path = err.path.join('.');
-        return `${path}: ${err.message}`;
-      });
-      
       return { 
         success: false, 
-        error: `Validation errors:\n${errorMessages.join('\n')}` 
+        error: formatZodError(result.error)
       };
     }
   } catch (e) {
@@ -81,14 +84,9 @@ export function validateObstacle(obstacle: unknown): { success: boolean; data?: 
       data: result.data 
     };
   } else {
-    const errorMessages = result.error.errors.map(err => {
-      const path = err.path.join('.');
-      return `${path}: ${err.message}`;
-    });
-    
     return { 
       success: false, 
-      error: `Validation errors:\n${errorMessages.join('\n')}` 
+      error: formatZodError(result.error)
     };
   }
 }

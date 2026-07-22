@@ -88,7 +88,7 @@ describe('Course Schema Validation', () => {
 
             const result = validateCourseData(invalidTypeJson);
             expect(result.success).toBe(false);
-            expect(result.error).toContain('Invalid enum value');
+            expect(result.error).toContain('Invalid option');
         });
 
         it('should reject obstacle with negative width', () => {
@@ -146,6 +146,44 @@ describe('Course Schema Validation', () => {
             const result = validateCourseData(invalidRotationJson);
             expect(result.success).toBe(false);
             expect(result.error).toContain('between 0 and 360');
+        });
+
+        it('should reject obstacle with negative x position', () => {
+            const negativeXJson = JSON.stringify([
+                {
+                    id: '550e8400-e29b-41d4-a716-446655440000',
+                    type: 'jump',
+                    x: -100,
+                    y: 200,
+                    width: 25,
+                    height: 25,
+                    fill: '#3b82f6',
+                    rotation: 0
+                }
+            ]);
+
+            const result = validateCourseData(negativeXJson);
+            expect(result.success).toBe(false);
+            expect(result.error).toContain('must be non-negative');
+        });
+
+        it('should reject obstacle with negative y position', () => {
+            const negativeYJson = JSON.stringify([
+                {
+                    id: '550e8400-e29b-41d4-a716-446655440000',
+                    type: 'jump',
+                    x: 100,
+                    y: -200,
+                    width: 25,
+                    height: 25,
+                    fill: '#3b82f6',
+                    rotation: 0
+                }
+            ]);
+
+            const result = validateCourseData(negativeYJson);
+            expect(result.success).toBe(false);
+            expect(result.error).toContain('must be non-negative');
         });
     });
 
