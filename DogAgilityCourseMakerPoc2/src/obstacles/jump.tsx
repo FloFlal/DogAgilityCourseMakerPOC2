@@ -1,5 +1,5 @@
 import { Circle, Group, Line, Rect } from "react-konva"
-import { JumpProps } from "../types/obstacleTypes"
+import type { JumpProps } from "../types/obstacleTypes"
 
 export const Jump: React.FC<JumpProps> = ({
   id,

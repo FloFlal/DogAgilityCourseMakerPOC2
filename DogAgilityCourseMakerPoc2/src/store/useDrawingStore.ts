@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { ObstacleType, Obstacle } from '../types/obstacleTypes';
+import type { ObstacleType, Obstacle } from '../types/obstacleTypes';
+import { validateCourseData } from '../schemas/courseSchema';
 
 interface DrawingState {
     obstacles: Obstacle[];
@@ -7,6 +8,7 @@ interface DrawingState {
     gridSize: number;
     currentColor: string;
     currentShapeType: ObstacleType;
+    importError: string | null;
 
     // Actions
     addShape: (x: number, y: number) => void;
@@ -15,10 +17,11 @@ interface DrawingState {
     setSelectedId: (id: string | null) => void;
     setCurrentColor: (color: string) => void;
     setCurrentShapeType: (type: ObstacleType) => void;
+    clearImportError: () => void;
 
     // Import/Export functions
     exportToJson: () => string;
-    importFromJson: (jsonString: string) => boolean;
+    importFromJson: (jsonString: string) => { success: boolean; error?: string };
 }
 
 export const useDrawingStore = create<DrawingState>((set, get) => ({
@@ -27,6 +30,7 @@ export const useDrawingStore = create<DrawingState>((set, get) => ({
     gridSize: 25,
     currentColor: '#3b82f6',
     currentShapeType: 'jump',
+    importError: null,
 
     // Actions
     addShape: (x: number, y: number): void => {
@@ -83,22 +87,28 @@ export const useDrawingStore = create<DrawingState>((set, get) => ({
         set({ currentShapeType: type });
     },
 
+    clearImportError: (): void => {
+        set({ importError: null });
+    },
+
     exportToJson: (): string => {
         return JSON.stringify(get().obstacles, null, 2);
     },
 
-    importFromJson: (jsonString: string): boolean => {
-        try {
-            const parsed = JSON.parse(jsonString);
-            if (Array.isArray(parsed)) {
-                set({ obstacles: parsed, selectedId: null });
-                return true;
-            } else {
-                return false;
-            }
-        } catch (e) {
-            console.error("Fail to import", e);
-            return false;
+    importFromJson: (jsonString: string): { success: boolean; error?: string } => {
+        const result = validateCourseData(jsonString);
+        
+        if (result.success && result.data) {
+            set({ 
+                obstacles: result.data as unknown as Obstacle[], 
+                selectedId: null,
+                importError: null 
+            });
+            return { success: true };
+        } else {
+            const errorMessage = result.error || 'Failed to import course data';
+            set({ importError: errorMessage });
+            return { success: false, error: errorMessage };
         }
     },
 }));

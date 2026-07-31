@@ -1,5 +1,5 @@
 import { Group, Line, Rect } from "react-konva"
-import { AFrameProps } from "../types/obstacleTypes"
+import type { AFrameProps } from "../types/obstacleTypes"
 
 export const AFrame: React.FC<AFrameProps> = ({
   id,

@@ -6,7 +6,7 @@ import { Jump } from '../obstacles/jump';
 import { Seesaw } from '../obstacles/seesaw';
 import { DogWalk } from '../obstacles/dogWalk';
 import { AFrame } from '../obstacles/aFrame';
-import { KonvaMouseEvent, KonvaDragEvent, KonvaTransformEvent } from '../types/obstacleTypes';
+import type { KonvaMouseEvent, KonvaDragEvent, KonvaTransformEvent } from '../types/obstacleTypes';
 
 export const CanvasArea: React.FC = () => {
     const { obstacles: shapes, gridSize, selectedId, setSelectedId, addShape, updateShape } = useDrawingStore();
