@@ -1,5 +1,5 @@
 import { Circle, Group, Rect, Text } from "react-konva"
-import { UserBadgeProps } from "../types/obstacleTypes"
+import type { UserBadgeProps } from "../types/obstacleTypes"
 import Konva from "konva"
 
 export const UserBadge: React.FC<UserBadgeProps> = ({

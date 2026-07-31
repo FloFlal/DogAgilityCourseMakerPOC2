@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { ObstacleType, Obstacle } from '../types/obstacleTypes';
-import { validateCourseData, ValidCourse } from '../schemas/courseSchema';
+import type { ObstacleType, Obstacle } from '../types/obstacleTypes';
+import { validateCourseData } from '../schemas/courseSchema';
 
 interface DrawingState {
     obstacles: Obstacle[];

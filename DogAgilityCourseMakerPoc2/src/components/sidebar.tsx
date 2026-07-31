@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useDrawingStore } from '../store/useDrawingStore';
 import { Square, Circle, Trash2, Download, Upload, AlertTriangle } from 'lucide-react';
-import { ObstacleType } from '../types/obstacleTypes';
+import type { ObstacleType } from '../types/obstacleTypes';
 
 export const Sidebar: React.FC = () => {
     const {
