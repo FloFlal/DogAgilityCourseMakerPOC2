@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ObstacleType } from '../types/obstacleTypes';
+import type { ObstacleType } from '../types/obstacleTypes';
 
 // Schema pour un obstacle individuel
 export const obstacleSchema = z.object({
@@ -14,7 +14,7 @@ export const obstacleSchema = z.object({
   width: z.number().positive('Obstacle width must be positive'),
   height: z.number().positive('Obstacle height must be positive'),
   fill: z.string().regex(/^#[0-9A-Fa-f]{6}$/, 'Fill must be a valid hex color'),
-  rotation: z.number().min(0).max(360, 'Rotation must be between 0 and 360 degrees'),
+  rotation: z.number().min(-180).max(180, 'Rotation must be between -180 and 180 degrees'),
 });
 
 // Schema pour un tableau d'obstacles (format d'export)

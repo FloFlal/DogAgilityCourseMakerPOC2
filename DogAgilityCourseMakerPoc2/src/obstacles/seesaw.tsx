@@ -1,5 +1,5 @@
 import { Group, Rect, Arrow } from "react-konva"
-import { SeesawProps } from "../types/obstacleTypes"
+import type { SeesawProps } from "../types/obstacleTypes"
 
 export const Seesaw: React.FC<SeesawProps> = ({
   id,

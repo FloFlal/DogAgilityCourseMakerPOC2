@@ -1,5 +1,5 @@
 import { Group, Line, Rect } from "react-konva"
-import { DogWalkProps } from "../types/obstacleTypes"
+import type { DogWalkProps } from "../types/obstacleTypes"
 
 export const DogWalk: React.FC<DogWalkProps> = ({
   id,

@@ -145,7 +145,7 @@ describe('Course Schema Validation', () => {
 
             const result = validateCourseData(invalidRotationJson);
             expect(result.success).toBe(false);
-            expect(result.error).toContain('between 0 and 360');
+            expect(result.error).toContain('between -180 and 180');
         });
 
         it('should reject obstacle with negative x position', () => {
