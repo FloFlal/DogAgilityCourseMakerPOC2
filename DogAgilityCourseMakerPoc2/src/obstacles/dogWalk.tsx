@@ -13,6 +13,7 @@ export const DogWalk: React.FC<DogWalkProps> = ({
   zoneLength,
   secondaryColor,
   onClick,
+  onTap,
   onDragEnd,
   onTransformEnd,
   onDrag,
@@ -43,7 +44,7 @@ export const DogWalk: React.FC<DogWalkProps> = ({
           y={y} 
           rotation={rotation} 
           onClick={onClick} 
-          onTap={onClick} 
+          onTap={onTap} 
           draggable={draggable}
           onDragEnd={onDragEnd} 
           onTransformEnd={onTransformEnd} 

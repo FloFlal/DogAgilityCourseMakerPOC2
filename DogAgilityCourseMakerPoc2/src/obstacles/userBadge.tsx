@@ -10,6 +10,7 @@ export const UserBadge: React.FC<UserBadgeProps> = ({
   isSelected,
   shapeRef,
   onClick,
+  onTap,
   onDragEnd,
   onTransformEnd,
   onDrag
@@ -21,7 +22,7 @@ export const UserBadge: React.FC<UserBadgeProps> = ({
           y={y} 
           ref={shapeRef as React.RefObject<Konva.Group> | undefined}
           onClick={onClick} 
-          onTap={onClick} 
+          onTap={onTap} 
           draggable 
           onDragEnd={onDragEnd} 
           onTransformEnd={onTransformEnd} 

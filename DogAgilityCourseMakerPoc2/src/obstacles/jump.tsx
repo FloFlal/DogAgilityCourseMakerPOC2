@@ -15,6 +15,7 @@ export const Jump: React.FC<JumpProps> = ({
   hurdleThickness,
   secondaryColor,
   onClick,
+  onTap,
   onDragEnd,
   onTransformEnd,
   onDrag,
@@ -28,7 +29,7 @@ export const Jump: React.FC<JumpProps> = ({
           y={y} 
           rotation={rotation} 
           onClick={onClick} 
-          onTap={onClick} 
+          onTap={onTap} 
           draggable={draggable}
           onDragEnd={onDragEnd} 
           onTransformEnd={onTransformEnd} 

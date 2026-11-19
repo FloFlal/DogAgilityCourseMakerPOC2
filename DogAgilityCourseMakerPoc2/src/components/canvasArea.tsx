@@ -1,175 +1,68 @@
-import React, { useRef, useEffect, useMemo } from 'react';
-import { Stage, Layer, Transformer, Line } from 'react-konva';
-import { useDrawingStore, type Obstacle } from '../store/useDrawingStore';
+import React, { useRef } from 'react';
+import { Stage } from 'react-konva';
 import Konva from 'konva';
-import { Jump } from '../obstacles/jump';
-import { Seesaw } from '../obstacles/seesaw';
-import { DogWalk } from '../obstacles/dogWalk';
-import { AFrame } from '../obstacles/aFrame';
-import type { KonvaMouseEvent, KonvaDragEvent, KonvaTransformEvent } from '../types/obstacleTypes';
+import { useDrawingStore } from '../store/useDrawingStore';
+import { useStageDimensions } from '../hooks/useStageDimensions';
+import { useObstacleDrag } from '../hooks/useObstacleDrag';
+import { useObstacleTransform } from '../hooks/useObstacleTransform';
+import { GridLayer } from './canvas/gridLayer';
+import { ObstaclesLayer } from './canvas/obstaclesLayer';
+import { TransformerComponent } from './canvas/transformerComponent';
+import type { KonvaMouseEvent } from '../types/obstacleTypes';
 
+/**
+ * Zone de dessin principale : compose le Stage Konva à partir des
+ * couches dédiées (quadrillage, obstacles, transformer) et des hooks
+ * de gestion des obstacles.
+ */
 export const CanvasArea: React.FC = () => {
-    const { obstacles: shapes, gridSize, selectedId, setSelectedId, addShape, updateShape } = useDrawingStore();
-    const transformerRef = useRef<Konva.Transformer>(null);
+    const obstacles = useDrawingStore((state) => state.obstacles);
+    const selectedId = useDrawingStore((state) => state.selectedId);
+    const setSelectedId = useDrawingStore((state) => state.setSelectedId);
+    const addShape = useDrawingStore((state) => state.addShape);
+    const gridSize = useDrawingStore((state) => state.gridSize);
+    const { onDragStart, onDragEnd } = useObstacleDrag();
+    const onTransformEnd = useObstacleTransform();
+    const { width, height } = useStageDimensions();
     const stageRef = useRef<Konva.Stage>(null);
-
-    // Update Konva Transformer when selection changes
-    useEffect(() => {
-        if (transformerRef.current) {
-            const stage = transformerRef.current.getStage();
-
-            if (!stage) return;
-
-            if (selectedId) {
-                const selectedNode = stage.findOne('#' + selectedId);
-
-                if (selectedNode) {
-                    transformerRef.current.nodes([selectedNode]);
-                    transformerRef.current.getLayer()?.batchDraw();
-                    return;
-                }
-            }
-
-            transformerRef.current.nodes([]);
-            transformerRef.current.getLayer()?.batchDraw();
-        }
-    }, [selectedId, shapes]);
 
     const handleStageClick = (e: KonvaMouseEvent): void => {
         // unselect obstacle when click on background
-        if (e.target === e.target.getStage()) {
-            if (selectedId) {
-                setSelectedId(null);
-            } else {
-                const pointer = stageRef.current?.getPointerPosition();
-                if (pointer) {
-                    addShape(pointer.x, pointer.y);
-                }
+        if (e.target !== e.target.getStage()) return;
+
+        if (selectedId) {
+            setSelectedId(null);
+        } else {
+            const pointer = stageRef.current?.getPointerPosition();
+
+            if (pointer) {
+                addShape(pointer.x, pointer.y);
             }
         }
     };
 
-    // Create grid lines
-    const gridWidth = window.innerWidth - 320;
-    const gridHeight = window.innerHeight;
-    
-    const gridLines = useMemo(() => {
-        const lines: JSX.Element[] = [];
-        
-        // Vertical lines
-        for (let x = 0; x <= gridWidth; x += gridSize) {
-            lines.push(
-                <Line
-                    key={`v-${x}`}
-                    x={x}
-                    y={0}
-                    points={[0, 0, 0, gridHeight]}
-                    stroke="#000"
-                    strokeWidth={1}
-                    opacity={0.1}
-                    listening={false}
-                />
-            );
-        }
-        
-        // Horizontal lines
-        for (let y = 0; y <= gridHeight; y += gridSize) {
-            lines.push(
-                <Line
-                    key={`h-${y}`}
-                    x={0}
-                    y={y}
-                    points={[0, 0, gridWidth, 0]}
-                    stroke="#000"
-                    strokeWidth={1}
-                    opacity={0.1}
-                    listening={false}
-                />
-            );
-        }
-        
-        return lines;
-    }, [gridSize, gridWidth, gridHeight]);
-
     return (
         <div className="flex-1 h-screen bg-slate-950 relative overflow-hidden">
-            <Stage 
-                width={gridWidth} // width minus sidebar
-                height={gridHeight}
+            <Stage
+                width={width}
+                height={height}
                 ref={stageRef}
                 onClick={handleStageClick}
             >
                 {/* Grid layer - limited to drawing area */}
-                <Layer>
-                    {gridLines}
-                </Layer>
-                
-                <Layer>
-                    {shapes.map((shape: Obstacle) => {
-                        const isSelected = shape.id === selectedId;
-                        
-                        const commonProps = {
-                            ratio: 2.5,
-                            id: shape.id,
-                            x: shape.x,
-                            y: shape.y,
-                            fill: shape.fill,
-                            rotation: shape.rotation,
-                            draggable: true,
-                            isSelected: isSelected,
-                            primaryColor: "#1155FF",
-                            secondaryColor: "#FFFF00",
-                            onClick: (e: KonvaMouseEvent): void => {
-                                e.cancelBubble = true; // avoid click on Stage
-                                setSelectedId(shape.id);
-                            },
-                            onDragEnd: (e: KonvaDragEvent): void => {
-                                updateShape(shape.id, {
-                                    x: e.target.x(),
-                                    y: e.target.y()
-                                });
-                            },
-                            onDrag: (/* eslint-disable @typescript-eslint/no-unused-vars */ e: KonvaDragEvent): void => {
-                                if (!isSelected) {
-                                    setSelectedId(shape.id);
-                                }
-                            },
-                            onTransformEnd: (e: KonvaTransformEvent): void => {
-                                // handle the end of rotation
-                                updateShape(shape.id, {
-                                    x: e.target.x(),
-                                    y: e.target.y(),
-                                    rotation: e.target.rotation(),
-                                });
-                            }
-                        };
-                        
-                        if (shape.type === 'jump') {
-                            return <Jump {...commonProps} key={shape.id} barWidth={130} barThickness={5} hurdleWidth={50} hurdleDepth={40} hurdleThickness={10} />
-                        } else if (shape.type === 'seesaw') {
-                            return <Seesaw {...commonProps} key={shape.id} width={30} length={370} zoneLength={90}/>
-                        } else if (shape.type === 'dogWalk') {
-                            return <DogWalk {...commonProps} key={shape.id} width={30} elementLength={370} zoneLength={90}/>
-                        } else if (shape.type === 'aFrame') {
-                            return <AFrame {...commonProps} key={shape.id} width={90} elementLength={270} zoneLength={106}/>
-                        } 
-                    })}
+                <GridLayer width={width} height={height} gridSize={gridSize} />
 
-                    {/*The component that surround the obstacle*/}
-                    <Transformer 
-                        ref={transformerRef} 
-                        boundBoxFunc={(oldBox, newBox) => {
-                            if (newBox.width < 10 || newBox.height < 10) {
-                                return oldBox;
-                            }
-                            return newBox;
-                        }}
-                        rotateEnabled={true}
-                        borderStroke='red'
-                        anchorCornerRadius={5}
-                        enabledAnchors={[]}
-                    />
-                </Layer>
+                <ObstaclesLayer
+                    shapes={obstacles}
+                    selectedId={selectedId}
+                    onSelect={setSelectedId}
+                    onDragStart={onDragStart}
+                    onDragEnd={onDragEnd}
+                    onTransformEnd={onTransformEnd}
+                />
+
+                {/*The component that surround the obstacle*/}
+                <TransformerComponent selectedId={selectedId} />
             </Stage>
         </div>
     );

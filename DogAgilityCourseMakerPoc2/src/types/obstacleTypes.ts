@@ -30,6 +30,7 @@ export interface Obstacle {
 
 // Types pour les événements Konva
 export type KonvaMouseEvent = Konva.KonvaEventObject<MouseEvent>;
+export type KonvaTapEvent = Konva.KonvaEventObject<TouchEvent>;
 export type KonvaDragEvent = Konva.KonvaEventObject<DragEvent>;
 export type KonvaTransformEvent = Konva.KonvaEventObject<Event>;
 
@@ -45,6 +46,7 @@ export interface BaseObstacleProps {
   secondaryColor: string;
   isSelected: boolean;
   onClick: (e: KonvaMouseEvent) => void;
+  onTap: (e: KonvaTapEvent) => void;
   onDragEnd: (e: KonvaDragEvent) => void;
   onTransformEnd: (e: KonvaTransformEvent) => void;
   onDrag: (e: KonvaDragEvent) => void;
@@ -90,6 +92,7 @@ export interface UserBadgeProps {
   isSelected: boolean;
   shapeRef?: React.RefObject<Konva.Shape>;
   onClick: (e: KonvaMouseEvent) => void;
+  onTap: (e: KonvaTapEvent) => void;
   onDragEnd: (e: KonvaDragEvent) => void;
   onTransformEnd: (e: KonvaTransformEvent) => void;
   onDrag: (e: KonvaDragEvent) => void;

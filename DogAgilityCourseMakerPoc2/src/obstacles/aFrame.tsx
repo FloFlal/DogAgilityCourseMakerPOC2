@@ -13,6 +13,7 @@ export const AFrame: React.FC<AFrameProps> = ({
   zoneLength,
   secondaryColor,
   onClick,
+  onTap,
   onDragEnd,
   onTransformEnd,
   onDrag,
@@ -42,7 +43,7 @@ export const AFrame: React.FC<AFrameProps> = ({
           y={y} 
           rotation={rotation} 
           onClick={onClick} 
-          onTap={onClick} 
+          onTap={onTap} 
           draggable={draggable}
           onDragEnd={onDragEnd} 
           onTransformEnd={onTransformEnd} 
