@@ -1,0 +1,84 @@
+import { useEffect } from 'react';
+import { useDrawingStore } from '../store/useDrawingStore';
+
+// Pas fin utilisé avec la touche Maj, en px
+const FINE_STEP_PX = 1;
+
+// Déplacements par touche fléchée : [dx, dy]
+const ARROW_DELTAS: Record<string, [number, number]> = {
+    ArrowUp: [0, -1],
+    ArrowDown: [0, 1],
+    ArrowLeft: [-1, 0],
+    ArrowRight: [1, 0],
+};
+
+// La navigation clavier ne s'applique pas aux champs de saisie
+function isTextEntryTarget(target: EventTarget | null): boolean {
+    if (!(target instanceof HTMLElement)) return false;
+
+    return (
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.tagName === 'SELECT' ||
+        target.isContentEditable
+    );
+}
+
+/**
+ * Navigation clavier du canvas :
+ * - Échap : désélectionne l'obstacle courant
+ * - Suppr / Retour arrière : supprime l'obstacle sélectionné
+ * - Flèches : déplace l'obstacle sélectionné d'une case de grille
+ *   (Maj + flèche : déplacement fin d'un pixel), borné aux coords positives
+ *
+ * Ignoré lorsque le focus est dans un champ de saisie. Le listener est
+ * attaché à window et relu via getState() : aucune re-souscription.
+ */
+export function useCanvasKeyboard(): void {
+    useEffect((): (() => void) => {
+        const handleKeyDown = (e: KeyboardEvent): void => {
+            if (isTextEntryTarget(e.target)) return;
+
+            const store = useDrawingStore.getState();
+            const { selectedId } = store;
+
+            if (e.key === 'Escape') {
+                if (selectedId !== null) {
+                    store.setSelectedId(null);
+                }
+
+                return;
+            }
+
+            if (selectedId === null) return;
+
+            if (e.key === 'Delete' || e.key === 'Backspace') {
+                e.preventDefault();
+                store.deleteShape(selectedId);
+
+                return;
+            }
+
+            const direction = ARROW_DELTAS[e.key];
+
+            if (!direction) return;
+
+            const step = e.shiftKey ? FINE_STEP_PX : store.gridSize;
+            const obstacle = store.obstacles.find((o) => o.id === selectedId);
+
+            if (!obstacle) return;
+
+            e.preventDefault();
+            store.updateShape(selectedId, {
+                x: Math.max(0, obstacle.x + direction[0] * step),
+                y: Math.max(0, obstacle.y + direction[1] * step),
+            });
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return (): void => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
+}

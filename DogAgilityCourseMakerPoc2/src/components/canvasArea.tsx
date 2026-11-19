@@ -8,6 +8,7 @@ import {
     selectSelectedId,
 } from '../store/selectors';
 import { useStageDimensions } from '../hooks/useStageDimensions';
+import { useCanvasKeyboard } from '../hooks/useCanvasKeyboard';
 import { useObstacleDrag } from '../hooks/useObstacleDrag';
 import { useObstacleTransform } from '../hooks/useObstacleTransform';
 import { GridLayer } from './canvas/gridLayer';
@@ -31,6 +32,8 @@ export const CanvasArea: React.FC = () => {
     const { width, height } = useStageDimensions();
     const stageRef = useRef<Konva.Stage>(null);
 
+    useCanvasKeyboard();
+
     const handleStageClick = (e: KonvaMouseEvent): void => {
         // unselect obstacle when click on background
         if (e.target !== e.target.getStage()) return;
@@ -47,7 +50,18 @@ export const CanvasArea: React.FC = () => {
     };
 
     return (
-        <div className="flex-1 h-screen bg-slate-950 relative overflow-hidden">
+        <div
+            className="flex-1 h-screen bg-slate-950 relative overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400"
+            tabIndex={0}
+            role="group"
+            aria-label="Zone de dessin du parcours d'agility"
+            aria-describedby="canvas-keyboard-help"
+        >
+            <p id="canvas-keyboard-help" className="sr-only">
+                Cliquez sur le canvas pour ajouter un obstacle. Utilisez les flèches pour déplacer l'obstacle
+                sélectionné (Maj + flèche pour un déplacement fin d'un pixel), Suppr pour le supprimer et
+                Échap pour le désélectionner.
+            </p>
             <Stage
                 width={width}
                 height={height}
