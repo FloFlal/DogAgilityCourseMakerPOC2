@@ -58,6 +58,10 @@ export const Sidebar: React.FC = () => {
         setCurrentShapeType(type);
     };
 
+    const toolButtonClass = (type: ObstacleType): string =>
+        `flex items-center gap-2 p-3 rounded-lg border text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400 ${
+        currentShapeType === type ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`;
+
     // Clear import error when component mounts
     useEffect(() => {
         return () => {
@@ -66,7 +70,10 @@ export const Sidebar: React.FC = () => {
     }, [clearImportError]);
 
     return (
-        <div className="w-80 h-screen bg-slate-800 border-r border-slate-700 p-6 flex flex-col gap-6 select-none z-10">
+        <aside
+            className="w-80 h-screen bg-slate-800 border-r border-slate-700 p-6 flex flex-col gap-6 select-none z-10"
+            aria-label="Panneau d'outils du créateur de parcours"
+        >
             <div>
                 <h1 className="text-xl font-bold text-white mb-1">Dog Agility Course Maker</h1>
                 <p className="text-sm text-slate-400">POC React + Konva</p>
@@ -74,15 +81,20 @@ export const Sidebar: React.FC = () => {
 
             {/* Import error display */}
             {importError && (
-                <div className="flex items-center gap-2 p-3 bg-red-900/30 border border-red-600 rounded-lg">
-                    <AlertTriangle size={16} className="text-red-400 flex-shrink-0" />
+                <div
+                    role="alert"
+                    aria-live="assertive"
+                    className="flex items-center gap-2 p-3 bg-red-900/30 border border-red-600 rounded-lg"
+                >
+                    <AlertTriangle size={16} aria-hidden="true" className="text-red-400 flex-shrink-0" />
                     <div className="flex-1">
                         <p className="text-sm text-red-300 font-medium">Import Error</p>
                         <p className="text-xs text-red-400/80 truncate">{importError}</p>
                     </div>
                     <button 
                         onClick={clearImportError}
-                        className="text-xs text-red-300 hover:text-red-200 underline"
+                        aria-label="Fermer le message d'erreur d'import"
+                        className="text-xs text-red-300 hover:text-red-200 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
                     >
                         Dismiss
                     </button>
@@ -90,45 +102,59 @@ export const Sidebar: React.FC = () => {
             )}
 
             {/*obstacle selector*/}
-            <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Tools</label>
+            <div role="group" aria-label="Choix de l'outil" className="flex flex-col gap-2">
+                <span className="text-sm font-semibold text-slate-400 uppercase tracking-wider" aria-hidden="true">Tools</span>
                 <div className="grid grid-cols-2 gap-2">
-                    <button 
-                        onClick={() => setShapeType('jump')} 
-                        className={`flex items-center gap-2 p-3 rounded-lg border text-sm font-medium transition ${currentShapeType === 'jump' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}
+                    <button
+                        type="button"
+                        onClick={() => setShapeType('jump')}
+                        aria-pressed={currentShapeType === 'jump'}
+                        className={toolButtonClass('jump')}
                     >
-                        <Square size={16} /> Jump
+                        <Square size={16} aria-hidden="true" /> Jump
                     </button>
-                    <button 
-                        onClick={() => setShapeType('seesaw')} 
-                        className={`flex items-center gap-2 p-3 rounded-lg border text-sm font-medium transition ${currentShapeType === 'seesaw' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}
+                    <button
+                        type="button"
+                        onClick={() => setShapeType('seesaw')}
+                        aria-pressed={currentShapeType === 'seesaw'}
+                        className={toolButtonClass('seesaw')}
                     >
-                        <Circle size={16} /> See Saw
+                        <Circle size={16} aria-hidden="true" /> See Saw
                     </button>
-                    <button 
-                        onClick={() => setShapeType('dogWalk')} 
-                        className={`flex items-center gap-2 p-3 rounded-lg border text-sm font-medium transition ${currentShapeType === 'dogWalk' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}
+                    <button
+                        type="button"
+                        onClick={() => setShapeType('dogWalk')}
+                        aria-pressed={currentShapeType === 'dogWalk'}
+                        className={toolButtonClass('dogWalk')}
                     >
-                        <Circle size={16} /> Dog Walk
+                        <Circle size={16} aria-hidden="true" /> Dog Walk
                     </button>
-                    <button 
-                        onClick={() => setShapeType('aFrame')} 
-                        className={`flex items-center gap-2 p-3 rounded-lg border text-sm font-medium transition ${currentShapeType === 'aFrame' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`}
+                    <button
+                        type="button"
+                        onClick={() => setShapeType('aFrame')}
+                        aria-pressed={currentShapeType === 'aFrame'}
+                        className={toolButtonClass('aFrame')}
                     >
-                        <Circle size={16} /> A Frame
+                        <Circle size={16} aria-hidden="true" /> A Frame
                     </button>
                 </div>
             </div>
 
             {/*color selector*/}
-            <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Colors</label>
+            <div role="group" aria-label="Choix de la couleur" className="flex flex-col gap-2">
+                <label
+                    htmlFor="obstacle-color"
+                    className="text-sm font-semibold text-slate-400 uppercase tracking-wider"
+                >
+                    Colors
+                </label>
                 <div className="flex items-center gap-3 bg-slate-700 p-2 rounded-lg border border-slate-600">
                     <input 
                         type="color" 
+                        id="obstacle-color"
                         value={currentColor} 
                         onChange={(e) => setCurrentColor(e.target.value)} 
-                        className="w-10 h-10 rounded cursor-pointer bg-transparent border-0" 
+                        className="w-10 h-10 rounded cursor-pointer bg-transparent border-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
                     />
                     <span className="font-mono text-sm uppercase text-slate-300">{currentColor}</span>
                 </div>
@@ -137,37 +163,48 @@ export const Sidebar: React.FC = () => {
             {/*obstacle actions*/}
             {selectedId && (
                 <div className="flex flex-col gap-2 mt-2 p-4 bg-slate-900/50 rounded-lg border border-red-900/30">
-                    <label className="text-xs font-semibold text-red-400 uppercase tracking-wider">Selected Element</label>
+                    <span className="text-xs font-semibold text-red-400 uppercase tracking-wider" aria-hidden="true">Selected Element</span>
                     <button 
+                        type="button"
                         onClick={() => {
                             deleteShape(selectedId);
                         }} 
-                        className="flex items-center justify-center gap-2 w-full bg-red-600/20 hover:bg-red-600 text-red-200 hover:text-white p-2.5 rounded-lg border border-red-500/30 transition text-sm font-medium"
+                        aria-label="Supprimer l'obstacle sélectionné"
+                        className="flex items-center justify-center gap-2 w-full bg-red-600/20 hover:bg-red-600 text-red-200 hover:text-white p-2.5 rounded-lg border border-red-500/30 transition text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
                     >
-                        <Trash2 size={16} /> Delete obstacle
+                        <Trash2 size={16} aria-hidden="true" /> Delete obstacle
                     </button>
                 </div>
             )}
 
             {/*import/export section*/}
-            <div className="mt-auto flex flex-col gap-2 border-t border-slate-700 pt-6">
-                <label className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Import/Export</label>
+            <div role="group" aria-label="Import et export du parcours" className="mt-auto flex flex-col gap-2 border-t border-slate-700 pt-6">
+                <span className="text-sm font-semibold text-slate-400 uppercase tracking-wider" aria-hidden="true">Import/Export</span>
                 <div className="grid grid-cols-2 gap-2">
                     <button 
+                        type="button"
                         onClick={handleExport} 
-                        className="flex items-center justify-center gap-2 bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white p-2.5 rounded-lg text-sm transition"
+                        className="flex items-center justify-center gap-2 bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white p-2.5 rounded-lg text-sm transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
                     >
-                        <Download size={16} /> Export
+                        <Download size={16} aria-hidden="true" /> Export
                     </button>
                     <button 
+                        type="button"
                         onClick={() => fileInputRef.current?.click()} 
-                        className="flex items-center justify-center gap-2 bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white p-2.5 rounded-lg text-sm transition"
+                        className="flex items-center justify-center gap-2 bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white p-2.5 rounded-lg text-sm transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
                     >
-                        <Upload size={16} /> Import
+                        <Upload size={16} aria-hidden="true" /> Import
                     </button>
-                    <input type="file" ref={fileInputRef} onChange={handleImport} accept=".json" className="hidden" />
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleImport}
+                        accept=".json"
+                        aria-label="Fichier de parcours à importer"
+                        className="hidden"
+                    />
                 </div>
             </div>
-        </div>
+        </aside>
     )
-}
+};
