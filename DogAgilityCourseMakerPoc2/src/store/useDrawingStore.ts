@@ -1,114 +1,28 @@
 import { create } from 'zustand';
-import type { ObstacleType, Obstacle } from '../types/obstacleTypes';
-import { validateCourseData } from '../schemas/courseSchema';
+import { logger } from './middleware/logger';
+import { createDrawingSlice } from './slices/drawingSlice';
+import { createToolSlice } from './slices/toolSlice';
+import { createCourseSlice } from './slices/courseSlice';
+import type { DrawingState } from './storeTypes';
 
-interface DrawingState {
-    obstacles: Obstacle[];
-    selectedId: string | null;
-    gridSize: number;
-    currentColor: string;
-    currentShapeType: ObstacleType;
-    importError: string | null;
-
-    // Actions
-    addShape: (x: number, y: number) => void;
-    updateShape: (id: string, newAttrs: Partial<Obstacle>) => void;
-    deleteShape: (id: string) => void;
-    setSelectedId: (id: string | null) => void;
-    setCurrentColor: (color: string) => void;
-    setCurrentShapeType: (type: ObstacleType) => void;
-    clearImportError: () => void;
-
-    // Import/Export functions
-    exportToJson: () => string;
-    importFromJson: (jsonString: string) => { success: boolean; error?: string };
-}
-
-export const useDrawingStore = create<DrawingState>((set, get) => ({
-    obstacles: [],
-    selectedId: null,
-    gridSize: 25,
-    currentColor: '#3b82f6',
-    currentShapeType: 'jump',
-    importError: null,
-
-    // Actions
-    addShape: (x: number, y: number): void => {
-        const { gridSize, currentColor, currentShapeType } = get();
-
-        const newShape: Obstacle = {
-            id: crypto.randomUUID(),
-            type: currentShapeType,
-            x: x,
-            y: y,
-            width: gridSize,
-            height: gridSize,
-            fill: currentColor,
-            rotation: 0,
-        };
-
-        set((state) => ({ 
-            obstacles: [...state.obstacles, newShape], 
-            selectedId: newShape.id 
-        }));
-    },
-
-    updateShape: (id: string, newAttrs: Partial<Obstacle>): void => {
-        set((state) => ({
-            obstacles: state.obstacles.map((shape: Obstacle) => {
-                if (shape.id !== id) { 
-                    return shape; 
-                }
-                
-                // if we move the object, optionally align it on the grid
-                const updated: Obstacle = { ...shape, ...newAttrs };
-
-                return updated;
-            })
-        }));
-    },
-
-    deleteShape: (id: string): void => {
-        set((state) => ({
-            obstacles: state.obstacles.filter((shape: Obstacle) => shape.id !== id),
-            selectedId: state.selectedId === id ? null : state.selectedId,
-        }));
-    },
-
-    setSelectedId: (id: string | null): void => {
-        set({ selectedId: id });
-    },
-
-    setCurrentColor: (color: string): void => {
-        set({ currentColor: color });
-    },
-
-    setCurrentShapeType: (type: ObstacleType): void => {
-        set({ currentShapeType: type });
-    },
-
-    clearImportError: (): void => {
-        set({ importError: null });
-    },
-
-    exportToJson: (): string => {
-        return JSON.stringify(get().obstacles, null, 2);
-    },
-
-    importFromJson: (jsonString: string): { success: boolean; error?: string } => {
-        const result = validateCourseData(jsonString);
-        
-        if (result.success && result.data) {
-            set({ 
-                obstacles: result.data as unknown as Obstacle[], 
-                selectedId: null,
-                importError: null 
-            });
-            return { success: true };
-        } else {
-            const errorMessage = result.error || 'Failed to import course data';
-            set({ importError: errorMessage });
-            return { success: false, error: errorMessage };
-        }
-    },
-}));
+/**
+ * Store Zustand global de l'application.
+ *
+ * Composé de trois slices pour séparer les responsabilités :
+ * - drawingSlice : obstacles et sélection (voir src/store/slices/drawingSlice.ts)
+ * - toolSlice : préférences d'outil (grille, couleur, type d'obstacle)
+ * - courseSlice : import/export d'un parcours via src/services/courseService.ts
+ *
+ * Les mutations sont tracées en développement par le middleware logger
+ * (voir src/store/middleware/logger.ts).
+ *
+ * Pour éviter les re-renders inutiles, toujours consommer le store via un
+ * sélecteur, de préférence un des sélecteurs memoized de src/store/selectors.ts.
+ */
+export const useDrawingStore = create<DrawingState>()(
+    logger((...a) => ({
+        ...createDrawingSlice(...a),
+        ...createToolSlice(...a),
+        ...createCourseSlice(...a),
+    })),
+);
