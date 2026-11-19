@@ -2,6 +2,11 @@ import React, { useRef } from 'react';
 import { Stage } from 'react-konva';
 import Konva from 'konva';
 import { useDrawingStore } from '../store/useDrawingStore';
+import {
+    selectGridSize,
+    selectObstacles,
+    selectSelectedId,
+} from '../store/selectors';
 import { useStageDimensions } from '../hooks/useStageDimensions';
 import { useObstacleDrag } from '../hooks/useObstacleDrag';
 import { useObstacleTransform } from '../hooks/useObstacleTransform';
@@ -16,11 +21,11 @@ import type { KonvaMouseEvent } from '../types/obstacleTypes';
  * de gestion des obstacles.
  */
 export const CanvasArea: React.FC = () => {
-    const obstacles = useDrawingStore((state) => state.obstacles);
-    const selectedId = useDrawingStore((state) => state.selectedId);
+    const obstacles = useDrawingStore(selectObstacles);
+    const selectedId = useDrawingStore(selectSelectedId);
     const setSelectedId = useDrawingStore((state) => state.setSelectedId);
     const addShape = useDrawingStore((state) => state.addShape);
-    const gridSize = useDrawingStore((state) => state.gridSize);
+    const gridSize = useDrawingStore(selectGridSize);
     const { onDragStart, onDragEnd } = useObstacleDrag();
     const onTransformEnd = useObstacleTransform();
     const { width, height } = useStageDimensions();

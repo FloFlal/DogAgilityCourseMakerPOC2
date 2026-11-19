@@ -1,5 +1,6 @@
 import toast from 'react-hot-toast';
 import { useDrawingStore } from '../store/useDrawingStore';
+import { selectImportError } from '../store/selectors';
 import { useEffect } from 'react';
 
 /**
@@ -7,7 +8,8 @@ import { useEffect } from 'react';
  * Affiche automatiquement les erreurs d'import sous forme de toast
  */
 export function useImportNotification(): void {
-    const { importError, clearImportError } = useDrawingStore();
+    const importError = useDrawingStore(selectImportError);
+    const clearImportError = useDrawingStore((state) => state.clearImportError);
 
     useEffect(() => {
         if (importError) {

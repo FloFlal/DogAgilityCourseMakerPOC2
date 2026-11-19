@@ -1,21 +1,26 @@
 import React, { useRef, useEffect } from 'react';
 import { useDrawingStore } from '../store/useDrawingStore';
+import {
+    selectCurrentColor,
+    selectCurrentShapeType,
+    selectImportError,
+    selectSelectedId,
+} from '../store/selectors';
 import { Square, Circle, Trash2, Download, Upload, AlertTriangle } from 'lucide-react';
 import type { ObstacleType } from '../types/obstacleTypes';
 
 export const Sidebar: React.FC = () => {
-    const {
-        currentColor, 
-        setCurrentColor, 
-        currentShapeType, 
-        setCurrentShapeType, 
-        selectedId, 
-        deleteShape, 
-        exportToJson, 
-        importFromJson,
-        importError,
-        clearImportError
-    } = useDrawingStore();
+    // Sélecteurs atomiques : chaque champ est souscrit individuellement
+    const currentColor = useDrawingStore(selectCurrentColor);
+    const setCurrentColor = useDrawingStore((state) => state.setCurrentColor);
+    const currentShapeType = useDrawingStore(selectCurrentShapeType);
+    const setCurrentShapeType = useDrawingStore((state) => state.setCurrentShapeType);
+    const selectedId = useDrawingStore(selectSelectedId);
+    const deleteShape = useDrawingStore((state) => state.deleteShape);
+    const exportToJson = useDrawingStore((state) => state.exportToJson);
+    const importFromJson = useDrawingStore((state) => state.importFromJson);
+    const importError = useDrawingStore(selectImportError);
+    const clearImportError = useDrawingStore((state) => state.clearImportError);
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
