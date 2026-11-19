@@ -13,6 +13,7 @@ export const Seesaw: React.FC<SeesawProps> = ({
   zoneLength,
   secondaryColor,
   onClick,
+  onTap,
   onDragEnd,
   onTransformEnd,
   onDrag,
@@ -31,7 +32,7 @@ export const Seesaw: React.FC<SeesawProps> = ({
           y={y} 
           rotation={rotation} 
           onClick={onClick} 
-          onTap={onClick} 
+          onTap={onTap} 
           draggable={draggable}
           onDragEnd={onDragEnd} 
           onTransformEnd={onTransformEnd} 

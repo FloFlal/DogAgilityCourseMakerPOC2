@@ -10,7 +10,6 @@ beforeAll(() => {
     };
   } else {
     // Si crypto existe déjà (dans jsdom), on mock randomUUID
-    // @ts-expect-error - Mocking crypto.randomUUID
     globalThis.crypto.randomUUID = () => '00000000-0000-0000-0000-000000000000';
   }
 });
