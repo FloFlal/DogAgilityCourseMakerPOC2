@@ -8,7 +8,9 @@ const STORAGE_KEY = 'dogagility.language';
 
 describe('LanguageSwitcher', () => {
     afterEach(async () => {
-        window.localStorage.clear();
+        if (typeof window.localStorage?.clear === 'function') {
+            window.localStorage.clear();
+        }
 
         await act(async () => {
             await i18n.changeLanguage('fr');

@@ -4,6 +4,9 @@ import { beforeAll, afterAll, afterEach, vi } from 'vitest';
 // Initialisation i18next (français par défaut) pour les composants traduits
 import '../i18n';
 
+// Polyfill localStorage si le runtime ne le fournit pas (Node 26+ sans --localstorage-file)
+import { installLocalStoragePolyfillIfNeeded } from './mocks/localStorage';
+
 // Mock de crypto.randomUUID pour les tests
 beforeAll(() => {
   if (!globalThis.crypto) {
@@ -15,6 +18,8 @@ beforeAll(() => {
     // Si crypto existe déjà (dans jsdom), on mock randomUUID
     globalThis.crypto.randomUUID = () => '00000000-0000-0000-0000-000000000000';
   }
+
+  installLocalStoragePolyfillIfNeeded(window);
 });
 
 // Nettoyage après chaque test
