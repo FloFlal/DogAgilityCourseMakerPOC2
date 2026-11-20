@@ -6,6 +6,8 @@ source et maintenu par la communauté.
 
 **Ce dépôt n'a pas vocation à être l'application finale.**
 
+**Essayer en ligne : [https://floflal.github.io/DogAgilityCourseMakerPOC2/](https://floflal.github.io/DogAgilityCourseMakerPOC2/)** (déployée automatiquement depuis `main`, voir [Déploiement](#déploiement)).
+
 ## Stack technique
 
 | Domaine | Technologie |
@@ -74,6 +76,25 @@ DogAgilityCourseMakerPoc2/src/
 ├── types/              # types TypeScript partagés
 └── __tests__/          # tests unitaires et d'intégration (Vitest)
 ```
+
+## Déploiement
+
+L'application est publiée sur **GitHub Pages** à chaque push sur `main`, via le
+workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) :
+
+1. installation des dépendances puis build de production sur Node 26 ;
+2. publication du contenu de `dist` avec les actions officielles
+   [`upload-pages-artifact`](https://github.com/actions/upload-pages-artifact)
+   et [`deploy-pages`](https://github.com/actions/deploy-pages) ;
+3. l'URL de l'application est visible dans l'environnement `github-pages` du
+dépôt (Settings → Environments).
+
+Le build Pages utilise une base publique spécifique
+(`VITE_BASE=/DogAgilityCourseMakerPOC2/`, consommée par `vite.config.ts`) —
+en développement local, la base par défaut `/` reste utilisée.
+
+> Prérequis (une seule fois, réglage manuel du dépôt) :
+> Settings → Pages → Source « GitHub Actions ».
 
 ## Contribution
 
