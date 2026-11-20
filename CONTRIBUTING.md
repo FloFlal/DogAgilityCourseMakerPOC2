@@ -117,10 +117,11 @@ et le détail des changements en liste à puces dans le corps du message.
 
 ## Checklist de pull request
 
-- [ ] L'issue concernée est liée (`Closes #<numéro>` dans la description)
-- [ ] `npx vitest run` passe (nouveaux tests inclus dans la couverture)
-- [ ] `npm run lint` : 0 erreur / 0 avertissement
-- [ ] `npm run build` : OK
-- [ ] Les textes visibles sont traduits (fr et en)
-- [ ] Les nouvelles sources exportées sont documentées (JSDoc)
-- [ ] La branche est à jour de `main`
+La checklist complète est maintenue dans le [template de pull
+request](.github/PULL_REQUEST_TEMPLATE.md) et pré-remplit automatiquement
+la description de chaque nouvelle PR : il suffit de cocher les cases avant
+de demander la relecture.
+
+Les vérifications testables (`lint`, tests et couverture, `build`) sont
+de plus exécutées automatiquement par le pipeline CI (`ci.yml`) sur chaque
+pull request et chaque push vers `main`.
