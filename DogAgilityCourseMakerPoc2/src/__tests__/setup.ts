@@ -1,6 +1,9 @@
 // Setup pour les tests Vitest
 import { beforeAll, afterAll, afterEach, vi } from 'vitest';
 
+// Initialisation i18next (français par défaut) pour les composants traduits
+import '../i18n';
+
 // Mock de crypto.randomUUID pour les tests
 beforeAll(() => {
   if (!globalThis.crypto) {

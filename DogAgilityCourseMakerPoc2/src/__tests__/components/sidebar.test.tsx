@@ -17,21 +17,21 @@ describe('Sidebar accessibilité', () => {
     it("les boutons d'outils exposent aria-pressed", () => {
         render(<Sidebar />);
 
-        const jump = screen.getByRole('button', { name: /jump/i });
+        const jump = screen.getByRole('button', { name: /haie/i });
 
         expect(jump.getAttribute('aria-pressed')).toBe('true');
-        expect(screen.getByRole('button', { name: /see saw/i }).getAttribute('aria-pressed')).toBe('false');
+        expect(screen.getByRole('button', { name: /bascule/i }).getAttribute('aria-pressed')).toBe('false');
     });
 
     it("aria-pressed bascule quand l'outil change", () => {
         render(<Sidebar />);
 
-        const seesaw = screen.getByRole('button', { name: /see saw/i });
+        const seesaw = screen.getByRole('button', { name: /bascule/i });
 
         fireEvent.click(seesaw);
 
         expect(seesaw.getAttribute('aria-pressed')).toBe('true');
-        expect(screen.getByRole('button', { name: /jump/i }).getAttribute('aria-pressed')).toBe('false');
+        expect(screen.getByRole('button', { name: /haie/i }).getAttribute('aria-pressed')).toBe('false');
     });
 
     it('les sections sont des groupes labellisés', () => {

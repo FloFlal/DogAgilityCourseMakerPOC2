@@ -45,10 +45,10 @@ describe('App (intégration)', () => {
         const user = userEvent.setup();
         render(<App />);
 
-        await user.click(screen.getByRole('button', { name: 'See Saw' }));
+        await user.click(screen.getByRole('button', { name: 'Bascule' }));
 
         expect(useDrawingStore.getState().currentShapeType).toBe('seesaw');
-        expect(screen.getByRole('button', { name: 'See Saw' }).getAttribute('aria-pressed')).toBe('true');
+        expect(screen.getByRole('button', { name: 'Bascule' }).getAttribute('aria-pressed')).toBe('true');
 
         act(() => {
             useDrawingStore.getState().addShape(10, 20);

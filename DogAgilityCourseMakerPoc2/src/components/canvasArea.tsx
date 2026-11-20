@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { Stage } from 'react-konva';
 import Konva from 'konva';
+import { useTranslation } from 'react-i18next';
 import { useDrawingStore } from '../store/useDrawingStore';
 import {
     selectGridSize,
@@ -22,6 +23,7 @@ import type { KonvaMouseEvent } from '../types/obstacleTypes';
  * de gestion des obstacles.
  */
 export const CanvasArea: React.FC = () => {
+    const { t } = useTranslation();
     const obstacles = useDrawingStore(selectObstacles);
     const selectedId = useDrawingStore(selectSelectedId);
     const setSelectedId = useDrawingStore((state) => state.setSelectedId);
@@ -54,13 +56,11 @@ export const CanvasArea: React.FC = () => {
             className="flex-1 h-screen bg-slate-950 relative overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400"
             tabIndex={0}
             role="group"
-            aria-label="Zone de dessin du parcours d'agility"
+            aria-label={t('canvas.groupLabel')}
             aria-describedby="canvas-keyboard-help"
         >
             <p id="canvas-keyboard-help" className="sr-only">
-                Cliquez sur le canvas pour ajouter un obstacle. Utilisez les flèches pour déplacer l'obstacle
-                sélectionné (Maj + flèche pour un déplacement fin d'un pixel), Suppr pour le supprimer et
-                Échap pour le désélectionner.
+                {t('canvas.keyboardHelp')}
             </p>
             <Stage
                 width={width}
