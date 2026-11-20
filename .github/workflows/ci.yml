@@ -1,0 +1,40 @@
+# Pipeline CI du POC : lint, tests avec seuils de couverture et build.
+# Se déclenche sur chaque pull request et sur chaque push vers main.
+# L'application vit dans le sous-dossier DogAgilityCourseMakerPoc2.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  ci:
+    name: Lint, tests et build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: DogAgilityCourseMakerPoc2
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+
+      - name: Configurer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: DogAgilityCourseMakerPoc2/package-lock.json
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Analyse ESLint
+        run: npm run lint
+
+      - name: Tests avec couverture (seuils 80/80/80/70)
+        run: npx vitest run --coverage
+
+      - name: Build de production (tsc -b + vite build)
+        run: npm run build
