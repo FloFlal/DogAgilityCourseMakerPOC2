@@ -6,6 +6,7 @@ import type { DrawingState } from '../storeTypes';
  * Slice "dessin" : gestion des obstacles et de la sélection courante.
  */
 
+/** État du slice "dessin" : obstacles posés, sélection courante et actions associées. */
 export interface DrawingSlice {
     obstacles: Obstacle[];
     selectedId: string | null;
@@ -17,6 +18,13 @@ export interface DrawingSlice {
     setSelectedId: (id: string | null) => void;
 }
 
+/**
+ * Crée le slice "dessin" : liste d'obstacles, sélection courante et actions
+ * d'ajout, de mise à jour, de suppression et de sélection.
+ * @param set - mutateur d'état Zustand
+ * @param get - accesseur d'état Zustand
+ * @returns les propriétés du slice drawing
+ */
 export const createDrawingSlice: StateCreator<DrawingState, [], [], DrawingSlice> = (set, get) => ({
     obstacles: [],
     selectedId: null,

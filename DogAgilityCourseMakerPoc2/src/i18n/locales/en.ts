@@ -1,4 +1,4 @@
-// Traductions anglaises
+/** Traductions anglaises. */
 export const en = {
     translation: {
         app: {

@@ -1,6 +1,18 @@
 import { Group, Line, Rect } from "react-konva"
 import type { AFrameProps } from "../types/obstacleTypes"
 
+/**
+ * A-Frame (mur) : deux rampes inclinées formant un triangle avec un sommet commun.
+ *
+ * Algorithme : chaque rampe a une longueur inclinée `elementLength` et une
+ * hauteur constante de 170 unités ; la projection horizontale d'une rampe
+ * vaut upDownVisibleLength = sqrt(elementLength² - 170²). Les zones de contact
+ * (`zoneLength`, mesurées le long de la rampe et projetées par le même
+ * coefficient) se situent aux extrémités extérieures (base) de chaque rampe.
+ * Le sommet est marqué d'une ligne médiane et des lattes antidérapantes
+ * (traits verticaux espacés de 25 unités, dessinés symétriquement) habillent
+ * rampes et zones. Toutes les longueurs sont divisées par `ratio`.
+ */
 export const AFrame: React.FC<AFrameProps> = ({
   id,
   ratio,

@@ -1,7 +1,11 @@
 import { z } from 'zod';
 import type { ObstacleType } from '../types/obstacleTypes';
 
-// Schema pour un obstacle individuel
+/**
+ * Schéma Zod d'un obstacle individuel : identifiant UUID, type réglementaire,
+ * position finie et positive, dimensions strictement positives, couleur
+ * hexadécimale et rotation bornée à ±180°.
+ */
 export const obstacleSchema = z.object({
   id: z.string().uuid('Invalid obstacle ID format'),
   type: z.enum([
@@ -17,11 +21,12 @@ export const obstacleSchema = z.object({
   rotation: z.number().min(-180).max(180, 'Rotation must be between -180 and 180 degrees'),
 });
 
-// Schema pour un tableau d'obstacles (format d'export)
+/** Schéma Zod d'un parcours complet : tableau d'obstacles (format .dacm.json). */
 export const courseSchema = z.array(obstacleSchema);
 
-// Type dérivé du schema
+/** Type d'un obstacle validé (inféré du schéma Zod). */
 export type ValidObstacle = z.infer<typeof obstacleSchema>;
+/** Type d'un parcours validé : liste d'obstacles validés. */
 export type ValidCourse = z.infer<typeof courseSchema>;
 
 // Helper function to format Zod v4 errors
@@ -33,7 +38,13 @@ function formatZodError(error: z.ZodError): string {
   return `Validation errors:\n${errorMessages.join('\n')}`;
 }
 
-// Fonction pour valider un JSON de parcours
+/**
+ * Valide une chaîne JSON représentant un parcours complet.
+ * Parse le JSON, vérifie que c'est un tableau puis applique le schéma Zod.
+ * @param jsonString - la chaîne JSON à valider
+ * @returns les obstacles validés en cas de succès, sinon un message d'erreur
+ *          listant tous les problèmes de validation
+ */
 export function validateCourseData(jsonString: string): { success: boolean; data?: ValidCourse; error?: string } {
   try {
     const parsed = JSON.parse(jsonString);
@@ -74,7 +85,11 @@ export function validateCourseData(jsonString: string): { success: boolean; data
   }
 }
 
-// Fonction pour valider un obstacle individuel
+/**
+ * Valide un obstacle individuel sans parsing JSON.
+ * @param obstacle - l'objet à valider
+ * @returns l'obstacle validé en cas de succès, sinon un message d'erreur détaillé
+ */
 export function validateObstacle(obstacle: unknown): { success: boolean; data?: ValidObstacle; error?: string } {
   const result = obstacleSchema.safeParse(obstacle);
   
@@ -91,14 +106,18 @@ export function validateObstacle(obstacle: unknown): { success: boolean; data?: 
   }
 }
 
-// Liste des types d'obstacles valides (pour l'UI)
+/** Types d'obstacles supportés, utilisables par l'UI de choix d'outil. */
 export const VALID_OBSTACLE_TYPES: ObstacleType[] = [
   'jump', 'oxer', 'seesaw', 'dogWalk', 'aFrame', 
   'weavePols', 'semiWeavePols', 'tunnel6m', 'tunnel5m', 
   'tunnel4m', 'tunnel3m', 'longJump', 'tire'
 ];
 
-// Fonction pour vérifier si un type est valide
+/**
+ * Vérifie qu'une chaîne correspond à un type d'obstacle connu (garde de type).
+ * @param type - la valeur candidate
+ * @returns true si `type` est un ObstacleType
+ */
 export function isValidObstacleType(type: string): type is ObstacleType {
   return VALID_OBSTACLE_TYPES.includes(type as ObstacleType);
 }

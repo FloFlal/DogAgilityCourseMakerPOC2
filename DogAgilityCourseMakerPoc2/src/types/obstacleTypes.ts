@@ -1,6 +1,9 @@
 import Konva from 'konva';
 
-// Types pour les obstacles d'agility selon la réglementation FCI
+/**
+ * Types d'obstacles selon la réglementation FCI ; les types encore
+ * non dessinés sont réservés pour les implémentations futures.
+ */
 export type ObstacleType = 
   | 'jump'           // Saut simple
   | 'oxer'          // Saut double
@@ -16,7 +19,7 @@ export type ObstacleType =
   | 'longJump'      // Saut en longueur
   | 'tire';         // Pneu
 
-// Interface de base pour un obstacle
+/** Représentation d'un obstacle posé sur le canvas. */
 export interface Obstacle {
   id: string;
   type: ObstacleType;
@@ -28,13 +31,16 @@ export interface Obstacle {
   rotation: number;
 }
 
-// Types pour les événements Konva
+/** Alias d'événements Konva exposés aux handlers des composants. */
 export type KonvaMouseEvent = Konva.KonvaEventObject<MouseEvent>;
+/** Événement de tap (tactile) Konva. */
 export type KonvaTapEvent = Konva.KonvaEventObject<TouchEvent>;
+/** Événement de drag Konva. */
 export type KonvaDragEvent = Konva.KonvaEventObject<DragEvent>;
+/** Événement de transformation (resize/rotation) Konva. */
 export type KonvaTransformEvent = Konva.KonvaEventObject<Event>;
 
-// Props communes à tous les composants d'obstacles
+/** Props communes à tous les composants d'obstacles : identité, géométrie, couleurs et handlers. */
 export interface BaseObstacleProps {
   id: string;
   ratio: number;
@@ -53,7 +59,7 @@ export interface BaseObstacleProps {
   draggable?: boolean;
 }
 
-// Props spécifiques pour le Jump (saut)
+/** Props spécifiques au Jump (saut) : barre et montants. */
 export interface JumpProps extends BaseObstacleProps {
   barWidth: number;
   barThickness: number;  // Correction: barThickess -> barThickness
@@ -62,21 +68,21 @@ export interface JumpProps extends BaseObstacleProps {
   hurdleThickness: number;
 }
 
-// Props spécifiques pour l'A-Frame
+/** Props spécifiques à l'A-Frame (mur) : rampes et zones de contact. */
 export interface AFrameProps extends BaseObstacleProps {
   width: number;
   elementLength: number;
   zoneLength: number;
 }
 
-// Props spécifiques pour le Seesaw (bascule)
+/** Props spécifiques au Seesaw (bascule) : plateau et zones de contact. */
 export interface SeesawProps extends BaseObstacleProps {
   width: number;
   length: number;
   zoneLength: number;
 }
 
-// Props spécifiques pour le DogWalk (passerelle)
+/** Props spécifiques au DogWalk (passerelle) : plateau, rampes et zones de contact. */
 export interface DogWalkProps extends BaseObstacleProps {
   width: number;
   elementLength: number;

@@ -11,6 +11,11 @@ import { Square, Circle, Trash2, Download, Upload, AlertTriangle } from 'lucide-
 import { LanguageSwitcher } from './languageSwitcher';
 import type { ObstacleType } from '../types/obstacleTypes';
 
+/**
+ * Panneau latéral : choix d'outil et de couleur, actions de sélection
+ * (suppression), import/export du parcours, sélecteur de langue et
+ * alerte accessible en cas d'erreur d'import.
+ */
 export const Sidebar: React.FC = () => {
     const { t } = useTranslation();
 

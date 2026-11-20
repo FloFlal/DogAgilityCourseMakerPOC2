@@ -1,7 +1,7 @@
 import { validateCourseData } from '../schemas/courseSchema';
 import type { Obstacle } from '../types/obstacleTypes';
 
-// Résultat d'un import de parcours
+/** Résultat d'un import de parcours : données validées ou message d'erreur. */
 export interface CourseImportResult {
     success: boolean;
     data?: Obstacle[];

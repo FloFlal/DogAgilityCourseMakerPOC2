@@ -1,26 +1,89 @@
 # DogAgilityCourseMakerPOC2
 
-This application is a proof of concept in order to choose technologies to develope an open source, community maintained Agility Course Designer.
+Cette application est une preuve de conception (POC) permettant de choisir
+les technologies d'un futur designer de parcours d'agility canine, open
+source et maintenu par la communauté.
 
-This repository is not meant to be the definitive application.
+**Ce dépôt n'a pas vocation à être l'application finale.**
 
-## Technology stack
+## Stack technique
 
-In this POC we will use the following stack:
-- React + Vite
-- TailwindCSS
-- React Konva + Konva
+| Domaine | Technologie |
+| --- | --- |
+| UI | React 19 + TypeScript + Vite |
+| Dessin 2D | Konva + react-konva |
+| Gestion d'état | Zustand (store découpé en slices, sélecteurs mémoïsés) |
+| Styles | TailwindCSS 4 |
+| Validation | Zod (schémas d'import de parcours) |
+| Internationalisation | i18next + react-i18next (français / anglais) |
+| Notifications | react-hot-toast |
+| Icônes | lucide-react |
+| Tests | Vitest + @testing-library/react (jsdom), couverture @vitest/coverage-v8 |
 
-## The Application
+## L'application
 
-This POC will concentrate in the following aspects:
-- A course designer enabling the user to put, translate, rotate obstacles. The different obstacles will be based on FCI regulation.
-- A settings view enabling the user to change color and size of the obstacles.
-- A import/export functionality to save the course in a file, share it, reimport it in the application.
+Ce POC se concentre sur les aspects suivants :
+
+- Un designer de parcours permettant de poser, déplacer, redimensionner et
+  faire pivoter des obstacles conformes à la réglementation FCI.
+- Une vue de réglages permettant de changer la couleur et la taille des
+  obstacles.
+- Une fonctionnalité d'import/export permettant de sauvegarder le parcours
+  dans un fichier (`.dacm.json`), de le partager et de le réimporter.
+- Une interface accessible (navigation clavier, ARIA) et internationale
+  (changement de langue français/anglais sans rechargement de la page).
+
+## Installation et développement
+
+Prérequis : Node.js (>= 20) et npm.
+
+```bash
+# récupérer le projet et installer les dépendances
+git clone https://github.com/FloFlal/DogAgilityCourseMakerPOC2.git
+cd DogAgilityCourseMakerPOC2/DogAgilityCourseMakerPoc2
+npm install
+
+# lancer le serveur de développement
+npm run dev
+```
+
+### Scripts disponibles
+
+| Commande | Description |
+| --- | --- |
+| `npm run dev` | serveur de développement Vite |
+| `npm run build` | vérification TypeScript (`tsc -b`) puis build de production |
+| `npm run preview` | prévisualisation du build de production |
+| `npm run lint` | analyse ESLint de tout le projet |
+| `npm test` | tests Vitest en mode watch |
+| `npx vitest run` | exécution unique de toute la suite de tests |
+| `npm run test:coverage` | tests avec rapport de couverture (seuils : 80 % lignes/statements/fonctions, 70 % branches) |
+
+## Structure du projet
+
+```
+DogAgilityCourseMakerPoc2/src/
+├── components/         # Sidebar, CanvasArea, LanguageSwitcher
+│   └── canvas/         # couches Konva (quadrillage, obstacles, transformer)
+├── hooks/              # hooks React (drag, transformation, clavier, dimensions)
+├── i18n/               # internationalisation (locales fr / en)
+├── obstacles/          # rendu de chaque obstacle (Jump, Seesaw, DogWalk, AFrame)
+├── schemas/            # schémas Zod de validation des parcours
+├── services/           # logique pure (import/export, indépendante du store et de l'UI)
+├── store/              # store Zustand (slices) + sélecteurs mémoïsés
+├── types/              # types TypeScript partagés
+└── __tests__/          # tests unitaires et d'intégration (Vitest)
+```
 
 ## Contribution
 
-To contribute, you have 2 possibilities:
-- You don't know how to code or you don't want to code: Please create an issue to explain what is your problem (issue, enhancement, bug, etc.) and how you would see the application evolving.
-- You want to code: you have a new idea, create an issue, fork the project on your GitHub, create a new branch to develop your issue, do the developpment and tests, make a pull request on the main project for a project member to review it.
+Pour contribuer, consultez le [guide de contribution](CONTRIBUTING.md).
+En résumé, deux possibilités :
 
+- Vous ne savez pas ou ne voulez pas coder : créez une issue pour expliquer
+  votre problème (bug, amélioration, idée, etc.) et comment vous imaginez
+  l'évolution de l'application.
+- Vous voulez coder : créez une issue, forkez le projet, créez une branche
+  pour développer votre idée, faites le développement et les tests, puis
+  ouvrez une pull request sur le projet principal pour qu'un membre la
+  relise.
