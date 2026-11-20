@@ -9,13 +9,13 @@ This repository is not meant to be the definitive application.
 In this POC we will use the following stack:
 - React + Vite
 - TailwindCSS
-- React Konda + Konda
+- React Konva + Konva
 
 ## The Application
 
 This POC will concentrate in the following aspects:
-- A course designer enabeling the user to put, translate, rotate obstacles. The different obstacles will be based on FCI regulation.
-- A settings view enabeling the user to change color and size of the obstacles.
+- A course designer enabling the user to put, translate, rotate obstacles. The different obstacles will be based on FCI regulation.
+- A settings view enabling the user to change color and size of the obstacles.
 - A import/export functionality to save the course in a file, share it, reimport it in the application.
 
 ## Contribution

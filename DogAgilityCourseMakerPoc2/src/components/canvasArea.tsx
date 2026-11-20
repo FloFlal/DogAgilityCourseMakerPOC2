@@ -27,8 +27,8 @@ export const CanvasArea: React.FC = () => {
     const setSelectedId = useDrawingStore((state) => state.setSelectedId);
     const addShape = useDrawingStore((state) => state.addShape);
     const gridSize = useDrawingStore(selectGridSize);
-    const { onDragStart, onDragEnd } = useObstacleDrag();
-    const onTransformEnd = useObstacleTransform();
+    const { handleDragStart, handleDragEnd } = useObstacleDrag();
+    const handleTransformEnd = useObstacleTransform();
     const { width, height } = useStageDimensions();
     const stageRef = useRef<Konva.Stage>(null);
 
@@ -75,9 +75,9 @@ export const CanvasArea: React.FC = () => {
                     shapes={obstacles}
                     selectedId={selectedId}
                     onSelect={setSelectedId}
-                    onDragStart={onDragStart}
-                    onDragEnd={onDragEnd}
-                    onTransformEnd={onTransformEnd}
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
+                    onTransformEnd={handleTransformEnd}
                 />
 
                 {/*The component that surround the obstacle*/}

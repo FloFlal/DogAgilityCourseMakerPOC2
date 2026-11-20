@@ -24,7 +24,7 @@ describe('useObstacleDrag', () => {
         const { result } = renderHook(() => useObstacleDrag());
 
         act(() => {
-            result.current.onDragStart('obstacle-1');
+            result.current.handleDragStart('obstacle-1');
         });
 
         expect(useDrawingStore.getState().selectedId).toBe('obstacle-1');
@@ -36,7 +36,7 @@ describe('useObstacleDrag', () => {
         const { result } = renderHook(() => useObstacleDrag());
 
         act(() => {
-            result.current.onDragStart('obstacle-1');
+            result.current.handleDragStart('obstacle-1');
         });
 
         expect(useDrawingStore.getState().selectedId).toBe('obstacle-1');
@@ -46,7 +46,7 @@ describe('useObstacleDrag', () => {
         const { result } = renderHook(() => useObstacleDrag());
 
         act(() => {
-            result.current.onDragEnd('obstacle-1', 150, 200);
+            result.current.handleDragEnd('obstacle-1', 150, 200);
         });
 
         const updated = useDrawingStore.getState().obstacles.find((o) => o.id === 'obstacle-1');
