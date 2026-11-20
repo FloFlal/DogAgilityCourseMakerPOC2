@@ -1,16 +1,18 @@
-// Largeur de la sidebar en px (voir App.tsx)
+/** Largeur de la sidebar en px (voir App.tsx). */
 export const SIDEBAR_WIDTH_PX = 320;
 
-// Ratio de dessin appliqué à tous les obstacles
+/** Ratio de dessin divisant toutes les longueurs d'obstacles sur le canvas. */
 export const OBSTACLE_RATIO = 2.5;
 
-// Couleurs par défaut des obstacles sur le canvas
+/** Couleurs par défaut du tracé des obstacles sur le canvas. */
 export const OBSTACLE_PRIMARY_COLOR = '#1155FF';
+/** Couleur secondaire (zones de contact et détails). */
 export const OBSTACLE_SECONDARY_COLOR = '#FFFF00';
 
-// Style du quadrillage
+/** Style visuel du quadrillage. */
 export const GRID_STROKE = '#000';
+/** Opacité du quadrillage. */
 export const GRID_OPACITY = 0.1;
 
-// Taille minimale autorisée lors d'une transformation
+/** Taille minimale (px) autorisée par le Transformer. */
 export const MIN_OBSTACLE_SIZE = 10;

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useDrawingStore } from '../store/useDrawingStore';
 
-// Résultat du hook : handlers de drag à invoquer avec l'identifiant de l'obstacle
+/** Handlers de drag à invoquer avec l'identifiant de l'obstacle concerné. */
 export interface ObstacleDragHandlers {
     handleDragStart: (id: string) => void;
     handleDragEnd: (id: string, x: number, y: number) => void;

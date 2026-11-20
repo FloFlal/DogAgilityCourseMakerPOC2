@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useDrawingStore } from '../store/useDrawingStore';
 
-// Résultat du hook : handler de fin de transformation à invoquer avec l'identifiant de l'obstacle
+/** Handler de fin de transformation : identifiant, nouvelle position et rotation. */
 export type ObstacleTransformHandler = (id: string, x: number, y: number, rotation: number) => void;
 
 /**

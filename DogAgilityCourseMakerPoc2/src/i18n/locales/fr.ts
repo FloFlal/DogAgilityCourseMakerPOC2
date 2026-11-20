@@ -1,4 +1,4 @@
-// Traductions françaises (langue par défaut)
+/** Traductions françaises (langue par défaut). */
 export const fr = {
     translation: {
         app: {

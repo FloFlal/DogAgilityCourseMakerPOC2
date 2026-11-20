@@ -1,4 +1,8 @@
-// Sélecteur de base : fonction pure extrayant une donnée de l'état
+/**
+ * Sélecteur de base : fonction pure extrayant une donnée de l'état.
+ * @param state - l'état du store
+ * @returns la donnée extraite
+ */
 export type Selector<TState, TResult> = (state: TState) => TResult;
 
 // Combiner : fonction recevant les valeurs des sélecteurs d'entrée
@@ -20,18 +24,18 @@ type Combiner = (...values: never[]) => unknown;
  *
  * @returns un sélecteur memoized utilisable avec useDrawingStore(selector)
  */
-// Surcharge : 1 entrée
+/** Surcharge : un sélecteur d'entrée et un combiner. */
 export function createSelector<TState, T1, TResult>(
     s1: Selector<TState, T1>,
     combiner: (a: T1) => TResult,
 ): Selector<TState, TResult>;
-// Surcharge : 2 entrées
+/** Surcharge : deux sélecteurs d'entrée et un combiner. */
 export function createSelector<TState, T1, T2, TResult>(
     s1: Selector<TState, T1>,
     s2: Selector<TState, T2>,
     combiner: (a: T1, b: T2) => TResult,
 ): Selector<TState, TResult>;
-// Surcharge : 3 entrées
+/** Surcharge : trois sélecteurs d'entrée et un combiner. */
 export function createSelector<TState, T1, T2, T3, TResult>(
     s1: Selector<TState, T1>,
     s2: Selector<TState, T2>,
@@ -39,7 +43,11 @@ export function createSelector<TState, T1, T2, T3, TResult>(
     combiner: (a: T1, b: T2, c: T3) => TResult,
 ): Selector<TState, TResult>;
 
-// Implémentation runtime (détails de typage arbitrés par les surcharges)
+/**
+ * Implémentation runtime : les détails de typage sont arbitrés par les surcharges.
+ * Mémoïse le dernier couple (entrées, résultat) et compare les entrées une à une
+ * avec Object.is ; le combiner n'est rappelé que si au moins une entrée a changé.
+ */
 export function createSelector(...args: unknown[]): Selector<unknown, unknown> {
     const combiner = args[args.length - 1] as Combiner;
     const inputSelectors = args.slice(0, -1) as ((state: unknown) => unknown)[];
