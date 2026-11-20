@@ -4,13 +4,35 @@ import React from 'react';
 // chaque primitive Konva est remplacée par une div portant ses props utiles.
 type AnyProps = Record<string, unknown>;
 
+// Enveloppe un handler souris Konva en handler DOM : l'objet évènement
+// imite l'API Konva utilisée par les composants (cancelBubble, target.getStage()).
+function wrapMouseHandler(handler: unknown): ((event: Event) => void) | undefined {
+    if (typeof handler !== 'function') return undefined;
+
+    return (nativeEvent: Event): void => {
+        (handler as (e: unknown) => void)({
+            target: {
+                getStage: (): null => null,
+                x: (): number => 0,
+                y: (): number => 0,
+                rotation: (): number => 0,
+            },
+            cancelBubble: false,
+            nativeEvent,
+        });
+    };
+}
+
 function renderNode(testId: string, props: AnyProps): React.ReactElement {
+    const click = wrapMouseHandler(props.onClick) ?? wrapMouseHandler(props.onTap);
+
     return React.createElement('div', {
         'data-testid': testId,
         'data-id': props.id as string | undefined,
         'data-points': props.points ? JSON.stringify(props.points) : undefined,
         'data-x': props.x as number | undefined,
         'data-y': props.y as number | undefined,
+        ...(click ? { onClick: click } : {}),
         children: props.children,
     });
 }
