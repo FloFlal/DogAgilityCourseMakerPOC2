@@ -34,6 +34,20 @@ describe('Sidebar accessibilité', () => {
         expect(screen.getByRole('button', { name: /haie/i }).getAttribute('aria-pressed')).toBe('false');
     });
 
+    it("changer d'outil désélectionne l'obstacle courant", () => {
+        useDrawingStore.setState({ obstacles: [], selectedId: 'obstacle-1', currentShapeType: 'jump' });
+        useDrawingStore.getState().setSelectedId('obstacle-1');
+        render(<Sidebar />);
+
+        expect(screen.getByRole('button', { name: /supprimer l'obstacle/i })).toBeTruthy();
+
+        fireEvent.click(screen.getByRole('button', { name: /bascule/i }));
+
+        expect(useDrawingStore.getState().selectedId).toBeNull();
+        expect(useDrawingStore.getState().currentShapeType).toBe('seesaw');
+        expect(screen.queryByRole('button', { name: /supprimer l'obstacle/i })).toBeNull();
+    });
+
     it('les sections sont des groupes labellisés', () => {
         render(<Sidebar />);
 
