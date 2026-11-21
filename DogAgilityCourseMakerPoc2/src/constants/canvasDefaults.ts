@@ -16,3 +16,15 @@ export const GRID_OPACITY = 0.1;
 
 /** Taille minimale (px) autorisée par le Transformer. */
 export const MIN_OBSTACLE_SIZE = 10;
+
+/** Dimensions par défaut de la haie (Jump), échelle FCI, exprimées avant ratio. */
+export const JUMP_DEFAULTS = { barWidth: 130, barThickness: 5, hurdleWidth: 50, hurdleDepth: 40, hurdleThickness: 10 };
+
+/** Dimensions par défaut de la bascule (Seesaw), échelle FCI, exprimées avant ratio. */
+export const SEESAW_DEFAULTS = { width: 30, length: 370, zoneLength: 90 };
+
+/** Dimensions par défaut de la passerelle (DogWalk), échelle FCI, exprimées avant ratio. */
+export const DOG_WALK_DEFAULTS = { width: 30, elementLength: 370, zoneLength: 90 };
+
+/** Dimensions par défaut de la palissade (AFrame), échelle FCI, exprimées avant ratio. */
+export const A_FRAME_DEFAULTS = { width: 90, elementLength: 270, zoneLength: 106 };

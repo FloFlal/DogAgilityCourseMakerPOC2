@@ -2,7 +2,7 @@ import { Group, Line, Rect } from "react-konva"
 import type { AFrameProps } from "../types/obstacleTypes"
 
 /**
- * A-Frame (mur) : deux rampes inclinées formant un triangle avec un sommet commun.
+ * A-Frame (palissade) : deux rampes inclinées formant un triangle avec un sommet commun.
  *
  * Algorithme : chaque rampe a une longueur inclinée `elementLength` et une
  * hauteur constante de 170 unités ; la projection horizontale d'une rampe

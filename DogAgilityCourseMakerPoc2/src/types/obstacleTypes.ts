@@ -9,7 +9,7 @@ export type ObstacleType =
   | 'oxer'          // Saut double
   | 'seesaw'        // Bascule
   | 'dogWalk'       // Passerelle
-  | 'aFrame'        // A-frame (mur)
+  | 'aFrame'        // A-frame (palissade)
   | 'weavePols'     // Slalom (avec piquets)
   | 'semiWeavePols' // Semi-slalom
   | 'tunnel6m'      // Tunnel 6m
@@ -68,7 +68,7 @@ export interface JumpProps extends BaseObstacleProps {
   hurdleThickness: number;
 }
 
-/** Props spécifiques à l'A-Frame (mur) : rampes et zones de contact. */
+/** Props spécifiques à l'A-Frame (palissade) : rampes et zones de contact. */
 export interface AFrameProps extends BaseObstacleProps {
   width: number;
   elementLength: number;

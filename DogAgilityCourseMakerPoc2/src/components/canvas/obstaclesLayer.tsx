@@ -5,18 +5,16 @@ import { Seesaw } from '../../obstacles/seesaw';
 import { DogWalk } from '../../obstacles/dogWalk';
 import { AFrame } from '../../obstacles/aFrame';
 import {
+    A_FRAME_DEFAULTS,
+    DOG_WALK_DEFAULTS,
+    JUMP_DEFAULTS,
     OBSTACLE_PRIMARY_COLOR,
     OBSTACLE_RATIO,
     OBSTACLE_SECONDARY_COLOR,
+    SEESAW_DEFAULTS,
 } from '../../constants/canvasDefaults';
 import type { BaseObstacleProps } from '../../types/obstacleTypes';
 import type { ObstaclesLayerProps } from '../../types/canvasTypes';
-
-// Dimensions par défaut de chaque type d'obstacle (échelle FCI, exprimées avant ratio)
-const JUMP_DEFAULTS = { barWidth: 130, barThickness: 5, hurdleWidth: 50, hurdleDepth: 40, hurdleThickness: 10 };
-const SEESAW_DEFAULTS = { width: 30, length: 370, zoneLength: 90 };
-const DOG_WALK_DEFAULTS = { width: 30, elementLength: 370, zoneLength: 90 };
-const A_FRAME_DEFAULTS = { width: 90, elementLength: 270, zoneLength: 106 };
 
 /**
  * Couche d'obstacles : rend chaque obstacle selon son type et lui
