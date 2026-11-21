@@ -57,7 +57,6 @@ export const createDrawingSlice: StateCreator<DrawingState, [], [], DrawingSlice
                     return shape;
                 }
 
-                // if we move the object, optionally align it on the grid
                 const updated: Obstacle = { ...shape, ...newAttrs };
 
                 return updated;
