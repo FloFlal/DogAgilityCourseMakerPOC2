@@ -10,10 +10,11 @@ import type { DrawingState } from '../storeTypes';
 export interface ToolSlice {
     gridSize: number;
     currentColor: string;
-    currentShapeType: ObstacleType;
+    /** Outil de pose actif : `null` signifie « aucun outil » (aucune pose au clic). */
+    currentShapeType: ObstacleType | null;
 
     setCurrentColor: (color: string) => void;
-    setCurrentShapeType: (type: ObstacleType) => void;
+    setCurrentShapeType: (type: ObstacleType | null) => void;
 }
 
 /**
@@ -31,7 +32,12 @@ export const createToolSlice: StateCreator<DrawingState, [], [], ToolSlice> = (s
         set({ currentColor: color });
     },
 
-    setCurrentShapeType: (type: ObstacleType): void => {
-        set({ currentShapeType: type });
+    setCurrentShapeType: (type: ObstacleType | null): void => {
+        set((state) => ({
+            currentShapeType: type,
+            // Armer l'outil désélectionne l'obstacle courant : outil et
+            // sélection sont mutuellement exclusifs.
+            selectedId: type !== null ? null : state.selectedId,
+        }));
     },
 });

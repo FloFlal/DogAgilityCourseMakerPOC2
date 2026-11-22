@@ -51,7 +51,8 @@ describe('CanvasArea', () => {
         });
 
         expect(useDrawingStore.getState().obstacles).toHaveLength(1);
-        expect(useDrawingStore.getState().selectedId).not.toBeNull();
+        // la pose ne sélectionne pas l'obstacle automatiquement
+        expect(useDrawingStore.getState().selectedId).toBeNull();
     });
 
     it("désélectionne l'obstacle via le store", () => {

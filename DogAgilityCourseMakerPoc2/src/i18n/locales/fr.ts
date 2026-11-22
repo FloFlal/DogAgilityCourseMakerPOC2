@@ -29,7 +29,7 @@ export const fr = {
         },
         canvas: {
             groupLabel: "Zone de dessin du parcours d'agility",
-            keyboardHelp: "Cliquez sur le canvas pour ajouter un obstacle. Utilisez les flèches pour déplacer l'obstacle sélectionné (Maj + flèche pour un déplacement fin d'un pixel), Suppr pour le supprimer et Échap pour le désélectionner.",
+            keyboardHelp: "Cliquez sur le canvas pour poser l'outil actif. Utilisez les flèches pour déplacer l'obstacle sélectionné (Maj + flèche pour un déplacement fin d'un pixel), Suppr pour le supprimer et Échap pour désélectionner l'obstacle ou désactiver l'outil.",
         },
         language: {
             groupLabel: 'Choix de la langue',

@@ -25,7 +25,7 @@ describe('useDrawingStore (slices combinées)', () => {
         });
     });
 
-    it("addShape utilise les préférences de l'outil et sélectionne le nouvel obstacle", () => {
+    it("addShape utilise les préférences de l'outil sans sélectionner le nouvel obstacle", () => {
         useDrawingStore.setState({ currentColor: '#ff0000', currentShapeType: 'seesaw' });
 
         useDrawingStore.getState().addShape(10, 20);
@@ -35,7 +35,27 @@ describe('useDrawingStore (slices combinées)', () => {
         expect(state.obstacles).toHaveLength(1);
         expect(state.obstacles[0].type).toBe('seesaw');
         expect(state.obstacles[0].fill).toBe('#ff0000');
-        expect(state.selectedId).toBe(state.obstacles[0].id);
+        expect(state.selectedId).toBeNull();
+    });
+
+    it("sélectionner un obstacle désactive l'outil de pose", () => {
+        useDrawingStore.setState({ currentShapeType: 'jump' });
+
+        useDrawingStore.getState().setSelectedId('obstacle-1');
+
+        const state = useDrawingStore.getState();
+        expect(state.selectedId).toBe('obstacle-1');
+        expect(state.currentShapeType).toBeNull();
+    });
+
+    it("armer un outil désélectionne l'obstacle courant", () => {
+        useDrawingStore.setState({ currentShapeType: null, selectedId: 'obstacle-1' });
+
+        useDrawingStore.getState().setCurrentShapeType('jump');
+
+        const state = useDrawingStore.getState();
+        expect(state.currentShapeType).toBe('jump');
+        expect(state.selectedId).toBeNull();
     });
 
     it("updateShape modifie uniquement l'obstacle ciblé", () => {
@@ -89,6 +109,14 @@ describe('useDrawingStore (slices combinées)', () => {
 
         expect(useDrawingStore.getState().currentColor).toBe('#00ff00');
         expect(useDrawingStore.getState().currentShapeType).toBe('aFrame');
+    });
+
+    it("addShape n'ajoute rien quand aucun outil n'est actif", () => {
+        useDrawingStore.setState({ currentShapeType: null });
+
+        useDrawingStore.getState().addShape(10, 20);
+
+        expect(useDrawingStore.getState().obstacles).toHaveLength(0);
     });
 
     it("clearImportError réinitialise l'erreur d'import", () => {

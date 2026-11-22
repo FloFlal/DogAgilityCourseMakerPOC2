@@ -39,6 +39,15 @@ describe('useCanvasKeyboard', () => {
         expect(useDrawingStore.getState().selectedId).toBeNull();
     });
 
+    it("Échap désélectionne l'outil si aucun obstacle n'est sélectionné", () => {
+        useDrawingStore.setState({ selectedId: null, currentShapeType: 'jump' });
+        renderHook(() => useCanvasKeyboard());
+
+        act(() => pressKey({ key: 'Escape' }));
+
+        expect(useDrawingStore.getState().currentShapeType).toBeNull();
+    });
+
     it("Suppr supprime l'obstacle sélectionné", () => {
         renderHook(() => useCanvasKeyboard());
 

@@ -25,7 +25,6 @@ export const Sidebar: React.FC = () => {
     const currentShapeType = useDrawingStore(selectCurrentShapeType);
     const setCurrentShapeType = useDrawingStore((state) => state.setCurrentShapeType);
     const selectedId = useDrawingStore(selectSelectedId);
-    const setSelectedId = useDrawingStore((state) => state.setSelectedId);
     const deleteShape = useDrawingStore((state) => state.deleteShape);
     const exportToJson = useDrawingStore((state) => state.exportToJson);
     const importFromJson = useDrawingStore((state) => state.importFromJson);
@@ -65,10 +64,9 @@ export const Sidebar: React.FC = () => {
     };
 
     const setShapeType = (type: ObstacleType): void => {
-        // Changer d'outil désélectionne l'obstacle courant : le prochain clic
-        // sur le canvas pose directement le nouvel obstacle.
-        setSelectedId(null);
-        setCurrentShapeType(type);
+        // Arme l'outil demandé ; re-cliquer l'outil actif le désélectionne.
+        // Le store désélectionne l'obstacle courant dès qu'un outil est armé.
+        setCurrentShapeType(currentShapeType === type ? null : type);
     };
 
     const toolButtonClass = (type: ObstacleType): string =>

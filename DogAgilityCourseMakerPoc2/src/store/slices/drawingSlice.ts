@@ -1,5 +1,6 @@
 import type { StateCreator } from 'zustand';
 import type { Obstacle } from '../../types/obstacleTypes';
+import { OBSTACLE_SIZES } from '../../constants/canvasDefaults';
 import type { DrawingState } from '../storeTypes';
 
 /**
@@ -33,20 +34,28 @@ export const createDrawingSlice: StateCreator<DrawingState, [], [], DrawingSlice
     addShape: (x: number, y: number): void => {
         const { gridSize, currentColor, currentShapeType } = get();
 
+        // Aucun outil actif : le clic sur le fond ne pose rien.
+        if (currentShapeType === null) return;
+
+        // Dimensions réglementaires par type (canvasDefaults) ; les types
+        // sans composant dédié (US-017+) retombent sur la taille de grille.
+        const size = OBSTACLE_SIZES[currentShapeType];
+
         const newShape: Obstacle = {
             id: crypto.randomUUID(),
             type: currentShapeType,
             x: x,
             y: y,
-            width: gridSize,
-            height: gridSize,
+            width: size?.width ?? gridSize,
+            height: size?.height ?? gridSize,
             fill: currentColor,
             rotation: 0,
         };
 
+        // La pose ne sélectionne pas l'obstacle : la sélection passe par le
+        // clic sur un obstacle (et désarme alors l'outil, exclusion mutuelle).
         set((state) => ({
             obstacles: [...state.obstacles, newShape],
-            selectedId: newShape.id
         }));
     },
 
@@ -72,6 +81,11 @@ export const createDrawingSlice: StateCreator<DrawingState, [], [], DrawingSlice
     },
 
     setSelectedId: (id: string | null): void => {
-        set({ selectedId: id });
+        set((state) => ({
+            selectedId: id,
+            // Sélectionner un obstacle désactive l'outil de pose : outil et
+            // sélection sont mutuellement exclusifs.
+            currentShapeType: id !== null ? null : state.currentShapeType,
+        }));
     },
 });

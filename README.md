@@ -35,6 +35,16 @@ Ce POC se concentre sur les aspects suivants :
 - Une interface accessible (navigation clavier, ARIA) et internationale
   (changement de langue français/anglais sans rechargement de la page).
 
+### Interactions principales
+
+- Cliquez sur un outil dans la barre latérale pour l'armer (re-cliquer sur
+  l'outil actif le désactive), puis cliquez sur le canvas pour y poser
+  l'obstacle, aux dimensions réglementaires par type. L'obstacle posé n'est
+  pas sélectionné automatiquement : cliquez dessus pour le sélectionner.
+- Cliquez sur un obstacle pour le sélectionner : cela désactive l'outil de
+  pose (outil et sélection sont mutuellement exclusifs). Échap désélectionne
+  l'élément actif : l'obstacle sélectionné, sinon l'outil.
+
 ## Installation et développement
 
 Prérequis : Node.js (>= 20) et npm.

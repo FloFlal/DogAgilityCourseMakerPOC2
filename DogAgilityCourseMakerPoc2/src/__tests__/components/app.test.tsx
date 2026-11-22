@@ -57,8 +57,14 @@ describe('App (intégration)', () => {
         const afterAdd = useDrawingStore.getState();
         expect(afterAdd.obstacles).toHaveLength(1);
         expect(afterAdd.obstacles[0].type).toBe('seesaw');
-        expect(afterAdd.selectedId).toBe(afterAdd.obstacles[0].id);
+        // la pose ne sélectionne pas l'obstacle : sélection par clic sur l'obstacle
+        expect(afterAdd.selectedId).toBeNull();
+        expect(screen.queryByRole('button', { name: /Supprimer l'obstacle/ })).toBeNull();
         expect(document.querySelectorAll('[data-testid="konva-group"]')).toHaveLength(1);
+
+        act(() => {
+            useDrawingStore.getState().setSelectedId(afterAdd.obstacles[0].id);
+        });
 
         await user.click(screen.getByRole('button', { name: /Supprimer l'obstacle/ }));
 
