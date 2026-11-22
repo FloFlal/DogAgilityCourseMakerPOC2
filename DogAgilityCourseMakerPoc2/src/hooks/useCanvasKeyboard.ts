@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDrawingStore } from '../store/useDrawingStore';
 
-// Pas fin utilisé avec la touche Maj, en px
+// Pas fin par défaut, en px (la touche Maj donne le pas rapide)
 const FINE_STEP_PX = 1;
 
 // Déplacements par touche fléchée : [dx, dy]
@@ -29,8 +29,9 @@ function isTextEntryTarget(target: EventTarget | null): boolean {
  * - Échap : désélectionne l'obstacle sélectionné, sinon désélectionne
  *   l'outil de pose actif
  * - Suppr / Retour arrière : supprime l'obstacle sélectionné
- * - Flèches : déplace l'obstacle sélectionné d'une case de grille
- *   (Maj + flèche : déplacement fin d'un pixel), borné aux coords positives
+ * - Flèches : déplacement fin de l'obstacle sélectionné (un pixel)
+ *   (Maj + flèche : déplacement rapide d'une case de gridSize), borné aux
+ *   coords positives
  *
  * Ignoré lorsque le focus est dans un champ de saisie. Le listener est
  * attaché à window et relu via getState() : aucune re-souscription.
@@ -68,7 +69,8 @@ export function useCanvasKeyboard(): void {
 
             if (!direction) return;
 
-            const step = e.shiftKey ? FINE_STEP_PX : store.gridSize;
+            // Pas fin par défaut ; Maj accélère d'une case de grille.
+            const step = e.shiftKey ? store.gridSize : FINE_STEP_PX;
             const obstacle = store.obstacles.find((o) => o.id === selectedId);
 
             if (!obstacle) return;
