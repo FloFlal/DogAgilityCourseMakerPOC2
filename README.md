@@ -44,6 +44,9 @@ Ce POC se concentre sur les aspects suivants :
 - Cliquez sur un obstacle pour le sélectionner : cela désactive l'outil de
   pose (outil et sélection sont mutuellement exclusifs). Échap désélectionne
   l'élément actif : l'obstacle sélectionné, sinon l'outil.
+- Un bandeau d'informations en bas de la zone de dessin affiche en permanence
+  le nombre d'obstacles posés et, lors d'une sélection, le type et la
+  position (x/y en px) de l'obstacle sélectionné.
 
 ## Installation et développement
 

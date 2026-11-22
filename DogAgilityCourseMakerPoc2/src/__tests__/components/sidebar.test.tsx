@@ -84,6 +84,16 @@ describe('Sidebar accessibilité', () => {
         expect(screen.getByRole('group', { name: /import et export/i })).toBeTruthy();
     });
 
+    it("chaque bouton d'outil affiche le schéma de l'obstacle (décoratif)", () => {
+        render(<Sidebar />);
+
+        for (const type of ['jump', 'seesaw', 'dogWalk', 'aFrame']) {
+            const icon = screen.getByTestId(`obstacle-icon-${type}`);
+
+            expect(icon.getAttribute('aria-hidden')).toBe('true');
+        }
+    });
+
     it("l'accordéon ouvre une seule section à la fois (outils ouvert par défaut)", () => {
         render(<Sidebar />);
 
