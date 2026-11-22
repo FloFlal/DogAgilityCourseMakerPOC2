@@ -34,5 +34,27 @@ export const fr = {
         language: {
             groupLabel: 'Choix de la langue',
         },
+        // Libellés des types d'obstacles (bandeau d'informations US-029)
+        obstacles: {
+            jump: 'Haie',
+            oxer: 'Saut double',
+            seesaw: 'Bascule',
+            dogWalk: 'Passerelle',
+            aFrame: 'Palissade',
+            weavePols: 'Slalom',
+            semiWeavePols: 'Semi-slalom',
+            tunnel6m: 'Tunnel 6 m',
+            tunnel5m: 'Tunnel 5 m',
+            tunnel4m: 'Tunnel 4 m',
+            tunnel3m: 'Tunnel 3 m',
+            longJump: 'Saut en longueur',
+            tire: 'Saut de pneu',
+        },
+        // Bandeau d'informations en bas de la zone de dessin (US-029)
+        statusBar: {
+            count: 'Obstacles : {{count}}',
+            type: 'Sélection : {{type}}',
+            position: 'x {{x}} px — y {{y}} px',
+        },
     },
 };
