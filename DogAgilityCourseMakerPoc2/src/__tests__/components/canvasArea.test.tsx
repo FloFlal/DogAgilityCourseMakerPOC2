@@ -33,6 +33,14 @@ describe('CanvasArea', () => {
         expect(screen.getByTestId('konva-transformer')).toBeTruthy();
     });
 
+    it('applique le fond clair de la feuille de plan (CANVAS_BACKGROUND)', () => {
+        render(<CanvasArea />);
+
+        const zone = screen.getByRole('group');
+
+        expect(zone.style.backgroundColor).toBe('rgb(248, 250, 252)');
+    });
+
     it("rend l'obstacle du store avec son identifiant", () => {
         useDrawingStore.setState({ obstacles: [makeObstacle('jump-42')] });
 
