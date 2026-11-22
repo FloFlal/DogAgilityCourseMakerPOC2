@@ -35,11 +35,12 @@ const App: React.FC = () => {
                     },
                 }}
             />
-            <div style={{ display: 'table', width: '100vw', height: '100vh', tableLayout: 'fixed' }}>
-                <div style={{ display: 'table-cell', width: '320px', verticalAlign: 'top' }}>
-                    <Sidebar />
-                </div>
-                <div style={{ display: 'table-cell', verticalAlign: 'top' }}>
+            {/* Mise en page flex : sidebar fixe (w-80 = 320 px, équivalent de
+                SIDEBAR_WIDTH_PX dans canvasDefaults.ts, consommé par
+                useStageDimensions) + canvas fluide sur le reste. */}
+            <div className="flex h-screen w-screen overflow-hidden">
+                <Sidebar />
+                <div className="flex-1 min-w-0">
                     <CanvasArea />
                 </div>
             </div>
