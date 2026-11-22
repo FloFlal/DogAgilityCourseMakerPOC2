@@ -26,6 +26,7 @@ export const en = {
             export: 'Export',
             import: 'Import',
             fileAria: 'Course file to import',
+            languageTitle: 'Language',
         },
         canvas: {
             groupLabel: 'Agility course drawing area',
