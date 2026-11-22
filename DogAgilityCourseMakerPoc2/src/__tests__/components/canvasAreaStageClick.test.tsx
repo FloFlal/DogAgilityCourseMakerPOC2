@@ -81,7 +81,7 @@ beforeAll(async () => {
 
 describe('CanvasArea - clic sur la scène', () => {
     beforeEach(() => {
-        useDrawingStore.setState({ obstacles: [], selectedId: null });
+        useDrawingStore.setState({ obstacles: [], selectedId: null, currentShapeType: 'jump' });
     });
 
     it('ajoute un obstacle au clic sur le fond quand rien n\'est sélectionné', () => {
@@ -100,9 +100,9 @@ describe('CanvasArea - clic sur la scène', () => {
         expect(state.selectedId).toBe(state.obstacles[0].id);
     });
 
-    it('désélectionne l\'obstacle courant au clic sur le fond', () => {
+    it("pose l'outil courant au clic sur le fond même si un obstacle est sélectionné", () => {
         const obstacle = makeObstacle('obstacle-1');
-        useDrawingStore.setState({ obstacles: [obstacle], selectedId: 'obstacle-1' });
+        useDrawingStore.setState({ obstacles: [obstacle], selectedId: 'obstacle-1', currentShapeType: 'jump' });
 
         render(<CanvasArea />);
         const click = konvaMock.getClick();
@@ -112,8 +112,24 @@ describe('CanvasArea - clic sur la scène', () => {
         });
 
         const state = useDrawingStore.getState();
-        expect(state.selectedId).toBeNull();
+        expect(state.obstacles).toHaveLength(2);
+        expect(state.selectedId).toBe(state.obstacles[1].id);
+    });
+
+    it("ne pose rien au clic sur le fond sans outil actif", () => {
+        const obstacle = makeObstacle('obstacle-1');
+        useDrawingStore.setState({ obstacles: [obstacle], selectedId: 'obstacle-1', currentShapeType: null });
+
+        render(<CanvasArea />);
+        const click = konvaMock.getClick();
+
+        act(() => {
+            click?.(backgroundClick());
+        });
+
+        const state = useDrawingStore.getState();
         expect(state.obstacles).toHaveLength(1);
+        expect(state.selectedId).toBe('obstacle-1');
     });
 
     it('ignore le clic cible un obstacle de la scène', () => {

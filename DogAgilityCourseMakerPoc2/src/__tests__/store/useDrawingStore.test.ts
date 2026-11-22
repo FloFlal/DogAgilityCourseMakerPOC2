@@ -38,6 +38,26 @@ describe('useDrawingStore (slices combinées)', () => {
         expect(state.selectedId).toBe(state.obstacles[0].id);
     });
 
+    it("sélectionner un obstacle désactive l'outil de pose", () => {
+        useDrawingStore.setState({ currentShapeType: 'jump' });
+
+        useDrawingStore.getState().setSelectedId('obstacle-1');
+
+        const state = useDrawingStore.getState();
+        expect(state.selectedId).toBe('obstacle-1');
+        expect(state.currentShapeType).toBeNull();
+    });
+
+    it("armer un outil désélectionne l'obstacle courant", () => {
+        useDrawingStore.setState({ currentShapeType: null, selectedId: 'obstacle-1' });
+
+        useDrawingStore.getState().setCurrentShapeType('jump');
+
+        const state = useDrawingStore.getState();
+        expect(state.currentShapeType).toBe('jump');
+        expect(state.selectedId).toBeNull();
+    });
+
     it("updateShape modifie uniquement l'obstacle ciblé", () => {
         useDrawingStore.setState({ obstacles: [makeObstacle('a'), makeObstacle('b')] });
 
@@ -89,6 +109,14 @@ describe('useDrawingStore (slices combinées)', () => {
 
         expect(useDrawingStore.getState().currentColor).toBe('#00ff00');
         expect(useDrawingStore.getState().currentShapeType).toBe('aFrame');
+    });
+
+    it("addShape n'ajoute rien quand aucun outil n'est actif", () => {
+        useDrawingStore.setState({ currentShapeType: null });
+
+        useDrawingStore.getState().addShape(10, 20);
+
+        expect(useDrawingStore.getState().obstacles).toHaveLength(0);
     });
 
     it("clearImportError réinitialise l'erreur d'import", () => {

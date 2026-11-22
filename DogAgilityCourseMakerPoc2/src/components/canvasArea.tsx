@@ -37,17 +37,15 @@ export const CanvasArea: React.FC = () => {
     useCanvasKeyboard();
 
     const handleStageClick = (e: KonvaMouseEvent): void => {
-        // unselect obstacle when click on background
+        // Clic sur un obstacle : géré par l'obstacle lui-même (sélection).
         if (e.target !== e.target.getStage()) return;
 
-        if (selectedId) {
-            setSelectedId(null);
-        } else {
-            const pointer = stageRef.current?.getPointerPosition();
+        // Clic sur le fond : pose de l'outil courant (no-op sans outil actif).
+        // La désélection passe par le clic sur un obstacle ou par Échap.
+        const pointer = stageRef.current?.getPointerPosition();
 
-            if (pointer) {
-                addShape(pointer.x, pointer.y);
-            }
+        if (pointer) {
+            addShape(pointer.x, pointer.y);
         }
     };
 

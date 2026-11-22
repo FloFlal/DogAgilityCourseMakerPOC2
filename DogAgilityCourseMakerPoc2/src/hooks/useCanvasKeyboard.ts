@@ -26,7 +26,8 @@ function isTextEntryTarget(target: EventTarget | null): boolean {
 
 /**
  * Navigation clavier du canvas :
- * - Échap : désélectionne l'obstacle courant
+ * - Échap : désélectionne l'obstacle sélectionné, sinon désélectionne
+ *   l'outil de pose actif
  * - Suppr / Retour arrière : supprime l'obstacle sélectionné
  * - Flèches : déplace l'obstacle sélectionné d'une case de grille
  *   (Maj + flèche : déplacement fin d'un pixel), borné aux coords positives
@@ -42,9 +43,13 @@ export function useCanvasKeyboard(): void {
             const store = useDrawingStore.getState();
             const { selectedId } = store;
 
+            // Échap désélectionne l'élément actif : l'obstacle sélectionné
+            // s'il existe, sinon l'outil de pose (exclusion mutuelle).
             if (e.key === 'Escape') {
                 if (selectedId !== null) {
                     store.setSelectedId(null);
+                } else if (store.currentShapeType !== null) {
+                    store.setCurrentShapeType(null);
                 }
 
                 return;

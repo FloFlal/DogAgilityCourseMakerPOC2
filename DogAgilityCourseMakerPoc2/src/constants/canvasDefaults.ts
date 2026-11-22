@@ -1,3 +1,5 @@
+import type { ObstacleType } from '../types/obstacleTypes';
+
 /** Largeur de la sidebar en px (voir App.tsx). */
 export const SIDEBAR_WIDTH_PX = 320;
 
@@ -28,3 +30,22 @@ export const DOG_WALK_DEFAULTS = { width: 30, elementLength: 370, zoneLength: 90
 
 /** Dimensions par défaut de la palissade (AFrame), échelle FCI, exprimées avant ratio. */
 export const A_FRAME_DEFAULTS = { width: 90, elementLength: 270, zoneLength: 106 };
+
+// Longueurs horizontales visibles (projection de la pente) pour les passes
+// de longueur : le corps incliné perd sqrt(length² - hauteur²) en px canvas.
+const SEESAW_VISIBLE_LENGTH = Math.sqrt(SEESAW_DEFAULTS.length ** 2 - 120 ** 2);
+const DOG_WALK_VISIBLE_LENGTH = Math.sqrt(DOG_WALK_DEFAULTS.elementLength ** 2 - 120 ** 2);
+const A_FRAME_VISIBLE_LENGTH = Math.sqrt(A_FRAME_DEFAULTS.elementLength ** 2 - 170 ** 2);
+
+/**
+ * Encadrant (width × height) de l'obstacle posé au clic, par type,
+ * calculé à partir des dims FCI ci-dessus. Les types sans composant
+ * dédié (à venir, US-017+) sont absents : ils retombent sur la taille
+ * de grille lors de la pose.
+ */
+export const OBSTACLE_SIZES: { [K in ObstacleType]?: { width: number; height: number } } = {
+    jump: { width: JUMP_DEFAULTS.hurdleDepth, height: JUMP_DEFAULTS.barWidth + 2 * JUMP_DEFAULTS.hurdleWidth },
+    seesaw: { width: SEESAW_DEFAULTS.width, height: SEESAW_VISIBLE_LENGTH },
+    dogWalk: { width: DOG_WALK_DEFAULTS.width, height: DOG_WALK_DEFAULTS.elementLength + DOG_WALK_VISIBLE_LENGTH },
+    aFrame: { width: A_FRAME_DEFAULTS.width, height: 2 * A_FRAME_VISIBLE_LENGTH },
+};
