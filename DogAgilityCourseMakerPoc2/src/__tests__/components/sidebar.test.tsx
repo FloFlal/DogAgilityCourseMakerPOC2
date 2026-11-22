@@ -71,12 +71,37 @@ describe('Sidebar accessibilité', () => {
         expect(useDrawingStore.getState().selectedId).toBeNull();
     });
 
-    it('les sections sont des groupes labellisés', () => {
+    it('les sections sont des groupes labellisés (après ouverture)', () => {
         render(<Sidebar />);
 
         expect(screen.getByRole('group', { name: /choix de l'outil/i })).toBeTruthy();
+
+        // Sections fermées par défaut : on les ouvre via leur titre accordéon
+        fireEvent.click(screen.getByRole('button', { name: 'Couleurs' }));
         expect(screen.getByRole('group', { name: /choix de la couleur/i })).toBeTruthy();
+
+        fireEvent.click(screen.getByRole('button', { name: 'Import/Export' }));
         expect(screen.getByRole('group', { name: /import et export/i })).toBeTruthy();
+    });
+
+    it("l'accordéon ouvre une seule section à la fois (outils ouvert par défaut)", () => {
+        render(<Sidebar />);
+
+        expect(screen.getByRole('button', { name: 'Outils' }).getAttribute('aria-expanded')).toBe('true');
+        expect(screen.getByRole('button', { name: 'Couleurs' }).getAttribute('aria-expanded')).toBe('false');
+
+        fireEvent.click(screen.getByRole('button', { name: 'Couleurs' }));
+
+        expect(screen.getByRole('button', { name: 'Couleurs' }).getAttribute('aria-expanded')).toBe('true');
+        expect(screen.getByRole('button', { name: 'Outils' }).getAttribute('aria-expanded')).toBe('false');
+    });
+
+    it("re-cliquer le titre ouvert referme la section (aucune ouverte)", () => {
+        render(<Sidebar />);
+
+        fireEvent.click(screen.getByRole('button', { name: 'Outils' }));
+
+        expect(screen.getByRole('button', { name: 'Outils' }).getAttribute('aria-expanded')).toBe('false');
     });
 
     it("l'erreur d'import est une alerte accessible avec bouton labellisé", () => {
@@ -91,6 +116,8 @@ describe('Sidebar accessibilité', () => {
 
     it('le champ couleur a un label associé', () => {
         render(<Sidebar />);
+
+        fireEvent.click(screen.getByRole('button', { name: 'Couleurs' }));
 
         const label = document.querySelector('label[for="obstacle-color"]');
         const input = document.getElementById('obstacle-color');

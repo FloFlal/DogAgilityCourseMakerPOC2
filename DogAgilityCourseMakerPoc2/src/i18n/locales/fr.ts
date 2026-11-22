@@ -26,6 +26,7 @@ export const fr = {
             export: 'Exporter',
             import: 'Importer',
             fileAria: 'Fichier de parcours à importer',
+            languageTitle: 'Langue',
         },
         canvas: {
             groupLabel: "Zone de dessin du parcours d'agility",
