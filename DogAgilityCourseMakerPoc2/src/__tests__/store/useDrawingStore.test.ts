@@ -25,7 +25,7 @@ describe('useDrawingStore (slices combinées)', () => {
         });
     });
 
-    it("addShape utilise les préférences de l'outil et sélectionne le nouvel obstacle", () => {
+    it("addShape utilise les préférences de l'outil sans sélectionner le nouvel obstacle", () => {
         useDrawingStore.setState({ currentColor: '#ff0000', currentShapeType: 'seesaw' });
 
         useDrawingStore.getState().addShape(10, 20);
@@ -35,7 +35,7 @@ describe('useDrawingStore (slices combinées)', () => {
         expect(state.obstacles).toHaveLength(1);
         expect(state.obstacles[0].type).toBe('seesaw');
         expect(state.obstacles[0].fill).toBe('#ff0000');
-        expect(state.selectedId).toBe(state.obstacles[0].id);
+        expect(state.selectedId).toBeNull();
     });
 
     it("sélectionner un obstacle désactive l'outil de pose", () => {

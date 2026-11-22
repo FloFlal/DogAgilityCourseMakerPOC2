@@ -52,9 +52,10 @@ export const createDrawingSlice: StateCreator<DrawingState, [], [], DrawingSlice
             rotation: 0,
         };
 
+        // La pose ne sélectionne pas l'obstacle : la sélection passe par le
+        // clic sur un obstacle (et désarme alors l'outil, exclusion mutuelle).
         set((state) => ({
             obstacles: [...state.obstacles, newShape],
-            selectedId: newShape.id
         }));
     },
 

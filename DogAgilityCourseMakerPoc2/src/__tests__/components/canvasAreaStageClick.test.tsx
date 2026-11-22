@@ -97,7 +97,7 @@ describe('CanvasArea - clic sur la scène', () => {
         expect(state.obstacles).toHaveLength(1);
         expect(state.obstacles[0].x).toBe(40);
         expect(state.obstacles[0].y).toBe(60);
-        expect(state.selectedId).toBe(state.obstacles[0].id);
+        expect(state.selectedId).toBeNull();
     });
 
     it("pose l'outil courant au clic sur le fond même si un obstacle est sélectionné", () => {
@@ -113,7 +113,7 @@ describe('CanvasArea - clic sur la scène', () => {
 
         const state = useDrawingStore.getState();
         expect(state.obstacles).toHaveLength(2);
-        expect(state.selectedId).toBe(state.obstacles[1].id);
+        expect(state.selectedId).toBe('obstacle-1');
     });
 
     it("ne pose rien au clic sur le fond sans outil actif", () => {

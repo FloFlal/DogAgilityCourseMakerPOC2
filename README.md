@@ -39,7 +39,8 @@ Ce POC se concentre sur les aspects suivants :
 
 - Cliquez sur un outil dans la barre latérale pour l'armer (re-cliquer sur
   l'outil actif le désactive), puis cliquez sur le canvas pour y poser
-  l'obstacle, aux dimensions réglementaires par type.
+  l'obstacle, aux dimensions réglementaires par type. L'obstacle posé n'est
+  pas sélectionné automatiquement : cliquez dessus pour le sélectionner.
 - Cliquez sur un obstacle pour le sélectionner : cela désactive l'outil de
   pose (outil et sélection sont mutuellement exclusifs). Échap désélectionne
   l'élément actif : l'obstacle sélectionné, sinon l'outil.
