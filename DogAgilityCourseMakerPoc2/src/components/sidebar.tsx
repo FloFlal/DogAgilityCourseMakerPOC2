@@ -7,8 +7,9 @@ import {
     selectImportError,
     selectSelectedId,
 } from '../store/selectors';
-import { Square, Circle, Trash2, Download, Upload, AlertTriangle } from 'lucide-react';
+import { Trash2, Download, Upload, AlertTriangle } from 'lucide-react';
 import { LanguageSwitcher } from './languageSwitcher';
+import { AFrameIcon, DogWalkIcon, JumpIcon, SeesawIcon } from './obstacleIcons';
 import type { ObstacleType } from '../types/obstacleTypes';
 
 /**
@@ -122,7 +123,7 @@ export const Sidebar: React.FC = () => {
                         aria-pressed={currentShapeType === 'jump'}
                         className={toolButtonClass('jump')}
                     >
-                        <Square size={16} aria-hidden="true" /> {t('sidebar.jump')}
+                        <JumpIcon /> {t('sidebar.jump')}
                     </button>
                     <button
                         type="button"
@@ -130,7 +131,7 @@ export const Sidebar: React.FC = () => {
                         aria-pressed={currentShapeType === 'seesaw'}
                         className={toolButtonClass('seesaw')}
                     >
-                        <Circle size={16} aria-hidden="true" /> {t('sidebar.seesaw')}
+                        <SeesawIcon /> {t('sidebar.seesaw')}
                     </button>
                     <button
                         type="button"
@@ -138,7 +139,7 @@ export const Sidebar: React.FC = () => {
                         aria-pressed={currentShapeType === 'dogWalk'}
                         className={toolButtonClass('dogWalk')}
                     >
-                        <Circle size={16} aria-hidden="true" /> {t('sidebar.dogWalk')}
+                        <DogWalkIcon /> {t('sidebar.dogWalk')}
                     </button>
                     <button
                         type="button"
@@ -146,7 +147,7 @@ export const Sidebar: React.FC = () => {
                         aria-pressed={currentShapeType === 'aFrame'}
                         className={toolButtonClass('aFrame')}
                     >
-                        <Circle size={16} aria-hidden="true" /> {t('sidebar.aFrame')}
+                        <AFrameIcon /> {t('sidebar.aFrame')}
                     </button>
                 </div>
             </div>
