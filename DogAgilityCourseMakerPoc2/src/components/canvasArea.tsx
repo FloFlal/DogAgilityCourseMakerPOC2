@@ -16,6 +16,7 @@ import { useObstacleTransform } from '../hooks/useObstacleTransform';
 import { GridLayer } from './canvas/gridLayer';
 import { ObstaclesLayer } from './canvas/obstaclesLayer';
 import { TransformerComponent } from './canvas/transformerComponent';
+import { StatusBar } from './statusBar';
 import type { KonvaMouseEvent } from '../types/obstacleTypes';
 
 /**
@@ -85,6 +86,9 @@ export const CanvasArea: React.FC = () => {
                 {/*The component that surround the obstacle*/}
                 <TransformerComponent selectedId={selectedId} />
             </Stage>
+
+            {/* Bandeau d'informations (US-029) : superposé en bas de la zone de dessin */}
+            <StatusBar />
         </div>
     );
 };

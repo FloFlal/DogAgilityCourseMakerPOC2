@@ -35,5 +35,27 @@ export const en = {
         language: {
             groupLabel: 'Language selection',
         },
+        // Obstacle type labels (information bar, US-029)
+        obstacles: {
+            jump: 'Jump',
+            oxer: 'Double (oxer)',
+            seesaw: 'Seesaw',
+            dogWalk: 'Dog walk',
+            aFrame: 'A-frame',
+            weavePols: 'Weave poles',
+            semiWeavePols: 'Semi weave poles',
+            tunnel6m: 'Tunnel 6 m',
+            tunnel5m: 'Tunnel 5 m',
+            tunnel4m: 'Tunnel 4 m',
+            tunnel3m: 'Tunnel 3 m',
+            longJump: 'Long jump',
+            tire: 'Tire jump',
+        },
+        // Information bar at the bottom of the drawing area (US-029)
+        statusBar: {
+            count: 'Obstacles: {{count}}',
+            type: 'Selected: {{type}}',
+            position: 'x {{x}} px — y {{y}} px',
+        },
     },
 };
