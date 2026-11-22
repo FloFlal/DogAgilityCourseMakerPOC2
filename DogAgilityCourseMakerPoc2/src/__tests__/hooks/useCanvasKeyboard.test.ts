@@ -67,7 +67,7 @@ describe('useCanvasKeyboard', () => {
         expect(useDrawingStore.getState().obstacles).toHaveLength(0);
     });
 
-    it("les flèches déplacent l'obstacle d'une case de grille", () => {
+    it("les flèches déplacent l'obstacle d'un pixel (pas fin)", () => {
         renderHook(() => useCanvasKeyboard());
 
         act(() => pressKey({ key: 'ArrowRight' }));
@@ -75,11 +75,11 @@ describe('useCanvasKeyboard', () => {
 
         const moved = useDrawingStore.getState().obstacles[0];
 
-        expect(moved.x).toBe(75);
-        expect(moved.y).toBe(85);
+        expect(moved.x).toBe(51);
+        expect(moved.y).toBe(61);
     });
 
-    it("Maj + flèche déplace d'un pixel seulement", () => {
+    it("Maj + flèche déplace d'une case de grille (pas rapide)", () => {
         renderHook(() => useCanvasKeyboard());
 
         act(() => pressKey({ key: 'ArrowLeft', shiftKey: true }));
@@ -87,8 +87,8 @@ describe('useCanvasKeyboard', () => {
 
         const moved = useDrawingStore.getState().obstacles[0];
 
-        expect(moved.x).toBe(49);
-        expect(moved.y).toBe(59);
+        expect(moved.x).toBe(25);
+        expect(moved.y).toBe(35);
     });
 
     it('ne descend pas en dessous de zéro', () => {
@@ -96,7 +96,7 @@ describe('useCanvasKeyboard', () => {
 
         renderHook(() => useCanvasKeyboard());
 
-        act(() => pressKey({ key: 'ArrowLeft' }));
+        act(() => pressKey({ key: 'ArrowLeft', shiftKey: true }));
 
         const moved = useDrawingStore.getState().obstacles[0];
 

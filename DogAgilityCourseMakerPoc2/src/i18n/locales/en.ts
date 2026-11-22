@@ -26,10 +26,11 @@ export const en = {
             export: 'Export',
             import: 'Import',
             fileAria: 'Course file to import',
+            languageTitle: 'Language',
         },
         canvas: {
             groupLabel: 'Agility course drawing area',
-            keyboardHelp: 'Click the canvas to place the active tool. Use the arrow keys to move the selected obstacle (Shift + arrow for a fine one-pixel step), Delete to remove it, and Escape to deselect the obstacle or turn off the tool.',
+            keyboardHelp: 'Click the canvas to place the active tool. Use the arrow keys to nudge the selected obstacle (1 px), Shift + arrow for a fast grid step, Delete to remove it, and Escape to deselect the obstacle or turn off the tool.',
         },
         language: {
             groupLabel: 'Language selection',

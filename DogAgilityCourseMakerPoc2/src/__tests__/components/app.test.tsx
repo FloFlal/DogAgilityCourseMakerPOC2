@@ -97,7 +97,15 @@ describe('App (intégration)', () => {
             window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
         });
 
-        expect(useDrawingStore.getState().obstacles[0].x).toBe(35);
+        // pas fin par défaut : +1 px
+        expect(useDrawingStore.getState().obstacles[0].x).toBe(11);
+
+        act(() => {
+            window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', shiftKey: true }));
+        });
+
+        // Maj : pas rapide d'une case de grille (25 px)
+        expect(useDrawingStore.getState().obstacles[0].x).toBe(36);
 
         await user.click(screen.getByRole('group', { name: "Zone de dessin du parcours d'agility" }));
     });
