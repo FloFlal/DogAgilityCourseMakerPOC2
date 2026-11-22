@@ -3,6 +3,7 @@ import { Stage } from 'react-konva';
 import Konva from 'konva';
 import { useTranslation } from 'react-i18next';
 import { useDrawingStore } from '../store/useDrawingStore';
+import { CANVAS_BACKGROUND } from '../constants/canvasDefaults';
 import {
     selectGridSize,
     selectObstacles,
@@ -51,7 +52,10 @@ export const CanvasArea: React.FC = () => {
 
     return (
         <div
-            className="flex-1 h-screen bg-slate-950 relative overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400"
+            className="flex-1 h-screen relative overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400"
+            // Fond clair « feuille de plan » (US-030) : valeur pilotée par la
+            // constante CANVAS_BACKGROUND (canvasDefaults.ts).
+            style={{ backgroundColor: CANVAS_BACKGROUND }}
             tabIndex={0}
             role="group"
             aria-label={t('canvas.groupLabel')}

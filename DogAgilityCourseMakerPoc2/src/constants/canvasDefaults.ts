@@ -8,13 +8,16 @@ export const OBSTACLE_RATIO = 2.5;
 
 /** Couleurs par défaut du tracé des obstacles sur le canvas. */
 export const OBSTACLE_PRIMARY_COLOR = '#1155FF';
-/** Couleur secondaire (zones de contact et détails). */
-export const OBSTACLE_SECONDARY_COLOR = '#FFFF00';
+/** Couleur secondaire (zones de contact et détails), lisible sur le fond clair. */
+export const OBSTACLE_SECONDARY_COLOR = '#F59E0B';
+
+/** Fond de la zone de dessin : quasi blanc, assimilé à une feuille de plan. */
+export const CANVAS_BACKGROUND = '#F8FAFC';
 
 /** Style visuel du quadrillage. */
 export const GRID_STROKE = '#000';
-/** Opacité du quadrillage. */
-export const GRID_OPACITY = 0.1;
+/** Opacité du quadrillage (foncé et visible sur le fond clair). */
+export const GRID_OPACITY = 0.3;
 
 /** Taille minimale (px) autorisée par le Transformer. */
 export const MIN_OBSTACLE_SIZE = 10;
