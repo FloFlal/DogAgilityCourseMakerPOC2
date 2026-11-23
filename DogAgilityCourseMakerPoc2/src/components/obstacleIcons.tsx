@@ -66,3 +66,12 @@ export const WeavePolsIcon: React.FC<ObstacleIconProps> = (props) => (
         ))}
     </svg>
 );
+
+/** Semi-slalom (semiWeavePols) : rangée droite de 6 poteaux (entraînement). */
+export const SemiWeavePolsIcon: React.FC<ObstacleIconProps> = (props) => (
+    <svg viewBox="0 0 20 20" data-testid="obstacle-icon-semiWeavePols" {...ICON_PATHS} {...props}>
+        {Array.from({ length: 6 }, (_, i) => (
+            <circle key={i} cx="10" cy={5 + i * (10 / 5)} r="1.1" fill="currentColor" stroke="none" />
+        ))}
+    </svg>
+);
