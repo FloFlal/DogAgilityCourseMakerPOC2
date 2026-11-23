@@ -68,6 +68,16 @@ export interface JumpProps extends BaseObstacleProps {
   hurdleThickness: number;
 }
 
+/** Props spécifiques à l'Oxer (double) : deux plans de saut séparés par la profondeur `spread`. */
+export interface OxerProps extends BaseObstacleProps {
+  barWidth: number;
+  barThickness: number;
+  hurdleWidth: number;
+  hurdleDepth: number;
+  hurdleThickness: number;
+  spread: number;
+}
+
 /** Props spécifiques à l'A-Frame (palissade) : rampes et zones de contact. */
 export interface AFrameProps extends BaseObstacleProps {
   width: number;

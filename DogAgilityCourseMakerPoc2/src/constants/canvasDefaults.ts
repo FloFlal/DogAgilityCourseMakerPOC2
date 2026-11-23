@@ -25,6 +25,20 @@ export const MIN_OBSTACLE_SIZE = 10;
 /** Dimensions par défaut de la haie (Jump), échelle FCI, exprimées avant ratio. */
 export const JUMP_DEFAULTS = { barWidth: 130, barThickness: 5, hurdleWidth: 50, hurdleDepth: 40, hurdleThickness: 10 };
 
+/**
+ * Default dimensions of the oxer (double), FCI scale, expressed before the ratio:
+ * same structure as the hurdle, with an entry plane and a back plane (the higher
+ * one) separated by the `spread` depth (regulated between 30 and 90 cm).
+ */
+export const OXER_DEFAULTS = {
+    barWidth: 130,
+    barThickness: 5,
+    hurdleWidth: 50,
+    hurdleDepth: 40,
+    hurdleThickness: 10,
+    spread: 60,
+};
+
 /** Dimensions par défaut de la bascule (Seesaw), échelle FCI, exprimées avant ratio. */
 export const SEESAW_DEFAULTS = { width: 30, length: 370, zoneLength: 90 };
 
@@ -48,6 +62,10 @@ const A_FRAME_VISIBLE_LENGTH = Math.sqrt(A_FRAME_DEFAULTS.elementLength ** 2 - 1
  */
 export const OBSTACLE_SIZES: { [K in ObstacleType]?: { width: number; height: number } } = {
     jump: { width: JUMP_DEFAULTS.hurdleDepth, height: JUMP_DEFAULTS.barWidth + 2 * JUMP_DEFAULTS.hurdleWidth },
+    oxer: {
+        width: OXER_DEFAULTS.spread + OXER_DEFAULTS.hurdleDepth,
+        height: OXER_DEFAULTS.barWidth + 2 * OXER_DEFAULTS.hurdleWidth,
+    },
     seesaw: { width: SEESAW_DEFAULTS.width, height: SEESAW_VISIBLE_LENGTH },
     dogWalk: { width: DOG_WALK_DEFAULTS.width, height: DOG_WALK_DEFAULTS.elementLength + DOG_WALK_VISIBLE_LENGTH },
     aFrame: { width: A_FRAME_DEFAULTS.width, height: 2 * A_FRAME_VISIBLE_LENGTH },

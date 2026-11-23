@@ -4,6 +4,7 @@ import { Jump } from '../../obstacles/jump';
 import { Seesaw } from '../../obstacles/seesaw';
 import { DogWalk } from '../../obstacles/dogWalk';
 import { AFrame } from '../../obstacles/aFrame';
+import { Oxer } from '../../obstacles/oxer';
 import {
     A_FRAME_DEFAULTS,
     DOG_WALK_DEFAULTS,
@@ -11,6 +12,7 @@ import {
     OBSTACLE_PRIMARY_COLOR,
     OBSTACLE_RATIO,
     OBSTACLE_SECONDARY_COLOR,
+    OXER_DEFAULTS,
     SEESAW_DEFAULTS,
 } from '../../constants/canvasDefaults';
 import type { BaseObstacleProps } from '../../types/obstacleTypes';
@@ -65,6 +67,8 @@ export const ObstaclesLayer: React.FC<ObstaclesLayerProps> = ({
                 switch (shape.type) {
                     case 'jump':
                         return <Jump {...commonProps} key={shape.id} {...JUMP_DEFAULTS} />;
+                    case 'oxer':
+                        return <Oxer {...commonProps} key={shape.id} {...OXER_DEFAULTS} />;
                     case 'seesaw':
                         return <Seesaw {...commonProps} key={shape.id} {...SEESAW_DEFAULTS} />;
                     case 'dogWalk':

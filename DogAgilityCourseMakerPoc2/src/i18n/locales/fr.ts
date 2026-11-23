@@ -13,6 +13,7 @@ export const fr = {
             toolsGroup: "Choix de l'outil",
             toolsTitle: 'Outils',
             jump: 'Haie',
+            oxer: 'Oxer',
             seesaw: 'Bascule',
             dogWalk: 'Passerelle',
             aFrame: 'A-Frame',
@@ -38,7 +39,7 @@ export const fr = {
         // Libellés des types d'obstacles (bandeau d'informations US-029)
         obstacles: {
             jump: 'Haie',
-            oxer: 'Saut double',
+            oxer: 'Oxer',
             seesaw: 'Bascule',
             dogWalk: 'Passerelle',
             aFrame: 'Palissade',

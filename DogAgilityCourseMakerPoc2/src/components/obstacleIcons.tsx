@@ -57,3 +57,11 @@ export const AFrameIcon: React.FC<ObstacleIconProps> = (props) => (
         <line x1="6.15" y1="10" x2="13.85" y2="10" strokeDasharray="2 1.5" />
     </svg>
 );
+
+/** Oxer (double) : deux plans parallèles, plan arrière plus haut. */
+export const OxerIcon: React.FC<ObstacleIconProps> = (props) => (
+    <svg viewBox="0 0 20 20" data-testid="obstacle-icon-oxer" {...ICON_PATHS} {...props}>
+        <line x1="8" y1="5" x2="8" y2="15" />
+        <line x1="13" y1="2.5" x2="13" y2="17.5" />
+    </svg>
+);
