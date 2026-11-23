@@ -9,18 +9,37 @@ export const LANGUAGES = [
     { code: 'en', label: 'English' },
 ] as const;
 
-/** Default language used on first launch */
-export const DEFAULT_LANGUAGE = 'fr' as const;
+/** Default language used on first launch (English-first application) */
+export const DEFAULT_LANGUAGE = 'en' as const;
 
 const STORAGE_KEY = 'dogagility.language';
 
-/** Initial language: persisted value otherwise the default language */
+/**
+ * Initial language, resolved by priority:
+ * 1. the persisted user choice (localStorage),
+ * 2. the browser language when it is supported (fr → 'fr'),
+ * 3. the application default ('en').
+ */
 export const getInitialLanguage = (): string => {
     try {
-        return window.localStorage.getItem(STORAGE_KEY) ?? DEFAULT_LANGUAGE;
+        const stored = window.localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+            return stored;
+        }
     } catch {
+        // Storage unavailable: fall through to browser detection
         return DEFAULT_LANGUAGE;
     }
+
+    const browserLanguage = typeof navigator !== 'undefined' ? navigator.language : undefined;
+    if (browserLanguage?.toLowerCase().startsWith(DEFAULT_LANGUAGE)) {
+        return DEFAULT_LANGUAGE;
+    }
+    if (browserLanguage?.toLowerCase().startsWith('fr')) {
+        return 'fr';
+    }
+
+    return DEFAULT_LANGUAGE;
 };
 
 const persistLanguage = (lng: string): void => {
