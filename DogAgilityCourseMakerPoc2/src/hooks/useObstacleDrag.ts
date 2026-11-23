@@ -1,15 +1,15 @@
 import { useCallback } from 'react';
 import { useDrawingStore } from '../store/useDrawingStore';
 
-/** Handlers de drag à invoquer avec l'identifiant de l'obstacle concerné. */
+/** Drag handlers to invoke with the identifier of the involved obstacle. */
 export interface ObstacleDragHandlers {
     handleDragStart: (id: string) => void;
     handleDragEnd: (id: string, x: number, y: number) => void;
 }
 
 /**
- * Hook gérant la logique de déplacement (drag) des obstacles :
- * sélection de l'obstacle draggué et persistance de sa nouvelle position.
+ * Hook managing the obstacle drag logic:
+ * selection of the dragged obstacle and persistence of its new position.
  */
 export function useObstacleDrag(): ObstacleDragHandlers {
     const selectedId = useDrawingStore((state) => state.selectedId);

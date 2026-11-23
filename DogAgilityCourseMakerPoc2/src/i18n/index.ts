@@ -3,18 +3,18 @@ import { initReactI18next } from 'react-i18next';
 import { fr } from './locales/fr';
 import { en } from './locales/en';
 
-/** Langues disponibles dans l'interface du sélecteur */
+/** Languages available in the switcher UI */
 export const LANGUAGES = [
     { code: 'fr', label: 'Français' },
     { code: 'en', label: 'English' },
 ] as const;
 
-/** Langue par défaut utilisée au premier lancement */
+/** Default language used on first launch */
 export const DEFAULT_LANGUAGE = 'fr' as const;
 
 const STORAGE_KEY = 'dogagility.language';
 
-/** Langue initiale : valeur persistée sinon langue par défaut */
+/** Initial language: persisted value otherwise the default language */
 export const getInitialLanguage = (): string => {
     try {
         return window.localStorage.getItem(STORAGE_KEY) ?? DEFAULT_LANGUAGE;
@@ -28,7 +28,7 @@ const persistLanguage = (lng: string): void => {
         window.localStorage.setItem(STORAGE_KEY, lng);
         document.documentElement.lang = lng;
     } catch {
-        // Stockage indisponible : le changement reste actif pour la session
+        // Storage unavailable: the change stays active for the session
     }
 };
 
@@ -39,7 +39,7 @@ void i18n.use(initReactI18next).init({
     interpolation: { escapeValue: false },
 });
 
-// Persistance du choix de langue à chaque changement (sans rechargement de page)
+// Persist the language choice on every change (no page reload)
 i18n.on('languageChanged', (lng) => persistLanguage(lng));
 
 export default i18n;

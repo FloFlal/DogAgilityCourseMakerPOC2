@@ -4,10 +4,10 @@ import { OBSTACLE_SIZES } from '../../constants/canvasDefaults';
 import type { DrawingState } from '../storeTypes';
 
 /**
- * Slice "dessin" : gestion des obstacles et de la sélection courante.
+ * Drawing slice: obstacle and current selection management.
  */
 
-/** État du slice "dessin" : obstacles posés, sélection courante et actions associées. */
+/** Drawing slice state: placed obstacles, current selection and related actions. */
 export interface DrawingSlice {
     obstacles: Obstacle[];
     selectedId: string | null;
@@ -20,11 +20,11 @@ export interface DrawingSlice {
 }
 
 /**
- * Crée le slice "dessin" : liste d'obstacles, sélection courante et actions
- * d'ajout, de mise à jour, de suppression et de sélection.
- * @param set - mutateur d'état Zustand
- * @param get - accesseur d'état Zustand
- * @returns les propriétés du slice drawing
+ * Creates the drawing slice: obstacle list, current selection and actions
+ * for adding, updating, deleting and selecting.
+ * @param set - Zustand state setter
+ * @param get - Zustand state getter
+ * @returns the drawing slice properties
  */
 export const createDrawingSlice: StateCreator<DrawingState, [], [], DrawingSlice> = (set, get) => ({
     obstacles: [],
@@ -34,11 +34,11 @@ export const createDrawingSlice: StateCreator<DrawingState, [], [], DrawingSlice
     addShape: (x: number, y: number): void => {
         const { gridSize, currentColor, currentShapeType } = get();
 
-        // Aucun outil actif : le clic sur le fond ne pose rien.
+        // No active tool: clicking the background places nothing.
         if (currentShapeType === null) return;
 
-        // Dimensions réglementaires par type (canvasDefaults) ; les types
-        // sans composant dédié (US-017+) retombent sur la taille de grille.
+        // Regulation dimensions per type (canvasDefaults); types
+        // without a dedicated component (US-017+) fall back to the grid size.
         const size = OBSTACLE_SIZES[currentShapeType];
 
         const newShape: Obstacle = {
@@ -52,8 +52,8 @@ export const createDrawingSlice: StateCreator<DrawingState, [], [], DrawingSlice
             rotation: 0,
         };
 
-        // La pose ne sélectionne pas l'obstacle : la sélection passe par le
-        // clic sur un obstacle (et désarme alors l'outil, exclusion mutuelle).
+        // Placement does not select the obstacle: selection goes through the
+        // obstacle click (which also disarms the tool, mutual exclusion).
         set((state) => ({
             obstacles: [...state.obstacles, newShape],
         }));
@@ -83,8 +83,8 @@ export const createDrawingSlice: StateCreator<DrawingState, [], [], DrawingSlice
     setSelectedId: (id: string | null): void => {
         set((state) => ({
             selectedId: id,
-            // Sélectionner un obstacle désactive l'outil de pose : outil et
-            // sélection sont mutuellement exclusifs.
+            // Selecting an obstacle disarms the placement tool: tool and
+            // selection are mutually exclusive.
             currentShapeType: id !== null ? null : state.currentShapeType,
         }));
     },

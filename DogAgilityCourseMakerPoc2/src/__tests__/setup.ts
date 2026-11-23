@@ -1,13 +1,13 @@
-// Setup pour les tests Vitest
+// Setup for Vitest tests
 import { beforeAll, afterAll, afterEach, vi } from 'vitest';
 
-// Initialisation i18next (français par défaut) pour les composants traduits
+// i18next initialization for translated components
 import '../i18n';
 
-// Polyfill localStorage si le runtime ne le fournit pas (Node 26+ sans --localstorage-file)
+// localStorage polyfill when the runtime does not provide it (Node 26+ without --localstorage-file)
 import { installLocalStoragePolyfillIfNeeded } from './mocks/localStorage';
 
-// Mock de crypto.randomUUID pour les tests
+// crypto.randomUUID mock for the tests
 beforeAll(() => {
   if (!globalThis.crypto) {
     // @ts-expect-error - Mocking global crypto
@@ -15,14 +15,14 @@ beforeAll(() => {
       randomUUID: () => '00000000-0000-0000-0000-000000000000',
     };
   } else {
-    // Si crypto existe déjà (dans jsdom), on mock randomUUID
+    // If crypto already exists (in jsdom), mock randomUUID
     globalThis.crypto.randomUUID = () => '00000000-0000-0000-0000-000000000000';
   }
 
   installLocalStoragePolyfillIfNeeded(window);
 });
 
-// Nettoyage après chaque test
+// Cleanup after each test
 afterEach(() => {
   vi.clearAllMocks();
 });

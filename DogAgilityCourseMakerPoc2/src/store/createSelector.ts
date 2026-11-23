@@ -1,19 +1,19 @@
 /**
- * Sélecteur de base : fonction pure extrayant une donnée de l'état.
- * @param state - l'état du store
- * @returns la donnée extraite
+ * Base selector: pure function extracting a piece of data from the state.
+ * @param state - the store state
+ * @returns the extracted data
  */
 export type Selector<TState, TResult> = (state: TState) => TResult;
 
-// Combiner : fonction recevant les valeurs des sélecteurs d'entrée
+// Combiner: function receiving the values of the input selectors
 type Combiner = (...values: never[]) => unknown;
 
 /**
- * Utilitaire de création de sélecteurs memoized (même sémantique que
- * createSelector de Reselect, adapté à Zustand).
+ * Helper to build memoized selectors (same semantics as
+ * Reselect createSelector, adapted to Zustand).
  *
- * Le combiner (dernier argument) n'est rappelé que si au moins une entrée
- * change (comparaison par référence, donc par valeur pour les primitifs).
+ * The combiner (last argument) is only re-invoked when at least one input
+ * changed (reference comparison, i.e. by value for primitives).
  *
  * @example
  * const selectSelectedObstacle = createSelector(
@@ -22,20 +22,20 @@ type Combiner = (...values: never[]) => unknown;
  *     (obstacles, selectedId) => obstacles.find((o) => o.id === selectedId),
  * );
  *
- * @returns un sélecteur memoized utilisable avec useDrawingStore(selector)
+ * @returns a memoized selector usable with useDrawingStore(selector)
  */
-/** Surcharge : un sélecteur d'entrée et un combiner. */
+/** Overload: one input selector and a combiner. */
 export function createSelector<TState, T1, TResult>(
     s1: Selector<TState, T1>,
     combiner: (a: T1) => TResult,
 ): Selector<TState, TResult>;
-/** Surcharge : deux sélecteurs d'entrée et un combiner. */
+/** Overload: two input selectors and a combiner. */
 export function createSelector<TState, T1, T2, TResult>(
     s1: Selector<TState, T1>,
     s2: Selector<TState, T2>,
     combiner: (a: T1, b: T2) => TResult,
 ): Selector<TState, TResult>;
-/** Surcharge : trois sélecteurs d'entrée et un combiner. */
+/** Overload: three input selectors and a combiner. */
 export function createSelector<TState, T1, T2, T3, TResult>(
     s1: Selector<TState, T1>,
     s2: Selector<TState, T2>,
@@ -44,9 +44,9 @@ export function createSelector<TState, T1, T2, T3, TResult>(
 ): Selector<TState, TResult>;
 
 /**
- * Implémentation runtime : les détails de typage sont arbitrés par les surcharges.
- * Mémoïse le dernier couple (entrées, résultat) et compare les entrées une à une
- * avec Object.is ; le combiner n'est rappelé que si au moins une entrée a changé.
+ * Runtime implementation: typing details are arbitrated by the overloads.
+ * Memoizes the last (inputs, result) pair and compares the inputs one by one
+ * with Object.is; the combiner is only re-invoked when at least one input changed.
  */
 export function createSelector(...args: unknown[]): Selector<unknown, unknown> {
     const combiner = args[args.length - 1] as Combiner;

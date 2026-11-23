@@ -1,11 +1,11 @@
 import React from 'react';
 
-// Mock commun de react-konva pour les tests en jsdom :
-// chaque primitive Konva est remplacée par une div portant ses props utiles.
+// Common react-konva mock for jsdom tests:
+// each Konva primitive is replaced by a div carrying its useful props.
 type AnyProps = Record<string, unknown>;
 
-// Enveloppe un handler souris Konva en handler DOM : l'objet évènement
-// imite l'API Konva utilisée par les composants (cancelBubble, target.getStage()).
+// Wraps a Konva mouse handler into a DOM handler: the event object
+// mimics the Konva API used by the components (cancelBubble, target.getStage()).
 function wrapMouseHandler(handler: unknown): ((event: Event) => void) | undefined {
     if (typeof handler !== 'function') return undefined;
 
@@ -69,8 +69,8 @@ export function Arrow(props: AnyProps): React.ReactElement {
     return renderNode('konva-arrow', props);
 }
 
-// Le ref du Transformer n'est volontairement pas transmis : la ref reste null
-// et l'effet du composant s'arrête proprement en environnement de test.
+// The Transformer ref is intentionally not forwarded: the ref stays null
+// and the component effect stops cleanly in the test environment.
 export function Transformer(): React.ReactElement {
     return React.createElement('div', { 'data-testid': 'konva-transformer' });
 }

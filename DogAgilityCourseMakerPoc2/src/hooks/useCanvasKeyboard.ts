@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useDrawingStore } from '../store/useDrawingStore';
 
-// Pas fin par défaut, en px (la touche Maj donne le pas rapide)
+// Fine step by default, in px (the Shift key gives the fast step)
 const FINE_STEP_PX = 1;
 
-// Déplacements par touche fléchée : [dx, dy]
+// Arrow-key moves: [dx, dy]
 const ARROW_DELTAS: Record<string, [number, number]> = {
     ArrowUp: [0, -1],
     ArrowDown: [0, 1],
@@ -12,7 +12,7 @@ const ARROW_DELTAS: Record<string, [number, number]> = {
     ArrowRight: [1, 0],
 };
 
-// La navigation clavier ne s'applique pas aux champs de saisie
+// Keyboard navigation does not apply to input fields
 function isTextEntryTarget(target: EventTarget | null): boolean {
     if (!(target instanceof HTMLElement)) return false;
 
@@ -25,16 +25,16 @@ function isTextEntryTarget(target: EventTarget | null): boolean {
 }
 
 /**
- * Navigation clavier du canvas :
- * - Échap : désélectionne l'obstacle sélectionné, sinon désélectionne
- *   l'outil de pose actif
- * - Suppr / Retour arrière : supprime l'obstacle sélectionné
- * - Flèches : déplacement fin de l'obstacle sélectionné (un pixel)
- *   (Maj + flèche : déplacement rapide d'une case de gridSize), borné aux
+ * Canvas keyboard navigation:
+ * - Escape: deselects the selected obstacle, otherwise deselects
+ *   the active placement tool
+ * - Delete / Backspace: deletes the selected obstacle
+ * - Arrows: fine move of the selected obstacle (one pixel)
+ *   (Shift + arrow: fast move of one gridSize cell), clamped to
  *   coords positives
  *
- * Ignoré lorsque le focus est dans un champ de saisie. Le listener est
- * attaché à window et relu via getState() : aucune re-souscription.
+ * Ignored when the focus is inside an input field. The listener is
+ * attached to window and read back via getState(): no re-subscription.
  */
 export function useCanvasKeyboard(): void {
     useEffect((): (() => void) => {
@@ -44,8 +44,8 @@ export function useCanvasKeyboard(): void {
             const store = useDrawingStore.getState();
             const { selectedId } = store;
 
-            // Échap désélectionne l'élément actif : l'obstacle sélectionné
-            // s'il existe, sinon l'outil de pose (exclusion mutuelle).
+            // Escape deselects the active item: the selected obstacle
+            // if any, otherwise the placement tool (mutual exclusion).
             if (e.key === 'Escape') {
                 if (selectedId !== null) {
                     store.setSelectedId(null);
@@ -69,7 +69,7 @@ export function useCanvasKeyboard(): void {
 
             if (!direction) return;
 
-            // Pas fin par défaut ; Maj accélère d'une case de grille.
+            // Fine step by default; Shift moves a whole grid cell.
             const step = e.shiftKey ? store.gridSize : FINE_STEP_PX;
             const obstacle = store.obstacles.find((o) => o.id === selectedId);
 

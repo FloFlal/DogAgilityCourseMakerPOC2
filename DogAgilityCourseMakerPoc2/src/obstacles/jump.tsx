@@ -2,13 +2,13 @@ import { Circle, Group, Line, Rect } from "react-konva"
 import type { JumpProps } from "../types/obstacleTypes"
 
 /**
- * Haie (Jump) : barre horizontale posée sur deux montants.
+ * Hurdle (Jump): horizontal bar resting on two uprights.
  *
- * Géométrie : toutes les longueurs sont divisées par le `ratio` global du
- * canvas. La barre est centrée sur l'origine et s'étend verticalement de
- * -barWidth/2 à +barWidth/2 ; les montants sont disposés symétriquement de
- * part et d'autre. Un rectangle invisible englobe l'ensemble pour offrir
- * une surface stable de clic et de drag.
+ * Geometry: all lengths are divided by the global canvas `ratio`.
+ * canvas. The bar is centered on the origin and spans vertically from
+ * -barWidth/2 to +barWidth/2; the uprights are arranged symmetrically on
+ * each side. An invisible rectangle wraps the whole thing to provide
+ * stable click and drag surface.
  */
 export const Jump: React.FC<JumpProps> = ({
   id,
