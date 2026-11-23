@@ -88,3 +88,10 @@ export interface DogWalkProps extends BaseObstacleProps {
   elementLength: number;
   zoneLength: number;
 }
+
+/** Props spécifiques au slalom (Weave poles) : nombre, espacement et diamètre des poteaux. */
+export interface WeavePolsProps extends BaseObstacleProps {
+  poleCount: number;
+  poleSpacing: number;
+  poleDiameter: number;
+}

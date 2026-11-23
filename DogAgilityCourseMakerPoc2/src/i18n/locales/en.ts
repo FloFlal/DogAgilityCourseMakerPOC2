@@ -16,6 +16,7 @@ export const en = {
             seesaw: 'Seesaw',
             dogWalk: 'Dog Walk',
             aFrame: 'A-Frame',
+            weavePols: 'Weave poles',
             colorGroup: 'Color selection',
             colorTitle: 'Colors',
             selectedTitle: 'Selected element',

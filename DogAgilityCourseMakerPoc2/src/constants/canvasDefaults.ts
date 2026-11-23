@@ -34,6 +34,9 @@ export const DOG_WALK_DEFAULTS = { width: 30, elementLength: 370, zoneLength: 90
 /** Dimensions par défaut de la palissade (AFrame), échelle FCI, exprimées avant ratio. */
 export const A_FRAME_DEFAULTS = { width: 90, elementLength: 270, zoneLength: 106 };
 
+/** Dimensions par défaut du slalom (Weave poles) : 12 poteaux espacés de 60 cm, Ø 4 cm, échelle FCI, exprimées avant ratio. */
+export const WEAVE_POLES_DEFAULTS = { poleCount: 12, poleSpacing: 60, poleDiameter: 4 };
+
 // Longueurs horizontales visibles (projection de la pente) pour les passes
 // de longueur : le corps incliné perd sqrt(length² - hauteur²) en px canvas.
 const SEESAW_VISIBLE_LENGTH = Math.sqrt(SEESAW_DEFAULTS.length ** 2 - 120 ** 2);
@@ -51,4 +54,10 @@ export const OBSTACLE_SIZES: { [K in ObstacleType]?: { width: number; height: nu
     seesaw: { width: SEESAW_DEFAULTS.width, height: SEESAW_VISIBLE_LENGTH },
     dogWalk: { width: DOG_WALK_DEFAULTS.width, height: DOG_WALK_DEFAULTS.elementLength + DOG_WALK_VISIBLE_LENGTH },
     aFrame: { width: A_FRAME_DEFAULTS.width, height: 2 * A_FRAME_VISIBLE_LENGTH },
+    // La largeur latérale du slalom est arbitraire (espacement), seule la longueur
+    // de la rangée est réglementaire : (nombre de poteaux - 1) * espacement.
+    weavePols: {
+        width: WEAVE_POLES_DEFAULTS.poleSpacing,
+        height: (WEAVE_POLES_DEFAULTS.poleCount - 1) * WEAVE_POLES_DEFAULTS.poleSpacing,
+    },
 };

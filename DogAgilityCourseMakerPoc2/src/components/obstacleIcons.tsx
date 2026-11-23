@@ -57,3 +57,12 @@ export const AFrameIcon: React.FC<ObstacleIconProps> = (props) => (
         <line x1="6.15" y1="10" x2="13.85" y2="10" strokeDasharray="2 1.5" />
     </svg>
 );
+
+/** Slalom (weavePols) : rangée droite de 12 poteaux. */
+export const WeavePolsIcon: React.FC<ObstacleIconProps> = (props) => (
+    <svg viewBox="0 0 20 20" data-testid="obstacle-icon-weavePols" {...ICON_PATHS} {...props}>
+        {Array.from({ length: 12 }, (_, i) => (
+            <circle key={i} cx="10" cy={2 + i * (16 / 11)} r="1.1" fill="currentColor" stroke="none" />
+        ))}
+    </svg>
+);
