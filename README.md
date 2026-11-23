@@ -33,7 +33,9 @@ Ce POC se concentre sur les aspects suivants :
 - Une fonctionnalité d'import/export permettant de sauvegarder le parcours
   dans un fichier (`.dacm.json`), de le partager et de le réimporter.
 - Une interface accessible (navigation clavier, ARIA) et internationale
-  (changement de langue français/anglais sans rechargement de la page).
+  (anglais par défaut, détection de la langue du navigateur, changement
+  français/anglais sans rechargement de la page ; le choix persisté dans le
+  navigateur prime sur tout autre critère).
 
 ### Interactions principales
 
