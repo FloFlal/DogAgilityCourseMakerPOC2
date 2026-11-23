@@ -15,6 +15,7 @@ export const fr = {
             jump: 'Haie',
             oxer: 'Oxer',
             longJump: 'Saut en longueur',
+            tire: 'Pneu',
             seesaw: 'Bascule',
             dogWalk: 'Passerelle',
             aFrame: 'A-Frame',
@@ -51,7 +52,7 @@ export const fr = {
             tunnel4m: 'Tunnel 4 m',
             tunnel3m: 'Tunnel 3 m',
             longJump: 'Saut en longueur',
-            tire: 'Saut de pneu',
+            tire: 'Pneu',
         },
         // Bandeau d'informations en bas de la zone de dessin (US-029)
         statusBar: {

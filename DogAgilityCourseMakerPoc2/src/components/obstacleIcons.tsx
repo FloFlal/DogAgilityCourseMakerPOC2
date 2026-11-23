@@ -74,3 +74,12 @@ export const LongJumpIcon: React.FC<ObstacleIconProps> = (props) => (
         <line x1="3" y1="16" x2="17" y2="16" />
     </svg>
 );
+
+/** Saut de pneu (tire) : anneau suspendu dans son cadre, ouverture au centre. */
+export const TireIcon: React.FC<ObstacleIconProps> = (props) => (
+    <svg viewBox="0 0 20 20" data-testid="obstacle-icon-tire" {...ICON_PATHS} {...props}>
+        <circle cx="10" cy="10" r="5" />
+        <line x1="3" y1="3.5" x2="17" y2="3.5" />
+        <line x1="3" y1="16.5" x2="17" y2="16.5" />
+    </svg>
+);

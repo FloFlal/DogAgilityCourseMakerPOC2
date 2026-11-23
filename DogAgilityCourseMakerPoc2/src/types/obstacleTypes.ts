@@ -86,6 +86,13 @@ export interface LongJumpProps extends BaseObstacleProps {
   totalDepth: number;
 }
 
+/** Props spécifiques au saut de pneu (Tire) : ouverture intérieure, épaisseur du pneu et cadre. */
+export interface TireProps extends BaseObstacleProps {
+  innerDiameter: number;
+  tireThickness: number;
+  frameSize: number;
+}
+
 /** Props spécifiques à l'A-Frame (palissade) : rampes et zones de contact. */
 export interface AFrameProps extends BaseObstacleProps {
   width: number;

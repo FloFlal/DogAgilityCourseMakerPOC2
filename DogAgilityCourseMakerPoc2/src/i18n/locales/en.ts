@@ -15,6 +15,7 @@ export const en = {
             jump: 'Jump',
             oxer: 'Double / Oxer',
             longJump: 'Long jump',
+            tire: 'Tyre',
             seesaw: 'Seesaw',
             dogWalk: 'Dog Walk',
             aFrame: 'A-Frame',
@@ -51,7 +52,7 @@ export const en = {
             tunnel4m: 'Tunnel 4 m',
             tunnel3m: 'Tunnel 3 m',
             longJump: 'Long jump',
-            tire: 'Tire jump',
+            tire: 'Tyre',
         },
         // Information bar at the bottom of the drawing area (US-029)
         statusBar: {

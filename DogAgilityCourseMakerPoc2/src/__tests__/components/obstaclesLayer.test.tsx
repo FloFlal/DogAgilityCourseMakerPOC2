@@ -31,6 +31,7 @@ describe('ObstaclesLayer', () => {
                 makeObstacle('jump-1', 'jump'),
                 makeObstacle('oxer-1', 'oxer'),
                 makeObstacle('lj-1', 'longJump'),
+                makeObstacle('tire-1', 'tire'),
                 makeObstacle('seesaw-1', 'seesaw'),
                 makeObstacle('walk-1', 'dogWalk'),
                 makeObstacle('aframe-1', 'aFrame'),
@@ -56,6 +57,7 @@ describe('ObstaclesLayer', () => {
             'jump-1',
             'oxer-1',
             'lj-1',
+            'tire-1',
             'seesaw-1',
             'walk-1',
             'aframe-1',
@@ -63,7 +65,9 @@ describe('ObstaclesLayer', () => {
     });
 
     it('ignore les types d\'obstacles non supportés', () => {
-        useDrawingStore.setState({ obstacles: [makeObstacle('tire-1', 'tire')] });
+        // Les 13 types réglementaires sont désormais tous dessinés ; on vérifie
+        // quand même la garde contre un type inconnu (données importées).
+        useDrawingStore.setState({ obstacles: [makeObstacle('bogus-1', 'bogus' as Obstacle['type'])] });
 
         const shapes = useDrawingStore.getState().obstacles;
 
