@@ -30,6 +30,7 @@ describe('ObstaclesLayer', () => {
             obstacles: [
                 makeObstacle('jump-1', 'jump'),
                 makeObstacle('oxer-1', 'oxer'),
+                makeObstacle('lj-1', 'longJump'),
                 makeObstacle('seesaw-1', 'seesaw'),
                 makeObstacle('walk-1', 'dogWalk'),
                 makeObstacle('aframe-1', 'aFrame'),
@@ -54,6 +55,7 @@ describe('ObstaclesLayer', () => {
         expect(groups.map((g) => g.getAttribute('data-id'))).toEqual([
             'jump-1',
             'oxer-1',
+            'lj-1',
             'seesaw-1',
             'walk-1',
             'aframe-1',

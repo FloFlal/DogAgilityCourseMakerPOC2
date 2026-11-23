@@ -6,6 +6,7 @@ import { Seesaw } from '../../obstacles/seesaw';
 import { DogWalk } from '../../obstacles/dogWalk';
 import { AFrame } from '../../obstacles/aFrame';
 import { Oxer } from '../../obstacles/oxer';
+import { LongJump } from '../../obstacles/longJump';
 import type { BaseObstacleProps } from '../../types/obstacleTypes';
 
 vi.mock('react-konva', async () => await import('./../mocks/reactKonva'));
@@ -62,6 +63,11 @@ const cases: ObstacleCase[] = [
             />
         ),
         primitives: ['konva-rect', 'konva-line'],
+    },
+    {
+        name: 'LongJump',
+        renderWith: (props) => <LongJump {...props} elementCount={3} boardWidth={120} boardDepth={15} totalDepth={120} />,
+        primitives: ['konva-rect', 'konva-circle'],
     },
     {
         name: 'Seesaw',

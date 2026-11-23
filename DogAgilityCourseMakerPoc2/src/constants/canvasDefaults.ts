@@ -39,6 +39,13 @@ export const OXER_DEFAULTS = {
     spread: 60,
 };
 
+/**
+ * Default dimensions of the long jump, FCI scale, expressed before the ratio:
+ * 3 successive boards spread over a total depth of 120 cm (FCI: 2 to 3 elements,
+ * total depth up to about 120 cm), each board 120 cm wide.
+ */
+export const LONG_JUMP_DEFAULTS = { elementCount: 3, boardDepth: 15, boardWidth: 120, totalDepth: 120 };
+
 /** Dimensions par défaut de la bascule (Seesaw), échelle FCI, exprimées avant ratio. */
 export const SEESAW_DEFAULTS = { width: 30, length: 370, zoneLength: 90 };
 
@@ -66,6 +73,7 @@ export const OBSTACLE_SIZES: { [K in ObstacleType]?: { width: number; height: nu
         width: OXER_DEFAULTS.spread + OXER_DEFAULTS.hurdleDepth,
         height: OXER_DEFAULTS.barWidth + 2 * OXER_DEFAULTS.hurdleWidth,
     },
+    longJump: { width: LONG_JUMP_DEFAULTS.totalDepth, height: LONG_JUMP_DEFAULTS.boardWidth },
     seesaw: { width: SEESAW_DEFAULTS.width, height: SEESAW_VISIBLE_LENGTH },
     dogWalk: { width: DOG_WALK_DEFAULTS.width, height: DOG_WALK_DEFAULTS.elementLength + DOG_WALK_VISIBLE_LENGTH },
     aFrame: { width: A_FRAME_DEFAULTS.width, height: 2 * A_FRAME_VISIBLE_LENGTH },

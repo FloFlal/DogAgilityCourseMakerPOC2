@@ -65,3 +65,12 @@ export const OxerIcon: React.FC<ObstacleIconProps> = (props) => (
         <line x1="13" y1="2.5" x2="13" y2="17.5" />
     </svg>
 );
+
+/** Saut en longueur (longJump) : trois planches transversales successives. */
+export const LongJumpIcon: React.FC<ObstacleIconProps> = (props) => (
+    <svg viewBox="0 0 20 20" data-testid="obstacle-icon-longJump" {...ICON_PATHS} {...props}>
+        <line x1="3" y1="4" x2="17" y2="4" />
+        <line x1="3" y1="10" x2="17" y2="10" strokeDasharray="2 1.5" />
+        <line x1="3" y1="16" x2="17" y2="16" />
+    </svg>
+);

@@ -78,6 +78,14 @@ export interface OxerProps extends BaseObstacleProps {
   spread: number;
 }
 
+/** Props spécifiques au saut en longueur (LongJump) : nombre de planches et profondeur totale. */
+export interface LongJumpProps extends BaseObstacleProps {
+  elementCount: number;
+  boardWidth: number;
+  boardDepth: number;
+  totalDepth: number;
+}
+
 /** Props spécifiques à l'A-Frame (palissade) : rampes et zones de contact. */
 export interface AFrameProps extends BaseObstacleProps {
   width: number;
