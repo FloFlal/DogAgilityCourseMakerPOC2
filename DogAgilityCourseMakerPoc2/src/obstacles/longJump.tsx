@@ -1,11 +1,11 @@
-import { Circle, Group, Rect } from "react-konva"
+import { Group, Rect } from "react-konva"
 import type { LongJumpProps } from "../types/obstacleTypes"
 
 /**
  * Long jump: successive boards crossed in a row over an empty take-off area.
  *
  * Geometry: all lengths are divided by the global canvas `ratio`. The
- * `elementCount` boards (FCI: 2 to 3 elements) are spread along the travel
+ * `elementCount` boards (FCI: 2 to 4 elements) are spread along the travel
  * axis (X) over `totalDepth` (up to 120 cm for Large, 120 cm by default),
  * evenly spaced with empty gaps so the jumping area stays visible. Each
  * board is drawn as a transverse rectangle `boardDepth` deep and
@@ -23,7 +23,6 @@ export const LongJump: React.FC<LongJumpProps> = ({
   boardDepth,
   totalDepth,
   primaryColor,
-  secondaryColor,
   onClick,
   onTap,
   onDragEnd,
@@ -50,9 +49,6 @@ export const LongJump: React.FC<LongJumpProps> = ({
         >
             {/* background for select and drag */}
             <Rect strokeEnabled={false} fill="#777" opacity={0} x={-(totalDepth / 2 / ratio)} y={-(boardWidth / 2 / ratio)} width={totalDepth / ratio} height={boardWidth / ratio} />
-
-            {/* center marker of the footprint */}
-            <Circle radius={5} offsetX={5} offsetY={5} fill={secondaryColor} opacity={0.6} />
 
             {/* transverse boards spread over the total depth */}
             {Array.from({ length: elementCount }, (_, i) => (

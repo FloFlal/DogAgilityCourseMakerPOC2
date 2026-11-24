@@ -41,10 +41,11 @@ export const OXER_DEFAULTS = {
 
 /**
  * Default dimensions of the long jump, FCI scale, expressed before the ratio:
- * 3 successive boards spread over a total depth of 120 cm (FCI: 2 to 3 elements,
- * total depth up to about 120 cm), each board 120 cm wide.
+ * 2 to 4 successive boards spread over a total depth of 120 cm (FCI: 2 to 4
+ * elements, total depth up to about 120 cm), each board 120 cm wide. The
+ * default is the full Large config with 4 elements.
  */
-export const LONG_JUMP_DEFAULTS = { elementCount: 3, boardDepth: 15, boardWidth: 120, totalDepth: 120 };
+export const LONG_JUMP_DEFAULTS = { elementCount: 4, boardDepth: 15, boardWidth: 120, totalDepth: 120 };
 
 /** Default dimensions of the seesaw (Seesaw), FCI scale, expressed before the ratio. */
 export const SEESAW_DEFAULTS = { width: 30, length: 370, zoneLength: 90 };
