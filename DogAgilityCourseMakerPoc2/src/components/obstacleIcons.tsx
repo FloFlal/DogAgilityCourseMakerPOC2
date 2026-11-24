@@ -58,11 +58,20 @@ export const AFrameIcon: React.FC<ObstacleIconProps> = (props) => (
     </svg>
 );
 
-/** Slalom (weavePols) : rangée droite de 12 poteaux. */
+/** Weave poles (weavePols): straight row of 12 poles. */
 export const WeavePolsIcon: React.FC<ObstacleIconProps> = (props) => (
     <svg viewBox="0 0 20 20" data-testid="obstacle-icon-weavePols" {...ICON_PATHS} {...props}>
         {Array.from({ length: 12 }, (_, i) => (
             <circle key={i} cx="10" cy={2 + i * (16 / 11)} r="1.1" fill="currentColor" stroke="none" />
+        ))}
+    </svg>
+);
+
+/** Semi weave poles (semiWeavePols): straight row of 6 poles (training). */
+export const SemiWeavePolsIcon: React.FC<ObstacleIconProps> = (props) => (
+    <svg viewBox="0 0 20 20" data-testid="obstacle-icon-semiWeavePols" {...ICON_PATHS} {...props}>
+        {Array.from({ length: 6 }, (_, i) => (
+            <circle key={i} cx="10" cy={5 + i * (10 / 5)} r="1.1" fill="currentColor" stroke="none" />
         ))}
     </svg>
 );
