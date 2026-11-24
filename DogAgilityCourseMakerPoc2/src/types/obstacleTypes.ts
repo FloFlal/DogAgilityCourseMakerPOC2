@@ -98,3 +98,10 @@ export interface DogWalkProps extends BaseObstacleProps {
   elementLength: number;
   zoneLength: number;
 }
+
+/** Props specific to the weave poles: number, spacing and diameter of the poles. */
+export interface WeavePolsProps extends BaseObstacleProps {
+  poleCount: number;
+  poleSpacing: number;
+  poleDiameter: number;
+}

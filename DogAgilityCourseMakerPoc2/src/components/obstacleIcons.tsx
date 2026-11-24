@@ -65,3 +65,12 @@ export const OxerIcon: React.FC<ObstacleIconProps> = (props) => (
         <line x1="13" y1="2.5" x2="13" y2="17.5" />
     </svg>
 );
+
+/** Weave poles (weavePols): straight row of 12 poles. */
+export const WeavePolsIcon: React.FC<ObstacleIconProps> = (props) => (
+    <svg viewBox="0 0 20 20" data-testid="obstacle-icon-weavePols" {...ICON_PATHS} {...props}>
+        {Array.from({ length: 12 }, (_, i) => (
+            <circle key={i} cx="10" cy={2 + i * (16 / 11)} r="1.1" fill="currentColor" stroke="none" />
+        ))}
+    </svg>
+);

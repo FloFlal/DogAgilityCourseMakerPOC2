@@ -5,6 +5,7 @@ import { Seesaw } from '../../obstacles/seesaw';
 import { DogWalk } from '../../obstacles/dogWalk';
 import { AFrame } from '../../obstacles/aFrame';
 import { Oxer } from '../../obstacles/oxer';
+import { WeavePols } from '../../obstacles/weavePols';
 import {
     A_FRAME_DEFAULTS,
     DOG_WALK_DEFAULTS,
@@ -14,6 +15,7 @@ import {
     OBSTACLE_SECONDARY_COLOR,
     OXER_DEFAULTS,
     SEESAW_DEFAULTS,
+    WEAVE_POLES_DEFAULTS,
 } from '../../constants/canvasDefaults';
 import type { BaseObstacleProps } from '../../types/obstacleTypes';
 import type { ObstaclesLayerProps } from '../../types/canvasTypes';
@@ -75,6 +77,8 @@ export const ObstaclesLayer: React.FC<ObstaclesLayerProps> = ({
                         return <DogWalk {...commonProps} key={shape.id} {...DOG_WALK_DEFAULTS} />;
                     case 'aFrame':
                         return <AFrame {...commonProps} key={shape.id} {...A_FRAME_DEFAULTS} />;
+                    case 'weavePols':
+                        return <WeavePols {...commonProps} key={shape.id} {...WEAVE_POLES_DEFAULTS} />;
                     default:
                         return null;
                 }
