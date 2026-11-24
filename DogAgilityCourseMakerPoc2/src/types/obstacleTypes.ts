@@ -86,6 +86,13 @@ export interface LongJumpProps extends BaseObstacleProps {
   totalDepth: number;
 }
 
+/** Props specific to the tyre: inner opening, rim thickness and frame. */
+export interface TireProps extends BaseObstacleProps {
+  innerDiameter: number;
+  tireThickness: number;
+  frameSize: number;
+}
+
 /** Props specific to the A-Frame: ramps and contact zones. */
 export interface AFrameProps extends BaseObstacleProps {
   width: number;

@@ -76,6 +76,15 @@ export const LongJumpIcon: React.FC<ObstacleIconProps> = (props) => (
     </svg>
 );
 
+/** Tyre jump (tire): ring suspended in its frame, opening at the center. */
+export const TireIcon: React.FC<ObstacleIconProps> = (props) => (
+    <svg viewBox="0 0 20 20" data-testid="obstacle-icon-tire" {...ICON_PATHS} {...props}>
+        <circle cx="10" cy="10" r="5" />
+        <line x1="3" y1="3.5" x2="17" y2="3.5" />
+        <line x1="3" y1="16.5" x2="17" y2="16.5" />
+    </svg>
+);
+
 /** Weave poles (weavePols): straight row of 12 poles. */
 export const WeavePolsIcon: React.FC<ObstacleIconProps> = (props) => (
     <svg viewBox="0 0 20 20" data-testid="obstacle-icon-weavePols" {...ICON_PATHS} {...props}>

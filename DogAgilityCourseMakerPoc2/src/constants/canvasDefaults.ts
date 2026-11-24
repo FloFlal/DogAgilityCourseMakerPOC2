@@ -47,6 +47,13 @@ export const OXER_DEFAULTS = {
  */
 export const LONG_JUMP_DEFAULTS = { elementCount: 4, boardDepth: 15, boardWidth: 120, totalDepth: 120 };
 
+/**
+ * Default dimensions of the tyre, FCI scale, expressed before the ratio:
+ * 60 cm inner opening (regulated), 10 cm rim thickness, hung inside a square
+ * frame of `frameSize` standing on the ground.
+ */
+export const TIRE_DEFAULTS = { innerDiameter: 60, tireThickness: 10, frameSize: 100 };
+
 /** Default dimensions of the seesaw (Seesaw), FCI scale, expressed before the ratio. */
 export const SEESAW_DEFAULTS = { width: 30, length: 370, zoneLength: 90 };
 
@@ -81,6 +88,7 @@ export const OBSTACLE_SIZES: { [K in ObstacleType]?: { width: number; height: nu
         height: OXER_DEFAULTS.barWidth + 2 * OXER_DEFAULTS.hurdleWidth,
     },
     longJump: { width: LONG_JUMP_DEFAULTS.totalDepth, height: LONG_JUMP_DEFAULTS.boardWidth },
+    tire: { width: TIRE_DEFAULTS.frameSize, height: TIRE_DEFAULTS.frameSize },
     seesaw: { width: SEESAW_DEFAULTS.width, height: SEESAW_VISIBLE_LENGTH },
     dogWalk: { width: DOG_WALK_DEFAULTS.width, height: DOG_WALK_DEFAULTS.elementLength + DOG_WALK_VISIBLE_LENGTH },
     aFrame: { width: A_FRAME_DEFAULTS.width, height: 2 * A_FRAME_VISIBLE_LENGTH },

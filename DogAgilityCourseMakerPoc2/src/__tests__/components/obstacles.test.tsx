@@ -7,6 +7,7 @@ import { DogWalk } from '../../obstacles/dogWalk';
 import { AFrame } from '../../obstacles/aFrame';
 import { Oxer } from '../../obstacles/oxer';
 import { LongJump } from '../../obstacles/longJump';
+import { Tire } from '../../obstacles/tire';
 import { WeavePols } from '../../obstacles/weavePols';
 import type { BaseObstacleProps } from '../../types/obstacleTypes';
 
@@ -69,6 +70,11 @@ const cases: ObstacleCase[] = [
         name: 'LongJump',
         renderWith: (props) => <LongJump {...props} elementCount={4} boardWidth={120} boardDepth={15} totalDepth={120} />,
         primitives: ['konva-rect'],
+    },
+    {
+        name: 'Tire',
+        renderWith: (props) => <Tire {...props} innerDiameter={60} tireThickness={10} frameSize={100} />,
+        primitives: ['konva-rect', 'konva-circle', 'konva-line'],
     },
     {
         name: 'Seesaw',
