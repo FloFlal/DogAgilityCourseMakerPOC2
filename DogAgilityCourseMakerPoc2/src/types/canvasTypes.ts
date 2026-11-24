@@ -1,17 +1,17 @@
 import type { Obstacle } from './obstacleTypes';
 
-/** Dimensions de la zone de dessin (Stage Konva), en px. */
+/** Drawing area dimensions (Konva Stage), in px. */
 export interface CanvasDimensions {
   width: number;
   height: number;
 }
 
-/** Props de la couche de quadrillage. */
+/** Grid layer props. */
 export interface GridLayerProps extends CanvasDimensions {
   gridSize: number;
 }
 
-/** Props de la couche d'obstacles : données, sélection et handlers de manipulation. */
+/** Obstacles layer props: data, selection and manipulation handlers. */
 export interface ObstaclesLayerProps {
   shapes: Obstacle[];
   selectedId: string | null;
@@ -21,7 +21,7 @@ export interface ObstaclesLayerProps {
   onTransformEnd: (id: string, x: number, y: number, rotation: number) => void;
 }
 
-/** Props du composant Transformer : l'identifiant sélectionné (ou null). */
+/** Transformer component props: the selected identifier (or null). */
 export interface TransformerComponentProps {
   selectedId: string | null;
 }

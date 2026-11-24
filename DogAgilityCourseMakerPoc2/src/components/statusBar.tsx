@@ -4,16 +4,16 @@ import { useDrawingStore } from '../store/useDrawingStore';
 import { selectObstacleCount, selectSelectedObstacle } from '../store/selectors';
 
 /**
- * Bandeau d'informations en bas de la zone de dessin (US-029) : retour
- * permanent sur l'état du parcours (nombre d'obstacles) et, le cas échéant,
- * sur l'obstacle sélectionné (type traduit, position x/y en px). Entièrement
- * dérivé du store via des sélecteurs mémoïsés : aucune duplication d'état,
- * aucune écriture. Superposé au canvas (position absolue), hors de la sidebar.
+ * Information banner at the bottom of the drawing area (US-029): reports
+ * view over the course state (obstacle count) and, when relevant,
+ * on the selected obstacle (translated type, x/y position in px). Entirely
+ * derived from the store via memoized selectors: no state duplication,
+ * no writes. Overlaid on the canvas (absolute position), outside the sidebar.
  */
 export const StatusBar: React.FC = () => {
     const { t } = useTranslation();
 
-    // Sélecteurs atomiques : chaque information est souscrite individuellement
+    // Atomic selectors: each piece of information is subscribed individually
     const count = useDrawingStore(selectObstacleCount);
     const selected = useDrawingStore(selectSelectedObstacle);
 

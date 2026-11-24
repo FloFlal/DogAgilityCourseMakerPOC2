@@ -20,9 +20,9 @@ import { StatusBar } from './statusBar';
 import type { KonvaMouseEvent } from '../types/obstacleTypes';
 
 /**
- * Zone de dessin principale : compose le Stage Konva à partir des
- * couches dédiées (quadrillage, obstacles, transformer) et des hooks
- * de gestion des obstacles.
+ * Main drawing area: composes the Konva Stage from the
+ * dedicated layers (grid, obstacles, transformer) and hooks
+ * for obstacle management.
  */
 export const CanvasArea: React.FC = () => {
     const { t } = useTranslation();
@@ -39,11 +39,11 @@ export const CanvasArea: React.FC = () => {
     useCanvasKeyboard();
 
     const handleStageClick = (e: KonvaMouseEvent): void => {
-        // Clic sur un obstacle : géré par l'obstacle lui-même (sélection).
+        // Obstacle click: handled by the obstacle itself (selection).
         if (e.target !== e.target.getStage()) return;
 
-        // Clic sur le fond : pose de l'outil courant (no-op sans outil actif).
-        // La désélection passe par le clic sur un obstacle ou par Échap.
+        // Background click: place the current tool (no-op with no active tool).
+        // Deselection goes through clicking an obstacle or pressing Escape.
         const pointer = stageRef.current?.getPointerPosition();
 
         if (pointer) {
@@ -54,7 +54,7 @@ export const CanvasArea: React.FC = () => {
     return (
         <div
             className="flex-1 h-screen relative overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400"
-            // Fond clair « feuille de plan » (US-030) : valeur pilotée par la
+            // Light "course-plan sheet" background (US-030): value driven by the
             // constante CANVAS_BACKGROUND (canvasDefaults.ts).
             style={{ backgroundColor: CANVAS_BACKGROUND }}
             tabIndex={0}

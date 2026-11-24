@@ -1,28 +1,28 @@
 import type { ObstacleType } from '../types/obstacleTypes';
 
-/** Largeur de la sidebar en px (voir App.tsx). */
+/** Sidebar width in px (see App.tsx). */
 export const SIDEBAR_WIDTH_PX = 320;
 
-/** Ratio de dessin divisant toutes les longueurs d'obstacles sur le canvas. */
+/** Drawing ratio dividing all obstacle lengths on the canvas. */
 export const OBSTACLE_RATIO = 2.5;
 
-/** Couleurs par défaut du tracé des obstacles sur le canvas. */
+/** Default drawing colors for obstacles on the canvas. */
 export const OBSTACLE_PRIMARY_COLOR = '#1155FF';
-/** Couleur secondaire (zones de contact et détails), lisible sur le fond clair. */
+/** Secondary color (contact zones and details), readable on the light background. */
 export const OBSTACLE_SECONDARY_COLOR = '#F59E0B';
 
-/** Fond de la zone de dessin : quasi blanc, assimilé à une feuille de plan. */
+/** Drawing area background: near-white, like a course-plan sheet. */
 export const CANVAS_BACKGROUND = '#F8FAFC';
 
-/** Style visuel du quadrillage. */
+/** Visual style of the grid overlay. */
 export const GRID_STROKE = '#000';
-/** Opacité du quadrillage (foncé et visible sur le fond clair). */
+/** Grid opacity (dark and visible on the light background). */
 export const GRID_OPACITY = 0.3;
 
-/** Taille minimale (px) autorisée par le Transformer. */
+/** Minimum size (px) allowed by the Transformer. */
 export const MIN_OBSTACLE_SIZE = 10;
 
-/** Dimensions par défaut de la haie (Jump), échelle FCI, exprimées avant ratio. */
+/** Default dimensions of the hurdle (Jump), FCI scale, expressed before the ratio. */
 export const JUMP_DEFAULTS = { barWidth: 130, barThickness: 5, hurdleWidth: 50, hurdleDepth: 40, hurdleThickness: 10 };
 
 /**
@@ -39,26 +39,26 @@ export const OXER_DEFAULTS = {
     spread: 60,
 };
 
-/** Dimensions par défaut de la bascule (Seesaw), échelle FCI, exprimées avant ratio. */
+/** Default dimensions of the seesaw (Seesaw), FCI scale, expressed before the ratio. */
 export const SEESAW_DEFAULTS = { width: 30, length: 370, zoneLength: 90 };
 
-/** Dimensions par défaut de la passerelle (DogWalk), échelle FCI, exprimées avant ratio. */
+/** Default dimensions of the dog walk (DogWalk), FCI scale, expressed before the ratio. */
 export const DOG_WALK_DEFAULTS = { width: 30, elementLength: 370, zoneLength: 90 };
 
-/** Dimensions par défaut de la palissade (AFrame), échelle FCI, exprimées avant ratio. */
+/** Default dimensions of the A-Frame, FCI scale, expressed before the ratio. */
 export const A_FRAME_DEFAULTS = { width: 90, elementLength: 270, zoneLength: 106 };
 
-// Longueurs horizontales visibles (projection de la pente) pour les passes
-// de longueur : le corps incliné perd sqrt(length² - hauteur²) en px canvas.
+// Visible horizontal lengths (slope projection) for the long
+// of length: the inclined body loses sqrt(length² - height²) in canvas px.
 const SEESAW_VISIBLE_LENGTH = Math.sqrt(SEESAW_DEFAULTS.length ** 2 - 120 ** 2);
 const DOG_WALK_VISIBLE_LENGTH = Math.sqrt(DOG_WALK_DEFAULTS.elementLength ** 2 - 120 ** 2);
 const A_FRAME_VISIBLE_LENGTH = Math.sqrt(A_FRAME_DEFAULTS.elementLength ** 2 - 170 ** 2);
 
 /**
- * Encadrant (width × height) de l'obstacle posé au clic, par type,
- * calculé à partir des dims FCI ci-dessus. Les types sans composant
- * dédié (à venir, US-017+) sont absents : ils retombent sur la taille
- * de grille lors de la pose.
+ * Bounding box (width x height) of the obstacle placed on click, per type,
+ * computed from the FCI dims above. Types without a dedicated
+ * (US-017+ onwards) are missing: they fall back to the grid
+ * size when placed.
  */
 export const OBSTACLE_SIZES: { [K in ObstacleType]?: { width: number; height: number } } = {
     jump: { width: JUMP_DEFAULTS.hurdleDepth, height: JUMP_DEFAULTS.barWidth + 2 * JUMP_DEFAULTS.hurdleWidth },

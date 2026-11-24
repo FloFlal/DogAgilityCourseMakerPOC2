@@ -3,9 +3,9 @@ import { SIDEBAR_WIDTH_PX } from '../constants/canvasDefaults';
 import type { CanvasDimensions } from '../types/canvasTypes';
 
 /**
- * Hook retournant les dimensions du Stage Konva :
- * largeur de la fenêtre moins la sidebar, hauteur de la fenêtre.
- * Se met à jour automatiquement au redimensionnement de la fenêtre.
+ * Hook returning the Konva Stage dimensions:
+ * window width minus the sidebar, window height.
+ * Updates automatically when the window is resized.
  */
 export function useStageDimensions(): CanvasDimensions {
     const [dimensions, setDimensions] = useState<CanvasDimensions>({

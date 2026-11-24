@@ -2,16 +2,16 @@ import { Group, Line, Rect } from "react-konva"
 import type { AFrameProps } from "../types/obstacleTypes"
 
 /**
- * A-Frame (palissade) : deux rampes inclinées formant un triangle avec un sommet commun.
+ * A-Frame: two inclined ramps forming a triangle with a common apex.
  *
- * Algorithme : chaque rampe a une longueur inclinée `elementLength` et une
- * hauteur constante de 170 unités ; la projection horizontale d'une rampe
- * vaut upDownVisibleLength = sqrt(elementLength² - 170²). Les zones de contact
- * (`zoneLength`, mesurées le long de la rampe et projetées par le même
- * coefficient) se situent aux extrémités extérieures (base) de chaque rampe.
- * Le sommet est marqué d'une ligne médiane et des lattes antidérapantes
- * (traits verticaux espacés de 25 unités, dessinés symétriquement) habillent
- * rampes et zones. Toutes les longueurs sont divisées par `ratio`.
+ * Algorithm: each ramp has an inclined `elementLength` length and a
+ * constant height of 170 units; the horizontal projection of a ramp
+ * is upDownVisibleLength = sqrt(elementLength² - 170²). The contact zones
+ * (`zoneLength`, measured along the ramp and projected by the same
+ * factor) sit at the outer (base) ends of each ramp.
+ * The apex is marked with a median line and anti-slip slats
+ * (vertical marks spaced 25 units apart, drawn symmetrically) dress up
+ * ramps and zones. All lengths are divided by `ratio`.
  */
 export const AFrame: React.FC<AFrameProps> = ({
   id,

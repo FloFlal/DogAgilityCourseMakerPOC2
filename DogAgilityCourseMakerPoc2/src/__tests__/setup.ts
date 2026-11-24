@@ -1,13 +1,19 @@
-// Setup pour les tests Vitest
+// Setup for Vitest tests
 import { beforeAll, afterAll, afterEach, vi } from 'vitest';
 
-// Initialisation i18next (français par défaut) pour les composants traduits
-import '../i18n';
-
-// Polyfill localStorage si le runtime ne le fournit pas (Node 26+ sans --localstorage-file)
+// Polyfill localStorage when the runtime does not provide it (Node 26+ without --localstorage-file)
 import { installLocalStoragePolyfillIfNeeded } from './mocks/localStorage';
 
-// Mock de crypto.randomUUID pour les tests
+// The suite is calibrated on French labels: seed a persisted "fr" choice
+// BEFORE i18next initialization (the application itself starts in English
+// by default — see US-016).
+installLocalStoragePolyfillIfNeeded(window);
+window.localStorage.setItem('dogagility.language', 'fr');
+
+// Initialize i18next (dynamic import: respects ordering with the seed above)
+await import('../i18n');
+
+// crypto.randomUUID mock for the tests
 beforeAll(() => {
   if (!globalThis.crypto) {
     // @ts-expect-error - Mocking global crypto
@@ -15,19 +21,17 @@ beforeAll(() => {
       randomUUID: () => '00000000-0000-0000-0000-000000000000',
     };
   } else {
-    // Si crypto existe déjà (dans jsdom), on mock randomUUID
+    // If crypto already exists (in jsdom), mock randomUUID
     globalThis.crypto.randomUUID = () => '00000000-0000-0000-0000-000000000000';
   }
-
-  installLocalStoragePolyfillIfNeeded(window);
 });
 
-// Nettoyage après chaque test
+// Cleanup after each test
 afterEach(() => {
   vi.clearAllMocks();
 });
 
 afterAll(() => {
-  // Nettoyage final
+  // Final cleanup
   vi.restoreAllMocks();
 });

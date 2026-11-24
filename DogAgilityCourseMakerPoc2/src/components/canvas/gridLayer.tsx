@@ -4,8 +4,8 @@ import { GRID_OPACITY, GRID_STROKE } from '../../constants/canvasDefaults';
 import type { GridLayerProps } from '../../types/canvasTypes';
 
 /**
- * Couche de quadrillage du canvas : génère les lignes verticales et
- * horizontales selon la taille de grille et les dimensions de la zone de dessin.
+ * Canvas grid layer: generates the vertical and
+ * horizontal lines according to the grid size and the drawing area dimensions.
  */
 export const GridLayer: React.FC<GridLayerProps> = ({ width, height, gridSize }) => {
     const gridLines = useMemo((): React.ReactElement[] => {
