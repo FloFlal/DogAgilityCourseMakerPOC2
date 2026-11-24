@@ -13,6 +13,7 @@ export const en = {
             toolsGroup: 'Tool selection',
             toolsTitle: 'Tools',
             jump: 'Jump',
+            oxer: 'Double / Oxer',
             seesaw: 'Seesaw',
             dogWalk: 'Dog Walk',
             aFrame: 'A-Frame',
@@ -40,7 +41,7 @@ export const en = {
         // Obstacle type labels (information bar, US-029)
         obstacles: {
             jump: 'Jump',
-            oxer: 'Double (oxer)',
+            oxer: 'Double / Oxer',
             seesaw: 'Seesaw',
             dogWalk: 'Dog walk',
             aFrame: 'A-frame',

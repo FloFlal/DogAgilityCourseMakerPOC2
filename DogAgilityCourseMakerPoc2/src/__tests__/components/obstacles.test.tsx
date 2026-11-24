@@ -5,6 +5,7 @@ import { Jump } from '../../obstacles/jump';
 import { Seesaw } from '../../obstacles/seesaw';
 import { DogWalk } from '../../obstacles/dogWalk';
 import { AFrame } from '../../obstacles/aFrame';
+import { Oxer } from '../../obstacles/oxer';
 import { WeavePols } from '../../obstacles/weavePols';
 import type { BaseObstacleProps } from '../../types/obstacleTypes';
 
@@ -47,6 +48,21 @@ const cases: ObstacleCase[] = [
             />
         ),
         primitives: ['konva-rect', 'konva-circle', 'konva-line'],
+    },
+    {
+        name: 'Oxer',
+        renderWith: (props) => (
+            <Oxer
+                {...props}
+                barWidth={130}
+                barThickness={5}
+                hurdleWidth={50}
+                hurdleDepth={40}
+                hurdleThickness={10}
+                spread={60}
+            />
+        ),
+        primitives: ['konva-rect', 'konva-line'],
     },
     {
         name: 'Seesaw',

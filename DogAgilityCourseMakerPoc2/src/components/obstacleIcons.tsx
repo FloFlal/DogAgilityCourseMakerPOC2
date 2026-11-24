@@ -58,6 +58,14 @@ export const AFrameIcon: React.FC<ObstacleIconProps> = (props) => (
     </svg>
 );
 
+/** Oxer (double): two parallel planes, back plane higher. */
+export const OxerIcon: React.FC<ObstacleIconProps> = (props) => (
+    <svg viewBox="0 0 20 20" data-testid="obstacle-icon-oxer" {...ICON_PATHS} {...props}>
+        <line x1="8" y1="5" x2="8" y2="15" />
+        <line x1="13" y1="2.5" x2="13" y2="17.5" />
+    </svg>
+);
+
 /** Weave poles (weavePols): straight row of 12 poles. */
 export const WeavePolsIcon: React.FC<ObstacleIconProps> = (props) => (
     <svg viewBox="0 0 20 20" data-testid="obstacle-icon-weavePols" {...ICON_PATHS} {...props}>
