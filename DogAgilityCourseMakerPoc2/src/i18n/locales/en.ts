@@ -19,6 +19,7 @@ export const en = {
             dogWalk: 'Dog Walk',
             aFrame: 'A-Frame',
             weavePols: 'Weave poles',
+            semiWeavePols: 'Semi weave poles',
             colorGroup: 'Color selection',
             colorTitle: 'Colors',
             selectedTitle: 'Selected element',
