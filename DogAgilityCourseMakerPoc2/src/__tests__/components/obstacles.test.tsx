@@ -8,6 +8,7 @@ import { AFrame } from '../../obstacles/aFrame';
 import { Oxer } from '../../obstacles/oxer';
 import { LongJump } from '../../obstacles/longJump';
 import { Tire } from '../../obstacles/tire';
+import { WeavePols } from '../../obstacles/weavePols';
 import type { BaseObstacleProps } from '../../types/obstacleTypes';
 
 vi.mock('react-konva', async () => await import('./../mocks/reactKonva'));
@@ -89,6 +90,11 @@ const cases: ObstacleCase[] = [
         name: 'AFrame',
         renderWith: (props) => <AFrame {...props} width={90} elementLength={270} zoneLength={106} />,
         primitives: ['konva-rect', 'konva-line'],
+    },
+    {
+        name: 'WeavePols',
+        renderWith: (props) => <WeavePols {...props} poleCount={12} poleSpacing={60} poleDiameter={4} />,
+        primitives: ['konva-rect', 'konva-circle', 'konva-line'],
     },
 ];
 

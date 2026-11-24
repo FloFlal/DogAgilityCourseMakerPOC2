@@ -9,7 +9,7 @@ import {
 } from '../store/selectors';
 import { Trash2, Download, Upload, AlertTriangle } from 'lucide-react';
 import { LanguageSwitcher } from './languageSwitcher';
-import { AFrameIcon, DogWalkIcon, JumpIcon, LongJumpIcon, OxerIcon, SeesawIcon, TireIcon } from './obstacleIcons';
+import { AFrameIcon, DogWalkIcon, JumpIcon, LongJumpIcon, OxerIcon, SeesawIcon, TireIcon, WeavePolsIcon } from './obstacleIcons';
 import { CollapsibleSection } from './collapsibleSection';
 import type { ObstacleType } from '../types/obstacleTypes';
 
@@ -190,6 +190,14 @@ export const Sidebar: React.FC = () => {
                             className={toolButtonClass('aFrame')}
                         >
                             <AFrameIcon /> {t('sidebar.aFrame')}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setShapeType('weavePols')}
+                            aria-pressed={currentShapeType === 'weavePols'}
+                            className={toolButtonClass('weavePols')}
+                        >
+                            <WeavePolsIcon /> {t('sidebar.weavePols')}
                         </button>
                     </div>
                 </CollapsibleSection>

@@ -35,6 +35,7 @@ describe('ObstaclesLayer', () => {
                 makeObstacle('seesaw-1', 'seesaw'),
                 makeObstacle('walk-1', 'dogWalk'),
                 makeObstacle('aframe-1', 'aFrame'),
+                makeObstacle('weave-1', 'weavePols'),
             ],
         });
 
@@ -61,6 +62,7 @@ describe('ObstaclesLayer', () => {
             'seesaw-1',
             'walk-1',
             'aframe-1',
+            'weave-1',
         ]);
     });
 

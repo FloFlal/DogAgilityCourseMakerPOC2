@@ -83,3 +83,12 @@ export const TireIcon: React.FC<ObstacleIconProps> = (props) => (
         <line x1="3" y1="16.5" x2="17" y2="16.5" />
     </svg>
 );
+
+/** Weave poles (weavePols): straight row of 12 poles. */
+export const WeavePolsIcon: React.FC<ObstacleIconProps> = (props) => (
+    <svg viewBox="0 0 20 20" data-testid="obstacle-icon-weavePols" {...ICON_PATHS} {...props}>
+        {Array.from({ length: 12 }, (_, i) => (
+            <circle key={i} cx="10" cy={2 + i * (16 / 11)} r="1.1" fill="currentColor" stroke="none" />
+        ))}
+    </svg>
+);
