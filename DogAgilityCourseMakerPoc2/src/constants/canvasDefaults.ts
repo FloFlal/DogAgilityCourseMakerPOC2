@@ -51,6 +51,9 @@ export const A_FRAME_DEFAULTS = { width: 90, elementLength: 270, zoneLength: 106
 /** Default dimensions of the weave poles: 12 poles spaced 60 cm, Ø 4 cm, FCI scale, expressed before the ratio. */
 export const WEAVE_POLES_DEFAULTS = { poleCount: 12, poleSpacing: 60, poleDiameter: 4 };
 
+/** Default dimensions of the semi weave poles: training-only weave limited to 6 poles, every other weave characteristic kept. */
+export const SEMI_WEAVE_POLES_DEFAULTS = { ...WEAVE_POLES_DEFAULTS, poleCount: 6 };
+
 // Visible horizontal lengths (slope projection) for the long
 // of length: the inclined body loses sqrt(length² - height²) in canvas px.
 const SEESAW_VISIBLE_LENGTH = Math.sqrt(SEESAW_DEFAULTS.length ** 2 - 120 ** 2);
@@ -77,5 +80,9 @@ export const OBSTACLE_SIZES: { [K in ObstacleType]?: { width: number; height: nu
     weavePols: {
         width: WEAVE_POLES_DEFAULTS.poleSpacing,
         height: (WEAVE_POLES_DEFAULTS.poleCount - 1) * WEAVE_POLES_DEFAULTS.poleSpacing,
+    },
+    semiWeavePols: {
+        width: SEMI_WEAVE_POLES_DEFAULTS.poleSpacing,
+        height: (SEMI_WEAVE_POLES_DEFAULTS.poleCount - 1) * SEMI_WEAVE_POLES_DEFAULTS.poleSpacing,
     },
 };

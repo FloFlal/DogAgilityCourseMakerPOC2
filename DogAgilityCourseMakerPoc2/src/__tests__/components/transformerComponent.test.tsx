@@ -5,6 +5,18 @@ import { TransformerComponent } from '../../components/canvas/transformerCompone
 import { MIN_OBSTACLE_SIZE } from '../../constants/canvasDefaults';
 import { useDrawingStore } from '../../store/useDrawingStore';
 import type { Box } from 'konva/lib/shapes/Transformer';
+import type { Obstacle } from '../../types/obstacleTypes';
+
+const makeObstacle = (id: string, type: Obstacle['type']): Obstacle => ({
+    id,
+    type,
+    x: 0,
+    y: 0,
+    width: 25,
+    height: 25,
+    fill: '#3b82f6',
+    rotation: 0,
+});
 
 vi.mock('react-konva', async () => {
     const React = await import('react');
@@ -127,5 +139,35 @@ describe('TransformerComponent', () => {
         expect(props.boundBoxFunc(oldBox, tooNarrow)).toBe(oldBox);
         expect(props.boundBoxFunc(oldBox, tooShort)).toBe(oldBox);
         expect(props.boundBoxFunc(oldBox, valid)).toBe(valid);
+    });
+
+    it('places the rotate handle on the side for vertical obstacles', () => {
+        useDrawingStore.setState({ obstacles: [makeObstacle('weave-1', 'weavePols')] });
+
+        render(<TransformerComponent selectedId="weave-1" />);
+
+        const props = konvaMock.getProps();
+
+        expect(props.rotateAnchorAngle).toBe(90);
+    });
+
+    it('keeps the default rotate handle (top-center) for other obstacles', () => {
+        useDrawingStore.setState({ obstacles: [makeObstacle('seesaw-1', 'seesaw')] });
+
+        render(<TransformerComponent selectedId="seesaw-1" />);
+
+        const props = konvaMock.getProps();
+
+        expect(props.rotateAnchorAngle).toBe(0);
+    });
+
+    it('keeps the default rotate handle when no obstacle is selected', () => {
+        useDrawingStore.setState({ obstacles: [makeObstacle('weave-1', 'weavePols')] });
+
+        render(<TransformerComponent selectedId={null} />);
+
+        const props = konvaMock.getProps();
+
+        expect(props.rotateAnchorAngle).toBe(0);
     });
 });

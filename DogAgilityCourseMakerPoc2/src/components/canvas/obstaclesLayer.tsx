@@ -14,6 +14,7 @@ import {
     OBSTACLE_RATIO,
     OBSTACLE_SECONDARY_COLOR,
     OXER_DEFAULTS,
+    SEMI_WEAVE_POLES_DEFAULTS,
     SEESAW_DEFAULTS,
     WEAVE_POLES_DEFAULTS,
 } from '../../constants/canvasDefaults';
@@ -79,6 +80,8 @@ export const ObstaclesLayer: React.FC<ObstaclesLayerProps> = ({
                         return <AFrame {...commonProps} key={shape.id} {...A_FRAME_DEFAULTS} />;
                     case 'weavePols':
                         return <WeavePols {...commonProps} key={shape.id} {...WEAVE_POLES_DEFAULTS} />;
+                    case 'semiWeavePols':
+                        return <WeavePols {...commonProps} key={shape.id} {...SEMI_WEAVE_POLES_DEFAULTS} />;
                     default:
                         return null;
                 }
