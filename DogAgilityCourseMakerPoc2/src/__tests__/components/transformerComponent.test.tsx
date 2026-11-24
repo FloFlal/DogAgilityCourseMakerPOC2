@@ -141,7 +141,7 @@ describe('TransformerComponent', () => {
         expect(props.boundBoxFunc(oldBox, valid)).toBe(valid);
     });
 
-    it('place la poignée de rotation sur le côté pour les obstacles verticaux', () => {
+    it('places the rotate handle on the side for vertical obstacles', () => {
         useDrawingStore.setState({ obstacles: [makeObstacle('weave-1', 'weavePols')] });
 
         render(<TransformerComponent selectedId="weave-1" />);
@@ -151,7 +151,7 @@ describe('TransformerComponent', () => {
         expect(props.rotateAnchorAngle).toBe(90);
     });
 
-    it('garde la poignée de rotation par défaut (haut-centre) pour les autres obstacles', () => {
+    it('keeps the default rotate handle (top-center) for other obstacles', () => {
         useDrawingStore.setState({ obstacles: [makeObstacle('seesaw-1', 'seesaw')] });
 
         render(<TransformerComponent selectedId="seesaw-1" />);
@@ -161,7 +161,7 @@ describe('TransformerComponent', () => {
         expect(props.rotateAnchorAngle).toBe(0);
     });
 
-    it('garde la poignée de rotation par défaut sans obstacle sélectionné', () => {
+    it('keeps the default rotate handle when no obstacle is selected', () => {
         useDrawingStore.setState({ obstacles: [makeObstacle('weave-1', 'weavePols')] });
 
         render(<TransformerComponent selectedId={null} />);
