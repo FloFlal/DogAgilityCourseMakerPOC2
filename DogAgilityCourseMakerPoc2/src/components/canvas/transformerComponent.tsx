@@ -5,6 +5,18 @@ import type { Box } from 'konva/lib/shapes/Transformer';
 import { MIN_OBSTACLE_SIZE } from '../../constants/canvasDefaults';
 import { useDrawingStore } from '../../store/useDrawingStore';
 import type { TransformerComponentProps } from '../../types/canvasTypes';
+import type { ObstacleType } from '../../types/obstacleTypes';
+
+/**
+ * Obstacles drawn along the vertical axis: their bounding box is tall and
+ * narrow, so the default top-center rotate handle sits on the obstacle axis
+ * and reads as part of the drawing. For these types the rotate handle is
+ * moved to the side of the bounding box (rotateAnchorAngle 90 = middle-right).
+ */
+const VERTICAL_OBSTACLE_TYPES: ReadonlySet<ObstacleType> = new Set<ObstacleType>([
+    'weavePols',
+    'semiWeavePols',
+]);
 
 /**
  * Transformer component: surrounds the selected obstacle and applies
@@ -13,6 +25,10 @@ import type { TransformerComponentProps } from '../../types/canvasTypes';
 export const TransformerComponent: React.FC<TransformerComponentProps> = ({ selectedId }) => {
     const transformerRef = useRef<Konva.Transformer>(null);
     const shapes = useDrawingStore((state) => state.obstacles);
+
+    // Vertical obstacles get their rotate handle on the side of the box.
+    const selectedType = shapes.find((shape) => shape.id === selectedId)?.type;
+    const rotateAnchorAngle = selectedType !== undefined && VERTICAL_OBSTACLE_TYPES.has(selectedType) ? 90 : 0;
 
     useEffect((): void => {
         const transformer = transformerRef.current;
@@ -50,6 +66,7 @@ export const TransformerComponent: React.FC<TransformerComponentProps> = ({ sele
                     return newBox;
                 }}
                 rotateEnabled={true}
+                rotateAnchorAngle={rotateAnchorAngle}
                 borderStroke='red'
                 anchorCornerRadius={5}
                 enabledAnchors={[]}

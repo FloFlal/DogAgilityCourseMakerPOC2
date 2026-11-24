@@ -20,6 +20,7 @@ export const fr = {
             dogWalk: 'Passerelle',
             aFrame: 'A-Frame',
             weavePols: 'Slalom',
+            semiWeavePols: 'Semi-slalom',
             colorGroup: 'Choix de la couleur',
             colorTitle: 'Couleurs',
             selectedTitle: 'Élément sélectionné',

@@ -96,6 +96,11 @@ const cases: ObstacleCase[] = [
         renderWith: (props) => <WeavePols {...props} poleCount={12} poleSpacing={60} poleDiameter={4} />,
         primitives: ['konva-rect', 'konva-circle', 'konva-line'],
     },
+    {
+        name: 'WeavePols (training weave, 6 poles)',
+        renderWith: (props) => <WeavePols {...props} poleCount={6} poleSpacing={60} poleDiameter={4} />,
+        primitives: ['konva-rect', 'konva-circle', 'konva-line'],
+    },
 ];
 
 describe("Composants d'obstacles", () => {
