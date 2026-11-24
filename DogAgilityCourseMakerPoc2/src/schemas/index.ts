@@ -1,2 +1,2 @@
-// Export des schemas et fonctions de validation
+// Export of the schemas and validation functions
 export * from './courseSchema';

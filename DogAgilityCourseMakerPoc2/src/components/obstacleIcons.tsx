@@ -3,17 +3,17 @@ import React from 'react';
 type ObstacleIconProps = React.SVGProps<SVGSVGElement>;
 
 /**
- * Icônes schématiques des obstacles (US-031) : SVG maison monochromes en
- * `currentColor`, reconnaissables sur le fond clair du canvas (#83) comme sur
- * la sidebar sombre. Décoratives (aria-hidden par défaut) : le libellé texte
- * du bouton reste la référence accessible. Un composant par type d'obstacle,
- * à étendre avec les futures US (#61-#66).
+ * Schematic obstacle icons (US-031): hand-made monochrome SVGs in
+ * `currentColor`, visible on the light canvas background (#83) as well as on
+ * dark sidebar. Decorative (aria-hidden by default): the text label
+ * of the button remains the accessible reference. One component per obstacle type,
+ * to be extended with upcoming US (#61-#66).
  */
 
 const ICON_PATHS = {
     width: 16,
     height: 16,
-    // Décoratives : masquées aux lecteurs d'écran, le libellé suffit
+    // Decorative: hidden from screen readers, the text label is enough
     'aria-hidden': true,
     fill: 'none',
     stroke: 'currentColor',
@@ -22,7 +22,7 @@ const ICON_PATHS = {
     strokeLinejoin: 'round' as const,
 };
 
-/** Haie (jump) : deux montants, barre élastique et bases au sol. */
+/** Hurdle (jump): two uprights, elastic bar and ground bases. */
 export const JumpIcon: React.FC<ObstacleIconProps> = (props) => (
     <svg viewBox="0 0 20 20" data-testid="obstacle-icon-jump" {...ICON_PATHS} {...props}>
         <line x1="4" y1="4" x2="4" y2="16" />
@@ -33,7 +33,7 @@ export const JumpIcon: React.FC<ObstacleIconProps> = (props) => (
     </svg>
 );
 
-/** Bascule (seesaw) : plateau pivotant sur son support triangulaire. */
+/** Seesaw: pivoting plank on its triangular support. */
 export const SeesawIcon: React.FC<ObstacleIconProps> = (props) => (
     <svg viewBox="0 0 20 20" data-testid="obstacle-icon-seesaw" {...ICON_PATHS} {...props}>
         <line x1="3" y1="10" x2="17" y2="10" />
@@ -50,7 +50,7 @@ export const DogWalkIcon: React.FC<ObstacleIconProps> = (props) => (
     </svg>
 );
 
-/** Palissade (A-Frame) : deux rampes en triangle avec zone de contact pointillée. */
+/** A-Frame: two triangle ramps with a dashed contact zone. */
 export const AFrameIcon: React.FC<ObstacleIconProps> = (props) => (
     <svg viewBox="0 0 20 20" data-testid="obstacle-icon-aFrame" {...ICON_PATHS} {...props}>
         <path d="M10 3 L3 17 L17 17 Z" />
@@ -58,7 +58,7 @@ export const AFrameIcon: React.FC<ObstacleIconProps> = (props) => (
     </svg>
 );
 
-/** Oxer (double) : deux plans parallèles, plan arrière plus haut. */
+/** Oxer (double): two parallel planes, back plane higher. */
 export const OxerIcon: React.FC<ObstacleIconProps> = (props) => (
     <svg viewBox="0 0 20 20" data-testid="obstacle-icon-oxer" {...ICON_PATHS} {...props}>
         <line x1="8" y1="5" x2="8" y2="15" />
@@ -66,7 +66,7 @@ export const OxerIcon: React.FC<ObstacleIconProps> = (props) => (
     </svg>
 );
 
-/** Saut en longueur (longJump) : trois planches transversales successives. */
+/** Long jump (longJump): three successive transverse boards. */
 export const LongJumpIcon: React.FC<ObstacleIconProps> = (props) => (
     <svg viewBox="0 0 20 20" data-testid="obstacle-icon-longJump" {...ICON_PATHS} {...props}>
         <line x1="3" y1="4" x2="17" y2="4" />
@@ -75,7 +75,7 @@ export const LongJumpIcon: React.FC<ObstacleIconProps> = (props) => (
     </svg>
 );
 
-/** Saut de pneu (tire) : anneau suspendu dans son cadre, ouverture au centre. */
+/** Tyre jump (tire): ring suspended in its frame, opening at the center. */
 export const TireIcon: React.FC<ObstacleIconProps> = (props) => (
     <svg viewBox="0 0 20 20" data-testid="obstacle-icon-tire" {...ICON_PATHS} {...props}>
         <circle cx="10" cy="10" r="5" />

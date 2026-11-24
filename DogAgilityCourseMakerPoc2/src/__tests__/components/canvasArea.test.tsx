@@ -59,7 +59,7 @@ describe('CanvasArea', () => {
         });
 
         expect(useDrawingStore.getState().obstacles).toHaveLength(1);
-        // la pose ne sélectionne pas l'obstacle automatiquement
+        // placement does not select the obstacle automatically
         expect(useDrawingStore.getState().selectedId).toBeNull();
     });
 

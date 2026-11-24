@@ -2,9 +2,9 @@ import { z } from 'zod';
 import type { ObstacleType } from '../types/obstacleTypes';
 
 /**
- * Schéma Zod d'un obstacle individuel : identifiant UUID, type réglementaire,
+ * Zod schema of an individual obstacle: UUID identifier, regulation type,
  * position finie et positive, dimensions strictement positives, couleur
- * hexadécimale et rotation bornée à ±180°.
+ * hexadecimal value and rotation clamped to +/-180°.
  */
 export const obstacleSchema = z.object({
   id: z.string().uuid('Invalid obstacle ID format'),
@@ -21,12 +21,12 @@ export const obstacleSchema = z.object({
   rotation: z.number().min(-180).max(180, 'Rotation must be between -180 and 180 degrees'),
 });
 
-/** Schéma Zod d'un parcours complet : tableau d'obstacles (format .dacm.json). */
+/** Zod schema of a full course: obstacle array (.dacm.json format). */
 export const courseSchema = z.array(obstacleSchema);
 
-/** Type d'un obstacle validé (inféré du schéma Zod). */
+/** Type of a validated obstacle (inferred from the Zod schema). */
 export type ValidObstacle = z.infer<typeof obstacleSchema>;
-/** Type d'un parcours validé : liste d'obstacles validés. */
+/** Type of a validated course: list of validated obstacles. */
 export type ValidCourse = z.infer<typeof courseSchema>;
 
 // Helper function to format Zod v4 errors
@@ -39,17 +39,17 @@ function formatZodError(error: z.ZodError): string {
 }
 
 /**
- * Valide une chaîne JSON représentant un parcours complet.
- * Parse le JSON, vérifie que c'est un tableau puis applique le schéma Zod.
- * @param jsonString - la chaîne JSON à valider
- * @returns les obstacles validés en cas de succès, sinon un message d'erreur
- *          listant tous les problèmes de validation
+ * Validates a JSON string representing a full course.
+ * Parses the JSON, checks it is an array then applies the Zod schema.
+ * @param jsonString - the JSON string to validate
+ * @returns the validated obstacles on success, otherwise an error message
+ *          listing all validation issues
  */
 export function validateCourseData(jsonString: string): { success: boolean; data?: ValidCourse; error?: string } {
   try {
     const parsed = JSON.parse(jsonString);
     
-    // Vérifier que c'est un tableau
+    // Check that it is an array
     if (!Array.isArray(parsed)) {
       return { 
         success: false, 
@@ -57,7 +57,7 @@ export function validateCourseData(jsonString: string): { success: boolean; data
       };
     }
     
-    // Valider avec Zod
+    // Validate with Zod
     const result = courseSchema.safeParse(parsed);
     
     if (result.success) {
@@ -86,9 +86,9 @@ export function validateCourseData(jsonString: string): { success: boolean; data
 }
 
 /**
- * Valide un obstacle individuel sans parsing JSON.
- * @param obstacle - l'objet à valider
- * @returns l'obstacle validé en cas de succès, sinon un message d'erreur détaillé
+ * Validates an individual obstacle without JSON parsing.
+ * @param obstacle - the object to validate
+ * @returns the validated obstacle on success, otherwise a detailed error message
  */
 export function validateObstacle(obstacle: unknown): { success: boolean; data?: ValidObstacle; error?: string } {
   const result = obstacleSchema.safeParse(obstacle);
@@ -106,7 +106,7 @@ export function validateObstacle(obstacle: unknown): { success: boolean; data?: 
   }
 }
 
-/** Types d'obstacles supportés, utilisables par l'UI de choix d'outil. */
+/** Supported obstacle types, usable by the tool-choice UI. */
 export const VALID_OBSTACLE_TYPES: ObstacleType[] = [
   'jump', 'oxer', 'seesaw', 'dogWalk', 'aFrame', 
   'weavePols', 'semiWeavePols', 'tunnel6m', 'tunnel5m', 
@@ -114,9 +114,9 @@ export const VALID_OBSTACLE_TYPES: ObstacleType[] = [
 ];
 
 /**
- * Vérifie qu'une chaîne correspond à un type d'obstacle connu (garde de type).
- * @param type - la valeur candidate
- * @returns true si `type` est un ObstacleType
+ * Checks whether a string matches a known obstacle type (type guard).
+ * @param type - the candidate value
+ * @returns true if `type` is an ObstacleType
  */
 export function isValidObstacleType(type: string): type is ObstacleType {
   return VALID_OBSTACLE_TYPES.includes(type as ObstacleType);

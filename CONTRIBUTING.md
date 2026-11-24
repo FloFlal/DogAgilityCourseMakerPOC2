@@ -1,11 +1,14 @@
-# Guide de contribution
+**English** | [🇫🇷 Français](CONTRIBUTING.fr.md)
 
-Merci de votre intérêt pour le Dog Agility Course Maker ! Ce document décrit
-comment installer le projet, développer dessus et respecter ses conventions.
+# Contributing guide
+
+Thank you for your interest in the Dog Agility Course Maker! This document
+describes how to set the project up, develop on it and follow its
+conventions.
 
 ## Installation
 
-Prérequis : Node.js (>= 20) et npm.
+Requirements: Node.js (>= 20) and npm.
 
 ```bash
 git clone https://github.com/FloFlal/DogAgilityCourseMakerPOC2.git
@@ -14,114 +17,112 @@ npm install
 npm run dev
 ```
 
-Le serveur de développement démarre sur http://localhost:5173.
+The development server starts on http://localhost:5173.
 
-Vérifier son travail avant de soumettre :
+Check your work before submitting:
 
 ```bash
-npx vitest run          # suite de tests complète
-npm run test:coverage   # couverture (seuils : 80/80/80/70)
-npm run lint            # ESLint, zéro erreur et zéro avertissement attendus
-npm run build           # tsc -b + build de production
+npx vitest run          # full test suite
+npm run test:coverage   # coverage (thresholds: 80/80/80/70)
+npm run lint            # ESLint, zero errors and zero warnings expected
+npm run build           # tsc -b + production build
 ```
 
-## Workflow de contribution
+## Contribution workflow
 
-1. Ouvrez (ou reprenez) une issue décrivant le problème ou l'amélioration.
-2. Créez une branche dédiée à partir de `main` à jour
-   (`git fetch origin main && git checkout -b <nom-de-branche> origin/main`).
-3. Développez avec des commits atomiques en français
-   (voir [conventions de commit](#conventions-de-commit)).
-4. Vérifiez tests, lint et build.
-5. Ouvrez une pull request vers `main` : le CI doit passer et un membre du
-   projet relit le code.
-6. Après relecture, la pull request est fusionnée (squash) dans `main`.
+1. Open (or pick up) an issue describing the problem or the improvement.
+2. Create a dedicated branch from an up-to-date `main`
+   (`git fetch origin main && git checkout -b <branch-name> origin/main`).
+3. Develop with atomic commits in English
+   (see [commit conventions](#commit-conventions)).
+4. Run tests, lint and build.
+5. Open a pull request towards `main`: CI must pass and a project member
+   reviews the code.
+6. After review, the pull request is merged (squash) into `main`.
 
-## Conventions de code
+## Code conventions
 
-- **Langue** : commentaires, JSDoc, messages de commit et de PR en français ;
-  identificateurs en anglais.
-- **Fichiers** : noms en camelCase, à l'exception des composants React
-  existants déjà nommés en lowerCamelCase (conserver la convention locale).
-- **TypeScript strict** :
-  - `verbatimModuleSyntax` : importer les types avec `import type` ;
-  - `erasableSyntaxOnly` : pas d'enum ni de namespace, préférer les unions
-    de littéraux et `as const` ;
-  - aucun `any` : typer explicitement les données publiques ;
-  - utiliser `React.ReactElement` plutôt que `JSX.Element`.
-- **Nom des callbacks** : `handle*` pour les callbacks internes et les
-  retours de hooks, `on*` pour les props d'événements.
-- **Indentation** : suivre celle du fichier modifié (le projet mélange 2
-  espaces dans `src/obstacles` et 4 espaces ailleurs) ; ne pas reformater
-  des lignes non touchées.
-- **Dépendances** : n'en ajouter que si nécessaire et motivé dans la PR.
+- **Language**: source-code comments and JSDoc in English (US-013);
+  identifiers in English. **New** issues, PRs and commit messages are
+  written in English (existing artifacts remain in French).
+- **Files**: camelCase names, except for existing React components already
+  named in lowerCamelCase (keep the local convention).
+- **Strict TypeScript**:
+  - `verbatimModuleSyntax`: import types with `import type`;
+  - `erasableSyntaxOnly`: no enum or namespace, prefer literal unions and
+    `as const`;
+  - no `any`: type public data explicitly;
+  - use `React.ReactElement` rather than `JSX.Element`.
+- **Callback naming**: `handle*` for internal callbacks and hook returns,
+  `on*` for event props.
+- **Indentation**: follow the file you modify (the project mixes 2-space
+  indentation in `src/obstacles` and 4 spaces elsewhere); do not reformat
+  untouched lines.
+- **Dependencies**: only add them when necessary and justify in the PR.
 
 ## Architecture
 
-- **Store Zustand découpé en slices** (`src/store/slices/`) : `drawing`
-  (obstacles et sélection), `tools` (préférences de dessin), `course`
-  (import/export). Les types se composent dans `storeTypes.ts`.
-- **Sélecteurs** (`src/store/selectors.ts`) : composer le store à travers
-  des sélecteurs nommés (`useDrawingStore(selectObstacles)`) ; les données
-  dérivées utilisent `createSelector` (mémoïsation).
-- **Service pur** (`src/services/courseService.ts`) : la logique
-  d'import/export est pure, sans store ni UI, ce qui la rend aisément
-  testable.
-- **Schémas Zod** (`src/schemas/courseSchema.ts`) : toute donnée importée
-  est validée par `validateCourseData`.
-- **Couches canvas** (`src/components/canvas/`) : le rendu est découpé en
-  couches (quadrillage, obstacles, transformer) et les composants
-  d'obstacles (`src/obstacles/`) restent purement visuels.
+- **Zustand store split into slices** (`src/store/slices/`): `drawing`
+  (obstacles and selection), `tools` (drawing preferences), `course`
+  (import/export). Slice types are composed in `storeTypes.ts`.
+- **Selectors** (`src/store/selectors.ts`): consume the store through named
+  selectors (`useDrawingStore(selectObstacles)`); derived data uses
+  `createSelector` (memoization).
+- **Pure service** (`src/services/courseService.ts`): the import/export
+  logic is pure, without store or UI, which makes it easy to test.
+- **Zod schemas** (`src/schemas/courseSchema.ts`): every imported dataset
+  is validated by `validateCourseData`.
+- **Canvas layers** (`src/components/canvas/`): rendering is split into
+  layers (grid, obstacles, transformer) and obstacle components
+  (`src/obstacles/`) stay purely visual.
 
 ## Tests
 
-- Runner : **Vitest** (jsdom, `globals: true`), assertions avec
-  `@testing-library/react` et `@testing-library/user-event`.
-- **react-konva doit être mocké** dans les tests rendant du canvas Konva
-  (voir `src/__tests__/mocks/reactKonva.tsx`) : chaque primitive Konva
-  devient une `div` avec des attributs `data-testid`/`data-id`.
-- Le compteur global de couverture impose **80 % de lignes, statements et
-  fonctions, 70 % de branches** : `npx vitest run --coverage` échoue si les
-  seuils ne sont pas atteints.
-- Préférer des tests ciblés pour couvrir les branches plutôt que baisser
-  les seuils.
+- Runner: **Vitest** (jsdom, `globals: true`), assertions with
+  `@testing-library/react` and `@testing-library/user-event`.
+- **react-konva must be mocked** in tests rendering Konva canvases
+  (see `src/__tests__/mocks/reactKonva.tsx`): every Konva primitive becomes
+  a `div` with `data-testid`/`data-id` attributes.
+- The global coverage threshold enforces **80% lines, statements and
+  functions, 70% branches**: `npx vitest run --coverage` fails when the
+  thresholds are not met.
+- Prefer targeted tests to cover branches rather than lowering thresholds.
 
-## Internationalisation
+## Internationalization
 
-- Tout texte visible doit passer par la fonction de traduction
-  `t('namespace.cle')` (`useTranslation` de react-i18next).
-- Les traductions vivent dans `src/i18n/locales/fr.ts` et `en.ts` :
-  toute nouvelle clé est ajoutée dans les **deux** fichiers.
-- Les libellés d'accessibilité (`aria-label`, textes `sr-only`) sont
-  également traduits.
+- Every visible text must go through the translation function
+  `t('namespace.key')` (`useTranslation` from react-i18next).
+- Translations live in `src/i18n/locales/fr.ts` and `en.ts`: every new key
+  is added to **both** files.
+- Accessibility labels (`aria-label`, `sr-only` texts) are translated too.
+- The application defaults to English with browser-language detection; the
+  persisted user choice (localStorage) always takes precedence (US-016).
 
-## Accessibilité
+## Accessibility
 
-- Tout élément interactif est atteignable au clavier (le canvas gère
-  Escape, Suppr et les flèches via `useCanvasKeyboard`).
-- Les groupes de contrôle utilisent `role="group"` avec un `aria-label`,
-  les boutons d'état exposent `aria-pressed`, les icônes décoratives sont
-  `aria-hidden`.
-- Les états de focus visibles (`focus-visible:outline-*`) sont conservés.
+- Every interactive element is keyboard-reachable (the canvas handles
+  Escape, Delete and the arrows via `useCanvasKeyboard`).
+- Control groups use `role="group"` with an `aria-label`, state buttons
+  expose `aria-pressed`, decorative icons are `aria-hidden`.
+- Visible focus states (`focus-visible:outline-*`) are preserved.
 
-## Conventions de commit
+## Commit conventions
 
-Messages en français, au format :
+Messages in English, with the format:
 
 ```
-type(US-0XX): description courte
+type(US-0XX): short description
 ```
 
-avec `type` parmi `feat`, `fix`, `refactor`, `test`, `docs`, `chore`,
-et le détail des changements en liste à puces dans le corps du message.
+where `type` is one of `feat`, `fix`, `refactor`, `test`, `docs`, `chore`,
+and the change details as a bullet list in the message body.
 
-## Checklist de pull request
+## Pull request checklist
 
-La checklist complète est maintenue dans le [template de pull
-request](.github/PULL_REQUEST_TEMPLATE.md) et pré-remplit automatiquement
-la description de chaque nouvelle PR : il suffit de cocher les cases avant
-de demander la relecture.
+The full checklist is maintained in the [pull request
+template](.github/PULL_REQUEST_TEMPLATE.md) and automatically pre-fills the
+description of every new PR: just tick the boxes before requesting review.
 
-Les vérifications testables (`lint`, tests et couverture, `build`) sont
-de plus exécutées automatiquement par le pipeline CI (`ci.yml`) sur chaque
-pull request et chaque push vers `main`.
+The checkable gates (`lint`, tests and coverage, `build`) are additionally
+run automatically by the CI pipeline (`ci.yml`) on every pull request and
+every push to `main`.
