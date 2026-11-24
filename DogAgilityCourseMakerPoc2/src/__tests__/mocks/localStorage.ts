@@ -1,7 +1,7 @@
 /**
- * Storage en mémoire utilisé comme polyfill de substitution dans les tests.
- * Réplique la sémantique de l'interface Storage (couples clé/valeur chaînes de
- * caractères, `getItem` retournant `null` pour une clé absente).
+ * In-memory storage used as a fallback polyfill in tests.
+ * Replicates the Storage interface semantics (key/value pairs of
+ * characters, `getItem` returning `null` for a missing key).
  */
 export type MemoryStorage = Pick<
     Storage,
@@ -9,8 +9,8 @@ export type MemoryStorage = Pick<
 >;
 
 /**
- * Crée un storage en mémoire indépendant, cloisonné entre les installations.
- * @returns Un objet conforme à la sous-interface MemoryStorage (getUser : getItem, setItem, removeItem, clear)
+ * Creates an independent in-memory storage, isolated between installations.
+ * @returns An object conforming to the MemoryStorage sub-interface (getItem, setItem, removeItem, clear)
  */
 export function createMemoryStorage(): MemoryStorage {
     const store = new Map<string, string>();
@@ -36,9 +36,9 @@ export function createMemoryStorage(): MemoryStorage {
 type StorageHost = { localStorage?: unknown };
 
 /**
- * Vérifie qu'une valeur expose bien le service Storage attendu.
- * @param value - Valeur à inspecter (peut être undefined ou un objet incomplet)
- * @returns Vrai si la valeur implémente les quatre méthodes de MemoryStorage
+ * Checks whether a value properly implements the expected Storage interface.
+ * @param value - Value to inspect (may be undefined or an incomplete object)
+ * @returns True if the value implements the four MemoryStorage methods
  */
 function isUsableStorage(value: unknown): value is MemoryStorage {
     if (typeof value !== 'object' || value === null) {
@@ -56,13 +56,13 @@ function isUsableStorage(value: unknown): value is MemoryStorage {
 }
 
 /**
- * Installe un polyfill en mémoire si `localStorage` est indisponible sur l'hôte.
- * Nœud 26+ expose un global `localStorage` expérimental qui, sans l'option
- * `--localstorage-file`, masque le localStorage fourni par jsdom dans
- * l'environnement Vitest : ce polyfill garantit alors une sémantique réelle
- * (getItem, setItem, removeItem, clear) quel que soit le runtime Node.
- * @param host - Objet hôte sur lequel définir `localStorage` (ex. `window` en environnement jsdom)
- * @returns Vrai si le polyfill a été installé, faux si un storage utilisable existe déjà ou si la définition a échoué
+ * Installs an in-memory polyfill when `localStorage` is unavailable on the host.
+ * Node 26+ exposes an experimental global `localStorage` which, without the
+ * `--localstorage-file` option, hides the localStorage provided by jsdom in
+ * the Vitest environment: this polyfill then guarantees a real
+ * (getItem, setItem, removeItem, clear) whatever the Node runtime.
+ * @param host - Host object on which to define `localStorage` (e.g. `window` in the jsdom environment)
+ * @returns True if the polyfill was installed, false if a usable storage already exists or the definition failed
  */
 export function installLocalStoragePolyfillIfNeeded(host: object): boolean {
     try {

@@ -3,17 +3,17 @@ import React from 'react';
 type ObstacleIconProps = React.SVGProps<SVGSVGElement>;
 
 /**
- * Icônes schématiques des obstacles (US-031) : SVG maison monochromes en
- * `currentColor`, reconnaissables sur le fond clair du canvas (#83) comme sur
- * la sidebar sombre. Décoratives (aria-hidden par défaut) : le libellé texte
- * du bouton reste la référence accessible. Un composant par type d'obstacle,
- * à étendre avec les futures US (#61-#66).
+ * Schematic obstacle icons (US-031): hand-made monochrome SVGs in
+ * `currentColor`, visible on the light canvas background (#83) as well as on
+ * dark sidebar. Decorative (aria-hidden by default): the text label
+ * of the button remains the accessible reference. One component per obstacle type,
+ * to be extended with upcoming US (#61-#66).
  */
 
 const ICON_PATHS = {
     width: 16,
     height: 16,
-    // Décoratives : masquées aux lecteurs d'écran, le libellé suffit
+    // Decorative: hidden from screen readers, the text label is enough
     'aria-hidden': true,
     fill: 'none',
     stroke: 'currentColor',
@@ -22,7 +22,7 @@ const ICON_PATHS = {
     strokeLinejoin: 'round' as const,
 };
 
-/** Haie (jump) : deux montants, barre élastique et bases au sol. */
+/** Hurdle (jump): two uprights, elastic bar and ground bases. */
 export const JumpIcon: React.FC<ObstacleIconProps> = (props) => (
     <svg viewBox="0 0 20 20" data-testid="obstacle-icon-jump" {...ICON_PATHS} {...props}>
         <line x1="4" y1="4" x2="4" y2="16" />
@@ -33,7 +33,7 @@ export const JumpIcon: React.FC<ObstacleIconProps> = (props) => (
     </svg>
 );
 
-/** Bascule (seesaw) : plateau pivotant sur son support triangulaire. */
+/** Seesaw: pivoting plank on its triangular support. */
 export const SeesawIcon: React.FC<ObstacleIconProps> = (props) => (
     <svg viewBox="0 0 20 20" data-testid="obstacle-icon-seesaw" {...ICON_PATHS} {...props}>
         <line x1="3" y1="10" x2="17" y2="10" />
@@ -50,7 +50,7 @@ export const DogWalkIcon: React.FC<ObstacleIconProps> = (props) => (
     </svg>
 );
 
-/** Palissade (A-Frame) : deux rampes en triangle avec zone de contact pointillée. */
+/** A-Frame: two triangle ramps with a dashed contact zone. */
 export const AFrameIcon: React.FC<ObstacleIconProps> = (props) => (
     <svg viewBox="0 0 20 20" data-testid="obstacle-icon-aFrame" {...ICON_PATHS} {...props}>
         <path d="M10 3 L3 17 L17 17 Z" />
@@ -58,7 +58,7 @@ export const AFrameIcon: React.FC<ObstacleIconProps> = (props) => (
     </svg>
 );
 
-/** Slalom (weavePols) : rangée droite de 12 poteaux. */
+/** Weave poles (weavePols): straight row of 12 poles. */
 export const WeavePolsIcon: React.FC<ObstacleIconProps> = (props) => (
     <svg viewBox="0 0 20 20" data-testid="obstacle-icon-weavePols" {...ICON_PATHS} {...props}>
         {Array.from({ length: 12 }, (_, i) => (
@@ -67,7 +67,7 @@ export const WeavePolsIcon: React.FC<ObstacleIconProps> = (props) => (
     </svg>
 );
 
-/** Semi-slalom (semiWeavePols) : rangée droite de 6 poteaux (entraînement). */
+/** Semi weave poles (semiWeavePols): straight row of 6 poles (training). */
 export const SemiWeavePolsIcon: React.FC<ObstacleIconProps> = (props) => (
     <svg viewBox="0 0 20 20" data-testid="obstacle-icon-semiWeavePols" {...ICON_PATHS} {...props}>
         {Array.from({ length: 6 }, (_, i) => (

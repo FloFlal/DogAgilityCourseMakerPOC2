@@ -10,7 +10,7 @@ vi.mock('react-konva', async () => {
     const React = await import('react');
     const { createElement, useEffect } = React;
 
-    // Instance fictive de Transformer avec l'API utilisée par le composant
+    // Fake Transformer instance with the API used by the component
     const transformerInstance: {
         nodes: ReturnType<typeof vi.fn>;
         getStage: ReturnType<typeof vi.fn>;
@@ -33,7 +33,7 @@ vi.mock('react-konva', async () => {
     const Transformer = (props: TransformerMockProps): ReactElement => {
         lastProps = props;
 
-        // Instance fictive assignée à la ref, avant l'effet du composant testé
+        // Fake instance assigned to the ref, before the effect of the tested component
         useEffect(() => {
             if (props.ref) props.ref.current = transformerInstance;
             return () => {

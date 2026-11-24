@@ -1,4 +1,4 @@
-/** Traductions françaises (langue par défaut). */
+/** French translations. */
 export const fr = {
     translation: {
         app: {
@@ -37,7 +37,7 @@ export const fr = {
         language: {
             groupLabel: 'Choix de la langue',
         },
-        // Libellés des types d'obstacles (bandeau d'informations US-029)
+        // Obstacle type labels (information banner US-029)
         obstacles: {
             jump: 'Haie',
             oxer: 'Saut double',
@@ -53,7 +53,7 @@ export const fr = {
             longJump: 'Saut en longueur',
             tire: 'Saut de pneu',
         },
-        // Bandeau d'informations en bas de la zone de dessin (US-029)
+        // Information banner at the bottom of the drawing area (US-029)
         statusBar: {
             count: 'Obstacles : {{count}}',
             type: 'Sélection : {{type}}',

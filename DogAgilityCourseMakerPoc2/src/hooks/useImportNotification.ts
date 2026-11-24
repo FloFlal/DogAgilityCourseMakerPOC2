@@ -4,8 +4,8 @@ import { selectImportError } from '../store/selectors';
 import { useEffect } from 'react';
 
 /**
- * Hook pour gérer les notifications d'import/export
- * Affiche automatiquement les erreurs d'import sous forme de toast
+ * Hook handling import/export notifications
+ * Automatically displays import errors as a toast
  */
 export function useImportNotification(): void {
     const importError = useDrawingStore(selectImportError);
@@ -17,7 +17,7 @@ export function useImportNotification(): void {
                 duration: 6000,
                 position: 'top-right',
             });
-            // Clear l'erreur après l'avoir affichée
+            // Clear the error after displaying it
             clearImportError();
         }
     }, [importError, clearImportError]);

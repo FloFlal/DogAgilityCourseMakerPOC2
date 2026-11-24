@@ -57,7 +57,7 @@ describe('App (intégration)', () => {
         const afterAdd = useDrawingStore.getState();
         expect(afterAdd.obstacles).toHaveLength(1);
         expect(afterAdd.obstacles[0].type).toBe('seesaw');
-        // la pose ne sélectionne pas l'obstacle : sélection par clic sur l'obstacle
+        // placement does not select the obstacle: selection by obstacle click
         expect(afterAdd.selectedId).toBeNull();
         expect(screen.queryByRole('button', { name: /Supprimer l'obstacle/ })).toBeNull();
         expect(document.querySelectorAll('[data-testid="konva-group"]')).toHaveLength(1);
@@ -97,14 +97,14 @@ describe('App (intégration)', () => {
             window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
         });
 
-        // pas fin par défaut : +1 px
+        // fine step by default: +1 px
         expect(useDrawingStore.getState().obstacles[0].x).toBe(11);
 
         act(() => {
             window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', shiftKey: true }));
         });
 
-        // Maj : pas rapide d'une case de grille (25 px)
+        // Shift: fast move of one grid cell (25 px)
         expect(useDrawingStore.getState().obstacles[0].x).toBe(36);
 
         await user.click(screen.getByRole('group', { name: "Zone de dessin du parcours d'agility" }));

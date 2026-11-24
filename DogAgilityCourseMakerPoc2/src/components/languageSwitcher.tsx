@@ -7,8 +7,8 @@ const switcherButtonClass = (active: boolean): string =>
     active ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-700 border-slate-600 text-slate-300 hover:bg-slate-600'}`;
 
 /**
- * Sélecteur de langue : bascule l'interface en français ou en anglais
- * sans rechargement de la page (react-i18next réagit au changement).
+ * Language selector: switches the interface between English and French
+ * without reloading the page (react-i18next reacts to the change).
  */
 export const LanguageSwitcher: React.FC = () => {
     const { t, i18n } = useTranslation();

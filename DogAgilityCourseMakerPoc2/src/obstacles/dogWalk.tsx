@@ -2,15 +2,15 @@ import { Group, Line, Rect } from "react-konva"
 import type { DogWalkProps } from "../types/obstacleTypes"
 
 /**
- * Passerelle (DogWalk) : plateau central horizontal avec une rampe à chaque extrémité.
+ * Dog walk (DogWalk): horizontal central plank with a ramp at each end.
  *
- * Algorithme : `elementLength` est la longueur inclinée de chaque rampe, dont
- * la hauteur constante vaut 120 unités ; la projection horizontale d'une rampe
- * vaut upDownVisibleLength = sqrt(elementLength² - 120²). Les zones de contact
- * (`zoneLength`, mesurées le long de la rampe) sont projetées par le même
- * coefficient et placées aux extrémités extérieures. Des lattes antidérapantes
- * (traits verticaux espacés de 25 unités, dessinées symétriquement)
- * décorent rampes et zones. Toutes les longueurs sont divisées par `ratio`.
+ * Algorithm: `elementLength` is the inclined length of each ramp, whose
+ * constant height is 120 units; the horizontal projection of a ramp
+ * is upDownVisibleLength = sqrt(elementLength² - 120²). The contact zones
+ * (`zoneLength`, measured along the ramp) are projected by the same
+ * factor and placed at the outer ends. Anti-slip slats
+ * (vertical marks spaced 25 units apart, drawn symmetrically)
+ * decorate ramps and zones. All lengths are divided by `ratio`.
  */
 export const DogWalk: React.FC<DogWalkProps> = ({
   id,
