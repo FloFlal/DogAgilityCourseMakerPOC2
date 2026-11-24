@@ -87,7 +87,7 @@ describe('Sidebar accessibilité', () => {
     it("chaque bouton d'outil affiche le schéma de l'obstacle (décoratif)", () => {
         render(<Sidebar />);
 
-        for (const type of ['jump', 'oxer', 'seesaw', 'dogWalk', 'aFrame', 'weavePols', 'semiWeavePols']) {
+        for (const type of ['jump', 'oxer', 'longJump', 'seesaw', 'dogWalk', 'aFrame', 'weavePols', 'semiWeavePols']) {
             const icon = screen.getByTestId(`obstacle-icon-${type}`);
 
             expect(icon.getAttribute('aria-hidden')).toBe('true');

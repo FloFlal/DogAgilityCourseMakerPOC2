@@ -14,6 +14,7 @@ export const en = {
             toolsTitle: 'Tools',
             jump: 'Jump',
             oxer: 'Double / Oxer',
+            longJump: 'Long jump',
             seesaw: 'Seesaw',
             dogWalk: 'Dog Walk',
             aFrame: 'A-Frame',

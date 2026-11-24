@@ -66,6 +66,16 @@ export const OxerIcon: React.FC<ObstacleIconProps> = (props) => (
     </svg>
 );
 
+/** Long jump (longJump): 4 successive transverse boards (FCI: 2 to 4). */
+export const LongJumpIcon: React.FC<ObstacleIconProps> = (props) => (
+    <svg viewBox="0 0 20 20" data-testid="obstacle-icon-longJump" {...ICON_PATHS} {...props}>
+        <line x1="3" y1="3" x2="17" y2="3" />
+        <line x1="3" y1="8" x2="17" y2="8" strokeDasharray="2 1.5" />
+        <line x1="3" y1="12" x2="17" y2="12" strokeDasharray="2 1.5" />
+        <line x1="3" y1="17" x2="17" y2="17" />
+    </svg>
+);
+
 /** Weave poles (weavePols): straight row of 12 poles. */
 export const WeavePolsIcon: React.FC<ObstacleIconProps> = (props) => (
     <svg viewBox="0 0 20 20" data-testid="obstacle-icon-weavePols" {...ICON_PATHS} {...props}>

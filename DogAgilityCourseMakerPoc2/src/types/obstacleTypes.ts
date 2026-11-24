@@ -78,6 +78,14 @@ export interface OxerProps extends BaseObstacleProps {
   spread: number;
 }
 
+/** Props specific to the long jump: board count and total depth. */
+export interface LongJumpProps extends BaseObstacleProps {
+  elementCount: number;
+  boardWidth: number;
+  boardDepth: number;
+  totalDepth: number;
+}
+
 /** Props specific to the A-Frame: ramps and contact zones. */
 export interface AFrameProps extends BaseObstacleProps {
   width: number;

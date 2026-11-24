@@ -9,7 +9,7 @@ import {
 } from '../store/selectors';
 import { Trash2, Download, Upload, AlertTriangle } from 'lucide-react';
 import { LanguageSwitcher } from './languageSwitcher';
-import { AFrameIcon, DogWalkIcon, JumpIcon, OxerIcon, SemiWeavePolsIcon, SeesawIcon, WeavePolsIcon } from './obstacleIcons';
+import { AFrameIcon, DogWalkIcon, JumpIcon, LongJumpIcon, OxerIcon, SemiWeavePolsIcon, SeesawIcon, WeavePolsIcon } from './obstacleIcons';
 import { CollapsibleSection } from './collapsibleSection';
 import type { ObstacleType } from '../types/obstacleTypes';
 
@@ -150,6 +150,14 @@ export const Sidebar: React.FC = () => {
                             className={toolButtonClass('oxer')}
                         >
                             <OxerIcon /> {t('sidebar.oxer')}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setShapeType('longJump')}
+                            aria-pressed={currentShapeType === 'longJump'}
+                            className={toolButtonClass('longJump')}
+                        >
+                            <LongJumpIcon /> {t('sidebar.longJump')}
                         </button>
                         <button
                             type="button"

@@ -5,6 +5,7 @@ import { Seesaw } from '../../obstacles/seesaw';
 import { DogWalk } from '../../obstacles/dogWalk';
 import { AFrame } from '../../obstacles/aFrame';
 import { Oxer } from '../../obstacles/oxer';
+import { LongJump } from '../../obstacles/longJump';
 import { WeavePols } from '../../obstacles/weavePols';
 import {
     A_FRAME_DEFAULTS,
@@ -14,6 +15,7 @@ import {
     OBSTACLE_RATIO,
     OBSTACLE_SECONDARY_COLOR,
     OXER_DEFAULTS,
+    LONG_JUMP_DEFAULTS,
     SEMI_WEAVE_POLES_DEFAULTS,
     SEESAW_DEFAULTS,
     WEAVE_POLES_DEFAULTS,
@@ -72,6 +74,8 @@ export const ObstaclesLayer: React.FC<ObstaclesLayerProps> = ({
                         return <Jump {...commonProps} key={shape.id} {...JUMP_DEFAULTS} />;
                     case 'oxer':
                         return <Oxer {...commonProps} key={shape.id} {...OXER_DEFAULTS} />;
+                    case 'longJump':
+                        return <LongJump {...commonProps} key={shape.id} {...LONG_JUMP_DEFAULTS} />;
                     case 'seesaw':
                         return <Seesaw {...commonProps} key={shape.id} {...SEESAW_DEFAULTS} />;
                     case 'dogWalk':

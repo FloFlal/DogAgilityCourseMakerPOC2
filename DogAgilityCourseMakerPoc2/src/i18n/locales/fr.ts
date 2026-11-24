@@ -14,6 +14,7 @@ export const fr = {
             toolsTitle: 'Outils',
             jump: 'Haie',
             oxer: 'Oxer',
+            longJump: 'Saut en longueur',
             seesaw: 'Bascule',
             dogWalk: 'Passerelle',
             aFrame: 'A-Frame',
