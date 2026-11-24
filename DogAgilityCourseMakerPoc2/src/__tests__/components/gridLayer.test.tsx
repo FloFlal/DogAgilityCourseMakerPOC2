@@ -15,7 +15,7 @@ describe('GridLayer', () => {
 
         const lines = screen.getAllByTestId('konva-line');
 
-        // verticales : x = 0..1000 (pas 100) -> 11 ; horizontales : y = 0..700 -> 8
+        // vertical: x = 0..1000 (step 100) -> 11; horizontal: y = 0..700 -> 8
         expect(lines).toHaveLength(19);
 
         const firstVertical = lines[0];

@@ -1,8 +1,8 @@
-import { describe, expect, it, afterEach } from 'vitest';
+import { describe, expect, it, afterEach, vi } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { LanguageSwitcher } from '../../components/languageSwitcher';
-import i18n from '../../i18n';
+import i18n, { DEFAULT_LANGUAGE, getInitialLanguage } from '../../i18n';
 
 const STORAGE_KEY = 'dogagility.language';
 
@@ -17,7 +17,7 @@ describe('LanguageSwitcher', () => {
         });
     });
 
-    it("affiche les deux langues avec l'état aria-pressed", () => {
+    it('shows both languages with the aria-pressed state', () => {
         render(<LanguageSwitcher />);
 
         const french = screen.getByRole('button', { name: 'Français' });
@@ -27,7 +27,7 @@ describe('LanguageSwitcher', () => {
         expect(english.getAttribute('aria-pressed')).toBe('false');
     });
 
-    it('change la langue sans recharger la page', async () => {
+    it('changes the language without reloading the page', async () => {
         const user = userEvent.setup();
         render(<LanguageSwitcher />);
 
@@ -41,7 +41,7 @@ describe('LanguageSwitcher', () => {
         expect(window.localStorage.getItem(STORAGE_KEY)).toBe('en');
     });
 
-    it("retraduit les textes de l'interface après changement", async () => {
+    it('retranslates UI texts after a change', async () => {
         const user = userEvent.setup();
         render(<LanguageSwitcher />);
 
@@ -56,5 +56,38 @@ describe('LanguageSwitcher', () => {
         });
 
         expect(i18n.t('sidebar.toolsTitle')).toBe('Outils');
+    });
+});
+
+describe('getInitialLanguage (US-016 — English default)', () => {
+    it('falls back to English when no preference is stored', () => {
+        window.localStorage.removeItem(STORAGE_KEY);
+
+        expect(getInitialLanguage()).toBe(DEFAULT_LANGUAGE);
+        expect(DEFAULT_LANGUAGE).toBe('en');
+    });
+
+    it('keeps the persisted user choice over anything else', () => {
+        window.localStorage.setItem(STORAGE_KEY, 'fr');
+
+        expect(getInitialLanguage()).toBe('fr');
+    });
+
+    it('follows a French browser language when nothing is stored', () => {
+        window.localStorage.removeItem(STORAGE_KEY);
+        vi.spyOn(window.navigator, 'language', 'get').mockReturnValue('fr-FR');
+
+        expect(getInitialLanguage()).toBe('fr');
+
+        vi.restoreAllMocks();
+    });
+
+    it('follows the default for an unsupported browser language', () => {
+        window.localStorage.removeItem(STORAGE_KEY);
+        vi.spyOn(window.navigator, 'language', 'get').mockReturnValue('de-DE');
+
+        expect(getInitialLanguage()).toBe('en');
+
+        vi.restoreAllMocks();
     });
 });

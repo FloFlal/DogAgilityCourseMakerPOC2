@@ -17,8 +17,8 @@ import type { BaseObstacleProps } from '../../types/obstacleTypes';
 import type { ObstaclesLayerProps } from '../../types/canvasTypes';
 
 /**
- * Couche d'obstacles : rend chaque obstacle selon son type et lui
- * délègue les handlers de sélection, drag et transformation.
+ * Obstacles layer: renders each obstacle according to its type and
+ * delegates the selection, drag and transform handlers.
  */
 export const ObstaclesLayer: React.FC<ObstaclesLayerProps> = ({
     shapes,

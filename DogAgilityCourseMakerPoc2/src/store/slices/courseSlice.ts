@@ -3,13 +3,13 @@ import { exportCourse, importCourse } from '../../services/courseService';
 import type { DrawingState } from '../storeTypes';
 
 /**
- * Slice "parcours" : import/export d'un parcours, délégué au service courseService.
- * Le slice ne gère que l'état applicatif (obstacles importés, erreur courante).
+ * Course slice: course import/export, delegated to the courseService service.
+ * The slice only manages the application state (imported obstacles, current error).
  */
 
 /**
- * État du slice "parcours" : erreur d'import courante et actions
- * d'export, d'import et de réinitialisation de l'erreur.
+ * Course slice state: current import error and actions
+ * for export, import and error reset.
  */
 export interface CourseSlice {
     importError: string | null;
@@ -20,11 +20,11 @@ export interface CourseSlice {
 }
 
 /**
- * Crée le slice "parcours" : import/export du parcours, délégués au service
- * courseService, plus le message d'erreur d'import courant.
- * @param set - mutateur d'état Zustand
- * @param get - accesseur d'état Zustand
- * @returns les propriétés du slice course
+ * Creates the course slice: course import/export, delegated to the
+ * courseService, plus the current import error message.
+ * @param set - Zustand state setter
+ * @param get - Zustand state getter
+ * @returns the course slice properties
  */
 export const createCourseSlice: StateCreator<DrawingState, [], [], CourseSlice> = (set, get) => ({
     importError: null,

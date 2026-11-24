@@ -1,25 +1,25 @@
 import Konva from 'konva';
 
 /**
- * Types d'obstacles selon la réglementation FCI ; les types encore
- * non dessinés sont réservés pour les implémentations futures.
+ * Obstacle types according to the FCI regulations; types not yet
+ * drawn yet are reserved for future implementations.
  */
 export type ObstacleType = 
-  | 'jump'           // Saut simple
-  | 'oxer'          // Saut double
-  | 'seesaw'        // Bascule
-  | 'dogWalk'       // Passerelle
-  | 'aFrame'        // A-frame (palissade)
-  | 'weavePols'     // Slalom (avec piquets)
-  | 'semiWeavePols' // Semi-slalom
+  | 'jump'           // Hurdle (single jump)
+  | 'oxer'          // Oxer (spread hurdle)
+  | 'seesaw'        // Seesaw
+  | 'dogWalk'       // Dog walk
+  | 'aFrame'        // A-Frame
+  | 'weavePols'     // Weave poles (12 poles)
+  | 'semiWeavePols' // Semi weave poles (6 poles)
   | 'tunnel6m'      // Tunnel 6m
   | 'tunnel5m'      // Tunnel 5m
   | 'tunnel4m'      // Tunnel 4m
   | 'tunnel3m'      // Tunnel 3m
-  | 'longJump'      // Saut en longueur
-  | 'tire';         // Pneu
+  | 'longJump'      // Long jump
+  | 'tire';         // Tyre
 
-/** Représentation d'un obstacle posé sur le canvas. */
+/** Representation of an obstacle placed on the canvas. */
 export interface Obstacle {
   id: string;
   type: ObstacleType;
@@ -31,16 +31,16 @@ export interface Obstacle {
   rotation: number;
 }
 
-/** Alias d'événements Konva exposés aux handlers des composants. */
+/** Alias of Konva events exposed to component handlers. */
 export type KonvaMouseEvent = Konva.KonvaEventObject<MouseEvent>;
-/** Événement de tap (tactile) Konva. */
+/** Konva tap (touch) event. */
 export type KonvaTapEvent = Konva.KonvaEventObject<TouchEvent>;
-/** Événement de drag Konva. */
+/** Konva drag event. */
 export type KonvaDragEvent = Konva.KonvaEventObject<DragEvent>;
-/** Événement de transformation (resize/rotation) Konva. */
+/** Konva transform (resize/rotation) event. */
 export type KonvaTransformEvent = Konva.KonvaEventObject<Event>;
 
-/** Props communes à tous les composants d'obstacles : identité, géométrie, couleurs et handlers. */
+/** Props common to all obstacle components: identity, geometry, colors and handlers. */
 export interface BaseObstacleProps {
   id: string;
   ratio: number;
@@ -59,7 +59,7 @@ export interface BaseObstacleProps {
   draggable?: boolean;
 }
 
-/** Props spécifiques au Jump (saut) : barre et montants. */
+/** Props specific to the Jump: bar and uprights. */
 export interface JumpProps extends BaseObstacleProps {
   barWidth: number;
   barThickness: number;  // Correction: barThickess -> barThickness
@@ -68,21 +68,21 @@ export interface JumpProps extends BaseObstacleProps {
   hurdleThickness: number;
 }
 
-/** Props spécifiques à l'A-Frame (palissade) : rampes et zones de contact. */
+/** Props specific to the A-Frame: ramps and contact zones. */
 export interface AFrameProps extends BaseObstacleProps {
   width: number;
   elementLength: number;
   zoneLength: number;
 }
 
-/** Props spécifiques au Seesaw (bascule) : plateau et zones de contact. */
+/** Props specific to the Seesaw: plank and contact zones. */
 export interface SeesawProps extends BaseObstacleProps {
   width: number;
   length: number;
   zoneLength: number;
 }
 
-/** Props spécifiques au DogWalk (passerelle) : plateau, rampes et zones de contact. */
+/** Props specific to the DogWalk: plank, ramps and contact zones. */
 export interface DogWalkProps extends BaseObstacleProps {
   width: number;
   elementLength: number;
