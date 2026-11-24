@@ -16,6 +16,7 @@ export const fr = {
             seesaw: 'Bascule',
             dogWalk: 'Passerelle',
             aFrame: 'A-Frame',
+            weavePols: 'Slalom',
             colorGroup: 'Choix de la couleur',
             colorTitle: 'Couleurs',
             selectedTitle: 'Élément sélectionné',
