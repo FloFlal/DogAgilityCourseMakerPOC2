@@ -6,18 +6,18 @@ import { createCourseSlice } from './slices/courseSlice';
 import type { DrawingState } from './storeTypes';
 
 /**
- * Store Zustand global de l'application.
+ * Global Zustand store of the application.
  *
- * Composé de trois slices pour séparer les responsabilités :
- * - drawingSlice : obstacles et sélection (voir src/store/slices/drawingSlice.ts)
- * - toolSlice : préférences d'outil (grille, couleur, type d'obstacle)
- * - courseSlice : import/export d'un parcours via src/services/courseService.ts
+ * Made of three slices to separate responsibilities:
+ * - drawingSlice: obstacles and selection (see src/store/slices/drawingSlice.ts)
+ * - toolSlice: tool preferences (grid, color, obstacle type)
+ * - courseSlice: course import/export via src/services/courseService.ts
  *
- * Les mutations sont tracées en développement par le middleware logger
+ * Mutations are traced in development by the logger middleware
  * (voir src/store/middleware/logger.ts).
  *
- * Pour éviter les re-renders inutiles, toujours consommer le store via un
- * sélecteur, de préférence un des sélecteurs memoized de src/store/selectors.ts.
+ * To avoid unnecessary re-renders, always consume the store through a
+ * selector, preferably one of the memoized selectors from src/store/selectors.ts.
  */
 export const useDrawingStore = create<DrawingState>()(
     logger((...a) => ({

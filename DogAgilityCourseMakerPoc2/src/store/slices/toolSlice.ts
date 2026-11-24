@@ -3,14 +3,14 @@ import type { ObstacleType } from '../../types/obstacleTypes';
 import type { DrawingState } from '../storeTypes';
 
 /**
- * Slice "outils" : préférences de l'outil de dessin (grille, couleur, type d'obstacle).
+ * Tools slice: drawing tool preferences (grid, color, obstacle type).
  */
 
-/** État du slice "outils" : préférences de dessin et mutateurs associés. */
+/** Tools slice state: drawing preferences and related setters. */
 export interface ToolSlice {
     gridSize: number;
     currentColor: string;
-    /** Outil de pose actif : `null` signifie « aucun outil » (aucune pose au clic). */
+    /** Active placement tool: `null` means "no tool" (nothing placed on click). */
     currentShapeType: ObstacleType | null;
 
     setCurrentColor: (color: string) => void;
@@ -18,10 +18,10 @@ export interface ToolSlice {
 }
 
 /**
- * Crée le slice "outils" : préférences de dessin (taille de grille, couleur
- * courante, type d'obstacle courant) et leurs mutateurs.
- * @param set - mutateur d'état Zustand
- * @returns les propriétés du slice tools
+ * Creates the tools slice: drawing preferences (grid size, obstacle
+ * current color, current obstacle type) and their setters.
+ * @param set - Zustand state setter
+ * @returns the tools slice properties
  */
 export const createToolSlice: StateCreator<DrawingState, [], [], ToolSlice> = (set) => ({
     gridSize: 25,
@@ -35,8 +35,8 @@ export const createToolSlice: StateCreator<DrawingState, [], [], ToolSlice> = (s
     setCurrentShapeType: (type: ObstacleType | null): void => {
         set((state) => ({
             currentShapeType: type,
-            // Armer l'outil désélectionne l'obstacle courant : outil et
-            // sélection sont mutuellement exclusifs.
+            // Arming the tool deselects the current obstacle: tool and
+            // selection are mutually exclusive.
             selectedId: type !== null ? null : state.selectedId,
         }));
     },

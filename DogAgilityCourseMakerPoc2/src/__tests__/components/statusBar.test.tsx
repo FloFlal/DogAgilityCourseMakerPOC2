@@ -36,9 +36,9 @@ describe('StatusBar (bandeau d\u2019informations, US-029)', () => {
 
         const selected = screen.getByTestId('status-selected');
 
-        // type traduit (fr par défaut)
+        // translated type (default language)
         expect(selected.textContent).toContain('Haie');
-        // positions arrondies à l'entier
+        // positions rounded to the integer
         expect(selected.textContent).toContain('121');
         expect(selected.textContent).toContain('80');
     });
@@ -66,7 +66,7 @@ describe('StatusBar (bandeau d\u2019informations, US-029)', () => {
             useDrawingStore.getState().deleteShape(id);
         });
 
-        // la suppression retire aussi la sélection du bandeau
+        // deleting also removes the selection from the banner
         expect(screen.queryByTestId('status-selected')).toBeNull();
         expect(screen.getByTestId('status-count').textContent).toContain('0');
     });

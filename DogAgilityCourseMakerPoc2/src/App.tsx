@@ -6,7 +6,7 @@ import { useImportNotification } from './hooks/useImportNotification';
 import './App.css';
 
 const App: React.FC = () => {
-    // Hook pour gérer les notifications d'import
+    // Hook handling import notifications
     useImportNotification();
 
     return (

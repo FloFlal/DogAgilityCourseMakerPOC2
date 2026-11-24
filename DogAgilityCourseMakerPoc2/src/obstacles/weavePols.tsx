@@ -2,18 +2,17 @@ import { Arrow, Circle, Group, Rect } from "react-konva"
 import type { WeavePolsProps } from "../types/obstacleTypes"
 
 /**
- * Slalom (Weave poles) : rangée droite de poteaux que le chien serpente.
+ * Weave poles: a straight row of poles the dog weaves through.
  *
- * Géométrie : toutes les longueurs sont divisées par le `ratio` global du
- * canvas. Le nombre réglementaire de poteaux (8 à 12, 12 par défaut) est
- * réparti sur l'axe vertical, espacé uniformément de -longueur/2 à
- * +longueur/2, la longueur valant (nombre de poteaux - 1) fois `poleSpacing`
- * (60 cm réglementaires). Au ratio par défaut (2.5), le diamètre nominal
- * de 4 cm tombe sous les 2 px : un rayon visuel minimal de 4 cm (Ø 8 cm)
- * garantit la lisibilité à l'écran. Les couleurs alternent le long de la
- * rangée, une flèche à gauche du premier poteau marque le sens d'entrée,
- * et un rectangle invisible englobe l'ensemble pour offrir une surface
- * stable de clic et de drag.
+ * Geometry: all lengths are divided by the global canvas `ratio`. The
+ * regulated number of poles (8 to 12, 12 by default) is spread on the
+ * vertical axis, evenly spaced from -length/2 to +length/2, the length
+ * being (pole count - 1) times `poleSpacing` (regulated 60 cm). At the
+ * default ratio (2.5) the nominal 4 cm diameter falls under 2 px wide: a
+ * minimum visual radius of 4 cm (Ø 8 cm) keeps it legible on screen.
+ * Colors alternate along the row, an arrow beside the first pole marks
+ * the entry direction, and an invisible rectangle engulfs the whole row
+ * to offer a stable click and drag surface.
  */
 export const WeavePols: React.FC<WeavePolsProps> = ({
   id,
@@ -33,12 +32,12 @@ export const WeavePols: React.FC<WeavePolsProps> = ({
   onDrag,
   draggable = true
 }) => {
-    // Rayon visuel plancher : le Ø 4 cm réglementaire est trop fin à l'écran.
+    // Minimum visual radius: the regulated 4 cm diameter is too thin on screen.
     const poleRadius = Math.max(poleDiameter / 2, 4);
     const rowLength = (poleCount - 1) * poleSpacing;
     const halfLength = rowLength / 2;
-    // Surface de clic et de drag : pleine longueur plus un espacement de
-    // chaque côté, largeur latérale d'un espacement entre poteaux.
+    // Click and drag surface: full length plus one pole spacing on each
+    // side, lateral width of one pole spacing.
     const hitWidth = poleSpacing;
     const hitLength = rowLength + 2 * poleSpacing;
     const arrowOffset = poleRadius / ratio + 8;
