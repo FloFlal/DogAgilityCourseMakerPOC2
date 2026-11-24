@@ -1,125 +1,124 @@
+[🇫🇷 Français](README.fr.md) | 🇬🇧 **English**
+
 # DogAgilityCourseMakerPOC2
 
-Cette application est une preuve de conception (POC) permettant de choisir
-les technologies d'un futur designer de parcours d'agility canine, open
-source et maintenu par la communauté.
+This application is a proof of concept (POC) used to select the technologies
+for a future dog agility course designer — open source and community driven.
 
-**Ce dépôt n'a pas vocation à être l'application finale.**
+**This repository is not meant to become the final application.**
 
-**Essayer en ligne : [https://floflal.github.io/DogAgilityCourseMakerPOC2/](https://floflal.github.io/DogAgilityCourseMakerPOC2/)** (déployée automatiquement depuis `main`, voir [Déploiement](#déploiement)).
+**Try it online: [https://floflal.github.io/DogAgilityCourseMakerPOC2/](https://floflal.github.io/DogAgilityCourseMakerPOC2/)** (deployed automatically from `main`, see [Deployment](#deployment)).
 
-## Stack technique
+## Tech stack
 
-| Domaine | Technologie |
+| Area | Technology |
 | --- | --- |
 | UI | React 19 + TypeScript + Vite |
-| Dessin 2D | Konva + react-konva |
-| Gestion d'état | Zustand (store découpé en slices, sélecteurs mémoïsés) |
-| Styles | TailwindCSS 4 |
-| Validation | Zod (schémas d'import de parcours) |
-| Internationalisation | i18next + react-i18next (français / anglais) |
+| 2D drawing | Konva + react-konva |
+| State management | Zustand (sliced store, memoized selectors) |
+| Styling | TailwindCSS 4 |
+| Validation | Zod (course import schemas) |
+| Internationalization | i18next + react-i18next (French / English) |
 | Notifications | react-hot-toast |
-| Icônes | lucide-react |
-| Tests | Vitest + @testing-library/react (jsdom), couverture @vitest/coverage-v8 |
+| Icons | lucide-react |
+| Testing | Vitest + @testing-library/react (jsdom), coverage with @vitest/coverage-v8 |
 
-## L'application
+## The application
 
-Ce POC se concentre sur les aspects suivants :
+This POC focuses on the following aspects:
 
-- Un designer de parcours permettant de poser, déplacer, redimensionner et
-  faire pivoter des obstacles conformes à la réglementation FCI.
-- Une vue de réglages permettant de changer la couleur et la taille des
-  obstacles.
-- Une fonctionnalité d'import/export permettant de sauvegarder le parcours
-  dans un fichier (`.dacm.json`), de le partager et de le réimporter.
-- Une interface accessible (navigation clavier, ARIA) et internationale
-  (anglais par défaut, détection de la langue du navigateur, changement
-  français/anglais sans rechargement de la page ; le choix persisté dans le
-  navigateur prime sur tout autre critère).
+- A course designer to place, move, resize and rotate obstacles that comply
+  with the FCI regulations.
+- A settings view to change the color and size of obstacles.
+- An import/export feature to save the course to a file (`.dacm.json`),
+  share it and import it back.
+- An accessible (keyboard navigation, ARIA) and international interface
+  (English by default & browser-language detection, French/English switch
+  without reloading the page; the persisted choice always wins).
 
-### Interactions principales
+### Main interactions
 
-- Cliquez sur un outil dans la barre latérale pour l'armer (re-cliquer sur
-  l'outil actif le désactive), puis cliquez sur le canvas pour y poser
-  l'obstacle, aux dimensions réglementaires par type. L'obstacle posé n'est
-  pas sélectionné automatiquement : cliquez dessus pour le sélectionner.
-- Cliquez sur un obstacle pour le sélectionner : cela désactive l'outil de
-  pose (outil et sélection sont mutuellement exclusifs). Échap désélectionne
-  l'élément actif : l'obstacle sélectionné, sinon l'outil.
-- Un bandeau d'informations en bas de la zone de dessin affiche en permanence
-  le nombre d'obstacles posés et, lors d'une sélection, le type et la
-  position (x/y en px) de l'obstacle sélectionné.
+- Click a tool in the sidebar to arm it (clicking the active tool again
+  disarms it), then click the canvas to place the obstacle with its
+  regulation dimensions per type. The placed obstacle is *not* selected
+  automatically: click it to select it.
+- Click an obstacle to select it: this disarms the placement tool (tool and
+  selection are mutually exclusive). Escape deselects the active item: the
+  selected obstacle, otherwise the tool.
+- An information banner at the bottom of the drawing area permanently shows
+  the number of placed obstacles and, when a selection exists, the type and
+  position (x/y in px) of the selected obstacle.
 
-## Installation et développement
+## Installation and development
 
-Prérequis : Node.js (>= 20) et npm.
+Requirements: Node.js (>= 20) and npm.
 
 ```bash
-# récupérer le projet et installer les dépendances
+# clone the project and install the dependencies
 git clone https://github.com/FloFlal/DogAgilityCourseMakerPOC2.git
 cd DogAgilityCourseMakerPOC2/DogAgilityCourseMakerPoc2
 npm install
 
-# lancer le serveur de développement
+# start the development server
 npm run dev
 ```
 
-### Scripts disponibles
+### Available scripts
 
-| Commande | Description |
+| Command | Description |
 | --- | --- |
-| `npm run dev` | serveur de développement Vite |
-| `npm run build` | vérification TypeScript (`tsc -b`) puis build de production |
-| `npm run preview` | prévisualisation du build de production |
-| `npm run lint` | analyse ESLint de tout le projet |
-| `npm test` | tests Vitest en mode watch |
-| `npx vitest run` | exécution unique de toute la suite de tests |
-| `npm run test:coverage` | tests avec rapport de couverture (seuils : 80 % lignes/statements/fonctions, 70 % branches) |
+| `npm run dev` | Vite development server |
+| `npm run build` | TypeScript check (`tsc -b`) then production build |
+| `npm run preview` | preview of the production build |
+| `npm run lint` | ESLint across the whole project |
+| `npm test` | Vitest tests in watch mode |
+| `npx vitest run` | one-shot run of the whole test suite |
+| `npm run test:coverage` | tests with coverage report (thresholds: 80% lines/statements/functions, 70% branches) |
 
-## Structure du projet
+## Project structure
 
 ```
 DogAgilityCourseMakerPoc2/src/
 ├── components/         # Sidebar, CanvasArea, LanguageSwitcher
-│   └── canvas/         # couches Konva (quadrillage, obstacles, transformer)
-├── hooks/              # hooks React (drag, transformation, clavier, dimensions)
-├── i18n/               # internationalisation (locales fr / en)
-├── obstacles/          # rendu de chaque obstacle (Jump, Seesaw, DogWalk, AFrame)
-├── schemas/            # schémas Zod de validation des parcours
-├── services/           # logique pure (import/export, indépendante du store et de l'UI)
-├── store/              # store Zustand (slices) + sélecteurs mémoïsés
-├── types/              # types TypeScript partagés
-└── __tests__/          # tests unitaires et d'intégration (Vitest)
+│   └── canvas/         # Konva layers (grid, obstacles, transformer)
+├── hooks/              # React hooks (drag, transform, keyboard, dimensions)
+├── i18n/               # internationalization (fr / en locales)
+├── obstacles/          # rendering of each obstacle (Jump, Seesaw, DogWalk, AFrame)
+├── schemas/            # Zod schemas validating courses
+├── services/           # pure logic (import/export, store- and UI-independent)
+├── store/              # Zustand store (slices) + memoized selectors
+├── types/              # shared TypeScript types
+└── __tests__/          # unit and integration tests (Vitest)
 ```
 
-## Déploiement
+## Deployment
 
-L'application est publiée sur **GitHub Pages** à chaque push sur `main`, via le
-workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) :
+The application is published on **GitHub Pages** on every push to `main`,
+through the
+[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) workflow:
 
-1. installation des dépendances puis build de production sur Node 26 ;
-2. publication du contenu de `dist` avec les actions officielles
+1. dependency installation then production build on Node 26;
+2. publication of the `dist` content with the official
    [`upload-pages-artifact`](https://github.com/actions/upload-pages-artifact)
-   et [`deploy-pages`](https://github.com/actions/deploy-pages) ;
-3. l'URL de l'application est visible dans l'environnement `github-pages` du
-dépôt (Settings → Environments).
+   and [`deploy-pages`](https://github.com/actions/deploy-pages) actions;
+3. the application URL is visible in the `github-pages` environment of the
+repository (Settings → Environments).
 
-Le build Pages utilise une base publique spécifique
-(`VITE_BASE=/DogAgilityCourseMakerPOC2/`, consommée par `vite.config.ts`) —
-en développement local, la base par défaut `/` reste utilisée.
+The Pages build uses a specific public base
+(`VITE_BASE=/DogAgilityCourseMakerPOC2/`, consumed by `vite.config.ts`) —
+in local development the default `/` base is still used.
 
-> Prérequis (une seule fois, réglage manuel du dépôt) :
-> Settings → Pages → Source « GitHub Actions ».
+> One-time prerequisite (manual repository setting):
+> Settings → Pages → Source "GitHub Actions".
 
-## Contribution
+## Contributing
 
-Pour contribuer, consultez le [guide de contribution](CONTRIBUTING.md).
-En résumé, deux possibilités :
+To contribute, read the [contributing guide](CONTRIBUTING.md).
+In short, two options:
 
-- Vous ne savez pas ou ne voulez pas coder : créez une issue pour expliquer
-  votre problème (bug, amélioration, idée, etc.) et comment vous imaginez
-  l'évolution de l'application.
-- Vous voulez coder : créez une issue, forkez le projet, créez une branche
-  pour développer votre idée, faites le développement et les tests, puis
-  ouvrez une pull request sur le projet principal pour qu'un membre la
-  relise.
+- You cannot or do not want to code: open an issue explaining your problem
+  (bug, improvement, idea, etc.) and how you envision the evolution of the
+  application.
+- You want to code: open an issue, fork the project, create a branch to
+  develop your idea, develop and test it, then open a pull request on the
+  main project for review.
