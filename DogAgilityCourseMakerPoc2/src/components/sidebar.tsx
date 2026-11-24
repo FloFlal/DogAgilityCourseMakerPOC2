@@ -14,16 +14,15 @@ import { CollapsibleSection } from './collapsibleSection';
 import type { ObstacleType } from '../types/obstacleTypes';
 
 /**
- * Panneau latéral accordéon (US-028) : sections rétractables (une seule
- * ouverte à la fois, sélection d'outils ouverte par défaut) regroupant le
- * choix d'outil et de couleur, actions de sélection (suppression), choix de
- * langue, import/export du parcours et alerte accessible en cas d'erreur
- * d'import.
+ * Accordion side panel (US-028): collapsible sections (only one
+ * open at a time, tool selection open by default) grouping the
+ * tool and color choice, selection actions (deletion), language
+ * choice, course import/export and an accessible alert on import error.
  */
 export const Sidebar: React.FC = () => {
     const { t } = useTranslation();
 
-    // Sélecteurs atomiques : chaque champ est souscrit individuellement
+    // Atomic selectors: each field is subscribed individually
     const currentColor = useDrawingStore(selectCurrentColor);
     const setCurrentColor = useDrawingStore((state) => state.setCurrentColor);
     const currentShapeType = useDrawingStore(selectCurrentShapeType);
@@ -37,8 +36,8 @@ export const Sidebar: React.FC = () => {
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // Accordéon : une seule section ouverte à la fois ; la section outils est
-    // ouverte par défaut à chaque chargement (état volontairement non persisté).
+    // Accordion: only one section open at a time; the tools section is
+    // open by default on every load (state intentionally not persisted).
     const [openSection, setOpenSection] = useState<string | null>('tools');
 
     const toggleSection = (id: string): void => {
@@ -76,8 +75,8 @@ export const Sidebar: React.FC = () => {
     };
 
     const setShapeType = (type: ObstacleType): void => {
-        // Arme l'outil demandé ; re-cliquer l'outil actif le désélectionne.
-        // Le store désélectionne l'obstacle courant dès qu'un outil est armé.
+        // Arms the requested tool; clicking the active tool again deselects it.
+        // The store deselects the current obstacle as soon as a tool is armed.
         setCurrentShapeType(currentShapeType === type ? null : type);
     };
 

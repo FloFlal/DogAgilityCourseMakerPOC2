@@ -2,23 +2,23 @@ import React from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
 interface CollapsibleSectionProps {
-    /** Identifiant unique : sert d'ancrage `aria-controls` du contenu. */
+    /** Unique identifier: used as the `aria-controls` anchor of the content. */
     id: string;
-    /** Nom accessible de la région de contenu (indépendant du titre visible). */
+    /** Accessible name of the content region (independent of the visible title). */
     label: string;
-    /** Titre visible du bouton de bascule. */
+    /** Visible title of the toggle button. */
     title: string;
-    /** Section ouverte ? (accordéon : une seule à la fois côté sidebar) */
+    /** Section open? (accordion: only one at a time on the sidebar side) */
     isOpen: boolean;
-    /** Basculer l'état ouvert/fermé de la section. */
+    /** Toggle the open/closed state of the section. */
     onToggle: () => void;
     children: React.ReactNode;
 }
 
 /**
- * Section rétractable (accordéon, US-028) : un titre cliquable expose
- * `aria-expanded` et `aria-controls`, le contenu est masqué (display none)
- * quand la section est fermée et expose une région nommée quand il est visible.
+ * Collapsible section (accordion, US-028): a clickable title exposes
+ * `aria-expanded` and `aria-controls`; the content is hidden (display none)
+ * when the section is closed and exposes a named region when visible.
  */
 export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
     id,

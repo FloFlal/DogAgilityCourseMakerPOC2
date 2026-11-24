@@ -76,7 +76,7 @@ describe('Sidebar accessibilité', () => {
 
         expect(screen.getByRole('group', { name: /choix de l'outil/i })).toBeTruthy();
 
-        // Sections fermées par défaut : on les ouvre via leur titre accordéon
+        // Sections closed by default: open them via their accordion title
         fireEvent.click(screen.getByRole('button', { name: 'Couleurs' }));
         expect(screen.getByRole('group', { name: /choix de la couleur/i })).toBeTruthy();
 

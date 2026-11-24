@@ -30,7 +30,7 @@ npm run build           # tsc -b + build de production
 1. Ouvrez (ou reprenez) une issue décrivant le problème ou l'amélioration.
 2. Créez une branche dédiée à partir de `main` à jour
    (`git fetch origin main && git checkout -b <nom-de-branche> origin/main`).
-3. Développez avec des commits atomiques en français
+3. Développez avec des commits atomiques en anglais
    (voir [conventions de commit](#conventions-de-commit)).
 4. Vérifiez tests, lint et build.
 5. Ouvrez une pull request vers `main` : le CI doit passer et un membre du
@@ -39,8 +39,9 @@ npm run build           # tsc -b + build de production
 
 ## Conventions de code
 
-- **Langue** : commentaires, JSDoc, messages de commit et de PR en français ;
-  identificateurs en anglais.
+- **Langue** : commentaires et JSDoc du code source en anglais ;
+  identificateurs en anglais (US-013) — les PR, issues et commits **nouveaux**
+  sont rédigés en anglais (les artifacts antérieurs restent en français).
 - **Fichiers** : noms en camelCase, à l'exception des composants React
   existants déjà nommés en lowerCamelCase (conserver la convention locale).
 - **TypeScript strict** :
@@ -106,7 +107,7 @@ npm run build           # tsc -b + build de production
 
 ## Conventions de commit
 
-Messages en français, au format :
+Messages en anglais, au format :
 
 ```
 type(US-0XX): description courte
