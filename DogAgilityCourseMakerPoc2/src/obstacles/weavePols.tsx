@@ -1,4 +1,4 @@
-import { Arrow, Circle, Group, Rect } from "react-konva"
+import { Circle, Group, Line, Rect } from "react-konva"
 import type { WeavePolsProps } from "../types/obstacleTypes"
 
 /**
@@ -10,9 +10,12 @@ import type { WeavePolsProps } from "../types/obstacleTypes"
  * being (pole count - 1) times `poleSpacing` (regulated 60 cm). At the
  * default ratio (2.5) the nominal 4 cm diameter falls under 2 px wide: a
  * minimum visual radius of 4 cm (Ø 8 cm) keeps it legible on screen.
- * Colors alternate along the row, an arrow beside the first pole marks
- * the entry direction, and an invisible rectangle engulfs the whole row
- * to offer a stable click and drag surface.
+ * The obstacle is direction-neutral: it can be taken from either end, the
+ * surrounding course determines the side of entry, so no entry arrow is
+ * drawn (unlike the seesaw or the long jump which have a fixed direction).
+ * Poles are drawn in the primary color over a secondary line standing for
+ * the ground support plate, and an invisible rectangle engulfs the whole
+ * row to offer a stable click and drag surface.
  */
 export const WeavePols: React.FC<WeavePolsProps> = ({
   id,
@@ -40,7 +43,6 @@ export const WeavePols: React.FC<WeavePolsProps> = ({
     // side, lateral width of one pole spacing.
     const hitWidth = poleSpacing;
     const hitLength = rowLength + 2 * poleSpacing;
-    const arrowOffset = poleRadius / ratio + 8;
 
     return (
         <Group
@@ -59,13 +61,13 @@ export const WeavePols: React.FC<WeavePolsProps> = ({
             {/* background for select and drag */}
             <Rect strokeEnabled={false} fill="#777" opacity={0} x={-(hitWidth / 2 / ratio)} y={-(hitLength / 2 / ratio)} width={hitWidth / ratio} height={hitLength / ratio} />
 
-            {/* evenly spaced poles, alternating colors */}
-            {Array.from({ length: poleCount }, (_, i) => (
-                <Circle key={i} x={0} y={(-halfLength + i * poleSpacing) / ratio} radius={poleRadius / ratio} fill={i % 2 === 0 ? primaryColor : secondaryColor} />
-            ))}
+            {/* ground support plate running the whole row */}
+            <Line stroke={secondaryColor} strokeWidth={poleDiameter / ratio} points={[0, -(halfLength / ratio), 0, halfLength / ratio]} />
 
-            {/* entry arrow beside the first pole */}
-            <Arrow x={0} y={0} points={[-arrowOffset, -(halfLength / ratio), -arrowOffset, -((halfLength - poleSpacing) / ratio)]} stroke={secondaryColor} pointerLength={5} pointerWidth={3} fill={secondaryColor} />
+            {/* evenly spaced poles over the plate */}
+            {Array.from({ length: poleCount }, (_, i) => (
+                <Circle key={i} x={0} y={(-halfLength + i * poleSpacing) / ratio} radius={poleRadius / ratio} fill={primaryColor} />
+            ))}
         </Group>
     )
 }
