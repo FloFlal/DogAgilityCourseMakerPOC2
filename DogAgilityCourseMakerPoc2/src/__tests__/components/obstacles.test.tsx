@@ -30,7 +30,7 @@ const makeProps = (): BaseObstacleProps => ({
 interface ObstacleCase {
     name: string;
     renderWith: (props: BaseObstacleProps) => ReactElement;
-    // Testids Konva réellement rendus par l'obstacle (via le mock react-konva)
+    // Konva testids actually rendered by the obstacle (via the react-konva mock)
     primitives: string[];
 }
 

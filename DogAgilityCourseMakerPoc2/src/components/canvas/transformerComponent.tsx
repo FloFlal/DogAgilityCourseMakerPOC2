@@ -7,8 +7,8 @@ import { useDrawingStore } from '../../store/useDrawingStore';
 import type { TransformerComponentProps } from '../../types/canvasTypes';
 
 /**
- * Composant Transformer : entoure l'obstacle sélectionné et applique
- * les contraintes de transformation (taille minimale, rotation).
+ * Transformer component: surrounds the selected obstacle and applies
+ * the transform constraints (minimum size, rotation).
  */
 export const TransformerComponent: React.FC<TransformerComponentProps> = ({ selectedId }) => {
     const transformerRef = useRef<Konva.Transformer>(null);

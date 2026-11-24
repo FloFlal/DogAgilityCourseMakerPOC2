@@ -1,7 +1,7 @@
 import { validateCourseData } from '../schemas/courseSchema';
 import type { Obstacle } from '../types/obstacleTypes';
 
-/** Résultat d'un import de parcours : données validées ou message d'erreur. */
+/** Result of a course import: validated data or an error message. */
 export interface CourseImportResult {
     success: boolean;
     data?: Obstacle[];
@@ -9,23 +9,23 @@ export interface CourseImportResult {
 }
 
 /**
- * Service d'import/export des parcours.
- * Logique pure, indépendante du store Zustand et de l'UI.
+ * Course import/export service.
+ * Pure logic, independent of the Zustand store and the UI.
  */
 
 /**
- * Sérialise un parcours en JSON indenté (format .dacm.json).
- * @param obstacles - la liste des obstacles du parcours
- * @returns la chaîne JSON prête à être sauvegardée ou partagée
+ * Serializes a course into indented JSON (.dacm.json format).
+ * @param obstacles - the course obstacle list
+ * @returns the JSON string ready to be saved or shared
  */
 export function exportCourse(obstacles: Obstacle[]): string {
     return JSON.stringify(obstacles, null, 2);
 }
 
 /**
- * Valide et parse un JSON de parcours.
- * @param jsonString - la chaîne JSON à importer
- * @returns les obstacles validés en cas de succès, sinon un message d'erreur
+ * Validates and parses a course JSON.
+ * @param jsonString - the JSON string to import
+ * @returns the validated obstacles on success, otherwise an error message
  */
 export function importCourse(jsonString: string): CourseImportResult {
     const result = validateCourseData(jsonString);

@@ -9,7 +9,7 @@ vi.mock('react-konva', async () => {
     const shared = await import('../mocks/reactKonva');
     const React = await import('react');
 
-    // Scène fictive avec un pointeur positionné par les tests
+    // Fake stage with a pointer positioned by the tests
     let pointer: { x: number; y: number } | null = { x: 40, y: 60 };
     const fakeStage = {
         getPointerPosition: (): { x: number; y: number } | null => pointer,
@@ -57,7 +57,7 @@ const makeObstacle = (id: string): Obstacle => ({
     rotation: 0,
 });
 
-// Scène Konva fictive : getStage() renvoie la scène elle-même
+// Fake Konva Stage: getStage() returns the stage itself
 const makeStageLike = (): { getStage: () => unknown } => {
     const stageLike: { getStage: () => unknown } = {
         getStage: () => undefined,
@@ -67,10 +67,10 @@ const makeStageLike = (): { getStage: () => unknown } => {
     return stageLike;
 };
 
-// Évènement dont la cible EST la scène (clic sur le fond)
+// Event whose target IS the stage (background click)
 const backgroundClick = (): unknown => ({ target: makeStageLike() });
 
-// Évènement dont la cible est un élément de la scène (clic sur un obstacle)
+// Event whose target is an element of the stage (obstacle click)
 const obstacleClick = (): unknown => ({ target: { getStage: makeStageLike } });
 
 let konvaMock: StageKonvaMock;
