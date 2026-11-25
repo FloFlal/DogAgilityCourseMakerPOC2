@@ -69,7 +69,7 @@ const cases: ObstacleCase[] = [
     {
         name: 'LongJump',
         renderWith: (props) => <LongJump {...props} elementCount={4} boardWidth={120} boardDepth={15} totalDepth={120} />,
-        primitives: ['konva-rect'],
+        primitives: ['konva-rect', 'konva-arrow'],
     },
     {
         name: 'Tire',
