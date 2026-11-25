@@ -64,7 +64,7 @@ const cases: ObstacleCase[] = [
                 spread={60}
             />
         ),
-        primitives: ['konva-rect', 'konva-line'],
+        primitives: ['konva-rect', 'konva-line', 'konva-arrow'],
     },
     {
         name: 'LongJump',
