@@ -19,6 +19,20 @@ function bendAngles(joints: TunnelPoint[]): number[] {
     });
 }
 
+function segmentLengths(joints: TunnelPoint[]): number[] {
+    return joints.slice(0, -1).map((joint, i) => Math.hypot(joints[i + 1].x - joint.x, joints[i + 1].y - joint.y));
+}
+
+function signedBends(joints: TunnelPoint[]): number[] {
+    return joints.slice(1, -1).map((_, i) => {
+        const v1 = { x: joints[i + 1].x - joints[i].x, y: joints[i + 1].y - joints[i].y };
+        const v2 = { x: joints[i + 2].x - joints[i + 1].x, y: joints[i + 2].y - joints[i + 1].y };
+        const cross = v1.x * v2.y - v1.y * v2.x;
+
+        return Math.atan2(cross, v1.x * v2.x + v1.y * v2.y);
+    });
+}
+
 describe('tunnelChain', () => {
     describe('createStraightChain', () => {
         it('builds a vertical chain with one joint per 50 cm segment', () => {
@@ -39,31 +53,43 @@ describe('tunnelChain', () => {
     });
 
     describe('dragChainEnd', () => {
-        it('pulls the whole tunnel when dragging along the axis', () => {
+        it('moves the tunnel rigidly when pulled straight along its axis', () => {
             const chain = createStraightChain(300);
             const result = dragChainEnd(chain, 'start', { x: 0, y: -250 });
 
-            // Straight pull = pure translation of the chain.
+            // An axial pull bends nothing: the whole chain follows the tip.
             expect(result[0]).toEqual({ x: 0, y: -250 });
-            expect(result[6].y - result[0].y).toBe(300);
+            expect(result[6]).toEqual({ x: 0, y: 50 });
             expect(bendAngles(result).every((angle) => angle < 0.001)).toBe(true);
         });
 
-        it('keeps every segment exactly one segment long', () => {
+        it('pulls the tunnel like a rope: the tip lands on the cursor and the chain follows', () => {
+            const chain = createStraightChain(300);
+            const result = dragChainEnd(chain, 'start', { x: 400, y: -250 });
+
+            // The grabbed tip is exactly on the cursor (1:1, no lag) and the
+            // far end has been dragged along (rope pull, not a fixed base).
+            expect(result[0]).toEqual({ x: 400, y: -250 });
+            expect(result[6]).not.toEqual(chain[6]);
+
+            segmentLengths(result).forEach((segmentLength) => {
+                expect(segmentLength).toBeCloseTo(SEGMENT_LENGTH, 6);
+            });
+        });
+
+        it('keeps every segment exactly one segment long on a free drag', () => {
             const chain = createStraightChain(600);
             const result = dragChainEnd(chain, 'end', { x: 123, y: -321 });
 
-            for (let i = 0; i < result.length - 1; i += 1) {
-                const dx = result[i + 1].x - result[i].x;
-                const dy = result[i + 1].y - result[i].y;
-
-                expect(Math.hypot(dx, dy)).toBeCloseTo(SEGMENT_LENGTH, 6);
-            }
+            segmentLengths(result).forEach((segmentLength) => {
+                expect(segmentLength).toBeCloseTo(SEGMENT_LENGTH, 6);
+            });
         });
 
-        it('clamps the curvature between consecutive segments to +/- 25 deg', () => {
+        it('clamps the curvature between consecutive segments to +/- 25 deg on a free pull', () => {
             const chain = createStraightChain(600);
-            // Violent sideways drag: each joint must absorb at most 20 deg.
+            // Violent sideways drag: each joint must absorb at most 25 deg,
+            // and saturated elements translate along instead of swinging.
             const result = dragChainEnd(chain, 'start', { x: 400, y: -250 });
             const bends = bendAngles(result);
 
@@ -71,11 +97,38 @@ describe('tunnelChain', () => {
             expect(bends.every((angle) => angle <= MAX_BEND_DEG + 1e-6)).toBe(true);
         });
 
+        it('clamps the curvature to +/- 25 deg around a pinned end', () => {
+            const chain = createStraightChain(600);
+            // Violent sideways drag with the far end pinned: each joint must
+            // absorb at most 25 deg, never swing wildly.
+            const result = dragChainEnd(chain, 'start', { x: 400, y: -250 }, { pinnedEnd: true });
+            const bends = bendAngles(result);
+
+            expect(bends.length).toBeGreaterThan(0);
+            expect(bends.every((angle) => angle <= MAX_BEND_DEG + 1e-6)).toBe(true);
+        });
+
+        it('holds the bend side with hysteresis across successive pulls', () => {
+            const chain = createStraightChain(600);
+
+            // Two pulls in the same direction: the saturated joints must stay
+            // on their boundary side instead of flipping between +25 and -25.
+            const firstPull = dragChainEnd(chain, 'start', { x: 400, y: -250 }, { pinnedEnd: true });
+            const secondPull = dragChainEnd(firstPull, 'start', { x: 420, y: -280 }, { pinnedEnd: true });
+            const bends = signedBends(secondPull);
+            const bendSigns = bends.filter((angle) => Math.abs(angle) > 1e-9).map(Math.sign);
+
+            expect(bends.length).toBeGreaterThan(0);
+            expect(bends.every((angle) => Math.abs(angle) <= (MAX_BEND_DEG * Math.PI) / 180 + 1e-6)).toBe(true);
+            expect(new Set(bendSigns).size).toBeLessThanOrEqual(1);
+        });
+
         it('never mutates the input chain', () => {
             const chain = createStraightChain(300);
             const snapshot = JSON.stringify(chain);
 
-            dragChainEnd(chain, 'start', { x: 250, y: 0 });
+            dragChainEnd(chain, 'start', { x: 250, y: 0 }, { pinnedEnd: true });
+            dragChainEnd(chain, 'end', { x: -120, y: 40 });
 
             expect(JSON.stringify(chain)).toBe(snapshot);
         });
@@ -96,34 +149,15 @@ describe('tunnelChain', () => {
             expect(JSON.stringify(result)).toBe(snapshot);
         });
 
-        it('caps the tip travel per drag event for a fluid pull', () => {
-            const chain = createStraightChain(300);
-            const result = dragChainEnd(chain, 'start', { x: 300, y: -150 }, { maxTipStepCm: 15 });
-            const dx = result[0].x;
-            const dy = result[0].y + 150;
-
-            expect(Math.hypot(dx, dy)).toBeCloseTo(15, 6);
-        });
-
-        it('reaches the exact target without a step cap', () => {
-            const chain = createStraightChain(300);
-            const result = dragChainEnd(chain, 'start', { x: 300, y: -150 });
-
-            expect(result[0]).toEqual({ x: 300, y: -150 });
-        });
-
         it('still respects segment lengths and the bend clamp with a pinned end', () => {
             const chain = createStraightChain(600);
             const result = dragChainEnd(chain, 'start', { x: 350, y: -280 }, { pinnedEnd: true });
 
             expect(result[result.length - 1]).toEqual({ x: 0, y: 300 });
 
-            for (let i = 0; i < result.length - 1; i += 1) {
-                const dx = result[i + 1].x - result[i].x;
-                const dy = result[i + 1].y - result[i].y;
-
-                expect(Math.hypot(dx, dy)).toBeCloseTo(SEGMENT_LENGTH, 6);
-            }
+            segmentLengths(result).forEach((segmentLength) => {
+                expect(segmentLength).toBeCloseTo(SEGMENT_LENGTH, 6);
+            });
 
             expect(bendAngles(result).every((angle) => angle <= MAX_BEND_DEG + 1e-6)).toBe(true);
         });
