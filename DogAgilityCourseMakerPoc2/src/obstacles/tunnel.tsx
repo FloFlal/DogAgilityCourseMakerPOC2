@@ -22,17 +22,19 @@ const CONNECTOR_OVERLAP_CM = 4;
  *
  * Interaction: the tunnel is deliberately NOT draggable as a whole and never
  * shows the transformer rotate handle (the TransformerComponent skips tunnel
- * types). Only the two extreme anchors can be grabbed. Dragging a FREE end
- * moves the whole tunnel as a rigid body: pure 1:1 translation with the
- * cursor, no lag and no bending. Dragging the free end while the OTHER end
- * is pinned (right-click) curves the tube like a rope around the pin with a
- * +/- 25 deg clamp between segments: saturated joints hold their remembered
- * bend side (hysteresis), so over-curving resists smoothly and elements
- * slip sideways instead of swinging wildly. A right-click on an anchor pins
- * that end (the circle turns red) until the tunnel is deselected or the
- * anchor is right-clicked again. Selecting the tunnel reveals the anchors,
- * deselecting hides them and clears any pin. A length number (bare,
- * unit-free) is displayed at the middle of the tube.
+ * types). Only the two extreme anchors can be grabbed. Dragging an anchor
+ * pulls the whole tube like a string (rope physics): the grabbed segment
+ * follows the cursor (tip exactly on it, 1:1, no lag) and pulls the next
+ * one, which pulls the next, etc., so the tunnel curves with the mouse
+ * movement; consecutive segments bend by at most +/- 25 deg and saturated
+ * joints hold their remembered bend side (hysteresis), so over-curving
+ * resists smoothly and elements slip sideways instead of swinging wildly.
+ * A right-click on an anchor pins that end (the circle turns red) until the
+ * tunnel is deselected or the anchor is right-clicked again; with the other
+ * end pinned, the same rope pull curves the tube around the pin. Selecting
+ * the tunnel reveals the anchors, deselecting hides them and clears any
+ * pin. A length number (bare, unit-free) is displayed at the middle of the
+ * tube.
  *
  * Rendering detail: hinge connectors (one rect joining the centers of two
  * consecutive segments, drawn under them) fill the wedge gaps that appear on

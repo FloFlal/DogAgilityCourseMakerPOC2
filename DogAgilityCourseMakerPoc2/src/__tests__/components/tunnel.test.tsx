@@ -55,7 +55,7 @@ describe('Tunnel', () => {
         expect(queryAllByTestId('konva-circle')).toHaveLength(2);
     });
 
-    it('translates the whole tunnel 1:1 on a free anchor drag', () => {
+    it('pulls the tunnel like a rope on a free anchor drag, tip on the cursor', () => {
         const onPointsChange = vi.fn();
         const props = { ...makeProps({ isSelected: true }), onPointsChange };
         const { getAllByTestId } = render(
@@ -63,8 +63,8 @@ describe('Tunnel', () => {
         );
 
         // The mock feeds the drag handler a local target of (7, 14) px, i.e.
-        // (7 * 2.5, 14 * 2.5) = (17.5, 35) cm: a free drag must move the
-        // WHOLE chain by that exact delta, no lag and no bending.
+        // (7 * 2.5, 14 * 2.5) = (17.5, 35) cm: a free drag must land the tip
+        // exactly on the cursor and curve the chain within +/- 25 deg.
         fireEvent.drag(getAllByTestId('konva-circle')[0]);
 
         expect(onPointsChange).toHaveBeenCalledTimes(1);
@@ -73,7 +73,19 @@ describe('Tunnel', () => {
         const chain = onPointsChange.mock.calls[0][1] as TunnelPoint[];
 
         expect(chain[0]).toEqual({ x: 17.5, y: 35 });
-        expect(chain[6]).toEqual({ x: 17.5, y: 335 });
+
+        for (let i = 0; i < chain.length - 1; i += 1) {
+            expect(Math.hypot(chain[i + 1].x - chain[i].x, chain[i + 1].y - chain[i].y)).toBeCloseTo(50, 6);
+        }
+
+        for (let i = 0; i < chain.length - 2; i += 1) {
+            const v1 = { x: chain[i + 1].x - chain[i].x, y: chain[i + 1].y - chain[i].y };
+            const v2 = { x: chain[i + 2].x - chain[i + 1].x, y: chain[i + 2].y - chain[i + 1].y };
+            const dot = (v1.x * v2.x + v1.y * v2.y) / (Math.hypot(v1.x, v1.y) * Math.hypot(v2.x, v2.y));
+            const angle = (Math.acos(Math.min(1, Math.max(-1, dot))) * 180) / Math.PI;
+
+            expect(angle).toBeLessThanOrEqual(25 + 1e-6);
+        }
     });
 
     it('bends the chain around a pinned end without moving the pin', () => {
