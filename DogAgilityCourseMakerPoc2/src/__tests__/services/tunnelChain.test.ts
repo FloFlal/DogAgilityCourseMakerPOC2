@@ -3,7 +3,7 @@ import { createStraightChain, dragChainEnd } from '../../services/tunnelChain';
 import type { TunnelPoint } from '../../types/obstacleTypes';
 
 /** Max angular deviation (deg) between two consecutive segments. */
-const MAX_BEND_DEG = 20;
+const MAX_BEND_DEG = 25;
 const SEGMENT_LENGTH = 50;
 
 function bendAngles(joints: TunnelPoint[]): number[] {
@@ -61,7 +61,7 @@ describe('tunnelChain', () => {
             }
         });
 
-        it('clamps the curvature between consecutive segments to +/- 20 deg', () => {
+        it('clamps the curvature between consecutive segments to +/- 25 deg', () => {
             const chain = createStraightChain(600);
             // Violent sideways drag: each joint must absorb at most 20 deg.
             const result = dragChainEnd(chain, 'start', { x: 400, y: -250 });
@@ -94,6 +94,22 @@ describe('tunnelChain', () => {
             const result = dragChainEnd(chain, 'start', { x: 300, y: -150 }, { pinnedStart: true });
 
             expect(JSON.stringify(result)).toBe(snapshot);
+        });
+
+        it('caps the tip travel per drag event for a fluid pull', () => {
+            const chain = createStraightChain(300);
+            const result = dragChainEnd(chain, 'start', { x: 300, y: -150 }, { maxTipStepCm: 15 });
+            const dx = result[0].x;
+            const dy = result[0].y + 150;
+
+            expect(Math.hypot(dx, dy)).toBeCloseTo(15, 6);
+        });
+
+        it('reaches the exact target without a step cap', () => {
+            const chain = createStraightChain(300);
+            const result = dragChainEnd(chain, 'start', { x: 300, y: -150 });
+
+            expect(result[0]).toEqual({ x: 300, y: -150 });
         });
 
         it('still respects segment lengths and the bend clamp with a pinned end', () => {

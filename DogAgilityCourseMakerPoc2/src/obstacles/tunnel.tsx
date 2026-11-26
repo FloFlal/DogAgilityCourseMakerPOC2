@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Circle, Group, Rect, Text } from 'react-konva';
+import type Konva from 'konva';
+import { TUNNEL_DRAG_STEP_CM } from '../constants/canvasDefaults';
 import { createStraightChain, dragChainEnd } from '../services/tunnelChain';
-import type { KonvaDragEvent, TunnelEnd, TunnelProps } from '../types/obstacleTypes';
+import type { KonvaDragEvent, TunnelEnd, TunnelPoint, TunnelProps } from '../types/obstacleTypes';
 
 /** Fill color of a pinned end anchor: the pin state must be unmistakable. */
 const PINNED_ANCHOR_COLOR = '#EF4444';
+
+/** Extra length (cm) of a hinge connector on both sides, so it disappears under the segments. */
+const CONNECTOR_OVERLAP_CM = 4;
 
 /**
  * Tunnel (US-020): flexible tube shown in top view as a chain of pre-ratio
@@ -19,12 +24,18 @@ const PINNED_ANCHOR_COLOR = '#EF4444';
  * Interaction: the tunnel is deliberately NOT draggable as a whole and never
  * shows the transformer rotate handle (the TransformerComponent skips tunnel
  * types). Only the two extreme anchors can be grabbed: dragging one pulls the
- * whole tube like a string (rope physics, +/- 20 deg clamp between segments)
- * while the other end follows. A right-click on an anchor pins that end (the
- * circle turns red) until the tunnel is deselected or the anchor is
+ * whole tube like a string (rope physics, +/- 25 deg clamp between segments)
+ * while the other end follows. The tip travel is capped per drag event (the
+ * tube smoothly lags behind the cursor, like a real rope) and settles exactly
+ * onto the cursor when the drag ends. A right-click on an anchor pins that
+ * end (the circle turns red) until the tunnel is deselected or the anchor is
  * right-clicked again. Selecting the tunnel reveals the anchors, deselecting
  * hides them and clears any pin. A length number (bare, unit-free) is
  * displayed at the middle of the tube.
+ *
+ * Rendering detail: hinge connectors (one rect joining the centers of two
+ * consecutive segments, drawn under them) fill the wedge gaps that appear on
+ * the outer side of a bend.
  */
 export const Tunnel: React.FC<TunnelProps> = ({
     id,
@@ -45,6 +56,14 @@ export const Tunnel: React.FC<TunnelProps> = ({
 }) => {
     const joints = points ?? createStraightChain(length);
 
+    // Latest chain for the dragBoundFunc closure (keeps the dragged anchor
+    // glued to the chain tip while the capped rope solve makes it lag).
+    const jointsRef = useRef<TunnelPoint[]>(joints);
+
+    useEffect(() => {
+        jointsRef.current = joints;
+    }, [joints]);
+
     // Pin state is ephemeral: it lives at most as long as the selection.
     const [pinnedEnd, setPinnedEnd] = useState<TunnelEnd | null>(null);
 
@@ -58,17 +77,54 @@ export const Tunnel: React.FC<TunnelProps> = ({
         if (!isSelected) setPinnedEnd(null);
     }
 
-    const handleAnchorDragMove = (end: TunnelEnd) => (e: KonvaDragEvent): void => {
+    const applyAnchorDrag = (end: TunnelEnd, target: TunnelPoint, settle: boolean): void => {
         if (pinnedEnd === end || !onPointsChange) return;
-
-        // The dragged anchor reports its position in local px; the chain
-        // works in local cm (pre-ratio).
-        const target = { x: e.target.x() * ratio, y: e.target.y() * ratio };
 
         onPointsChange(id, dragChainEnd(joints, end, target, {
             pinnedStart: pinnedEnd === 'start',
             pinnedEnd: pinnedEnd === 'end',
+            // Capped travel per drag event for a fluid pull; the settle pass
+            // (drag end) reaches the cursor exactly.
+            maxTipStepCm: settle ? undefined : TUNNEL_DRAG_STEP_CM,
         }));
+    };
+
+    const pointerTargetCm = (e: KonvaDragEvent): TunnelPoint | null => {
+        // Real Konva: live pointer in absolute stage coords. The stage and
+        // the obstacles layer sit untransformed at the origin and the tunnel
+        // group never rotates, so local px = absolute px - group position.
+        const pointer = e.target.getStage?.()?.getPointerPosition();
+
+        if (!pointer) return null;
+
+        return { x: (pointer.x - x) * ratio, y: (pointer.y - y) * ratio };
+    };
+
+    const handleAnchorDragMove = (end: TunnelEnd) => (e: KonvaDragEvent): void => {
+        // In the test mock (no stage) the dragged node position stands in for
+        // the pointer.
+        const target = pointerTargetCm(e) ?? { x: e.target.x() * ratio, y: e.target.y() * ratio };
+
+        applyAnchorDrag(end, target, false);
+    };
+
+    // Settle pass: when the drag ends, the tip catches up with the cursor.
+    const handleAnchorDragEnd = (end: TunnelEnd) => (e: KonvaDragEvent): void => {
+        const target = pointerTargetCm(e);
+
+        if (target) applyAnchorDrag(end, target, true);
+    };
+
+    // Keeps the visual anchor on the chain tip even when the capped solve
+    // lets the tube lag behind the cursor (or when the end is pinned). The
+    // default dragged position is deliberately ignored: the anchor is always
+    // snapped onto the chain tip.
+    const anchorBoundFunc = (end: TunnelEnd) => (pos: Konva.Vector2d): Konva.Vector2d => {
+        void pos;
+        const current = jointsRef.current;
+        const tip = end === 'start' ? current[0] : current[current.length - 1];
+
+        return { x: x + tip.x / ratio, y: y + tip.y / ratio };
     };
 
     // Right-click toggles the pin on that end; the circle color reflects it.
@@ -90,6 +146,32 @@ export const Tunnel: React.FC<TunnelProps> = ({
             onClick={onClick}
             onTap={onTap}
         >
+            {/* hinge connectors joining the centers of consecutive segments,
+                drawn under the segments to fill the outer bend gaps */}
+            {joints.slice(0, -2).map((joint, i) => {
+                const centerA = { x: (joint.x + joints[i + 1].x) / 2, y: (joint.y + joints[i + 1].y) / 2 };
+                const centerB = { x: (joints[i + 1].x + joints[i + 2].x) / 2, y: (joints[i + 1].y + joints[i + 2].y) / 2 };
+                const vx = centerB.x - centerA.x;
+                const vy = centerB.y - centerA.y;
+                const length = Math.hypot(vx, vy);
+
+                if (length < 1e-6) return null;
+
+                return (
+                    <Rect
+                        key={`connector-${i}`}
+                        x={((centerA.x + centerB.x) / 2) / ratio}
+                        y={((centerA.y + centerB.y) / 2) / ratio}
+                        offsetX={diameter / 2 / ratio}
+                        offsetY={(length + 2 * CONNECTOR_OVERLAP_CM) / 2 / ratio}
+                        width={diameter / ratio}
+                        height={(length + 2 * CONNECTOR_OVERLAP_CM) / ratio}
+                        rotation={(Math.atan2(-vx, vy) * 180) / Math.PI}
+                        fill={primaryColor}
+                    />
+                );
+            })}
+
             {/* chain segments: one rect per 50 cm slab, rotated on its midpoint */}
             {joints.slice(0, -1).map((joint, i) => {
                 const next = joints[i + 1];
@@ -133,7 +215,9 @@ export const Tunnel: React.FC<TunnelProps> = ({
                         radius={5}
                         fill={pinnedEnd === 'start' ? PINNED_ANCHOR_COLOR : secondaryColor}
                         draggable={true}
+                        dragBoundFunc={anchorBoundFunc('start')}
                         onDragMove={handleAnchorDragMove('start')}
+                        onDragEnd={handleAnchorDragEnd('start')}
                         onContextMenu={handleAnchorContextMenu('start')}
                     />
                     <Circle
@@ -142,7 +226,9 @@ export const Tunnel: React.FC<TunnelProps> = ({
                         radius={5}
                         fill={pinnedEnd === 'end' ? PINNED_ANCHOR_COLOR : secondaryColor}
                         draggable={true}
+                        dragBoundFunc={anchorBoundFunc('end')}
                         onDragMove={handleAnchorDragMove('end')}
+                        onDragEnd={handleAnchorDragEnd('end')}
                         onContextMenu={handleAnchorContextMenu('end')}
                     />
                 </>
