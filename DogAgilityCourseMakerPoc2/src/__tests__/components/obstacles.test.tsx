@@ -8,6 +8,7 @@ import { AFrame } from '../../obstacles/aFrame';
 import { Oxer } from '../../obstacles/oxer';
 import { LongJump } from '../../obstacles/longJump';
 import { Tire } from '../../obstacles/tire';
+import { Tunnel } from '../../obstacles/tunnel';
 import { WeavePols } from '../../obstacles/weavePols';
 import type { BaseObstacleProps } from '../../types/obstacleTypes';
 
@@ -100,6 +101,11 @@ const cases: ObstacleCase[] = [
         name: 'WeavePols (training weave, 6 poles)',
         renderWith: (props) => <WeavePols {...props} poleCount={6} poleSpacing={60} poleDiameter={4} />,
         primitives: ['konva-rect', 'konva-circle', 'konva-line'],
+    },
+    {
+        name: 'Tunnel',
+        renderWith: (props) => <Tunnel {...props} length={300} diameter={66} segmentLength={50} />,
+        primitives: ['konva-rect', 'konva-text'],
     },
 ];
 

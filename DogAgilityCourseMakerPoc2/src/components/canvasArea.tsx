@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Stage } from 'react-konva';
 import Konva from 'konva';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +17,7 @@ import { GridLayer } from './canvas/gridLayer';
 import { ObstaclesLayer } from './canvas/obstaclesLayer';
 import { TransformerComponent } from './canvas/transformerComponent';
 import { StatusBar } from './statusBar';
-import type { KonvaMouseEvent } from '../types/obstacleTypes';
+import type { KonvaMouseEvent, TunnelPoint } from '../types/obstacleTypes';
 
 /**
  * Main drawing area: composes the Konva Stage from the
@@ -33,6 +33,11 @@ export const CanvasArea: React.FC = () => {
     const gridSize = useDrawingStore(selectGridSize);
     const { handleDragStart, handleDragEnd } = useObstacleDrag();
     const handleTransformEnd = useObstacleTransform();
+    const updateShape = useDrawingStore((state) => state.updateShape);
+    // Tunnel-only (US-020): an anchor drag rewrites the whole joint chain.
+    const handlePointsChange = useCallback((id: string, points: TunnelPoint[]): void => {
+        updateShape(id, { points });
+    }, [updateShape]);
     const { width, height } = useStageDimensions();
     const stageRef = useRef<Konva.Stage>(null);
 
@@ -81,6 +86,7 @@ export const CanvasArea: React.FC = () => {
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}
                     onTransformEnd={handleTransformEnd}
+                    onPointsChange={handlePointsChange}
                 />
 
                 {/*The component that surround the obstacle*/}

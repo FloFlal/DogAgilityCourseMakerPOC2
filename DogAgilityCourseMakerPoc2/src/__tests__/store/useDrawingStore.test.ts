@@ -126,4 +126,27 @@ describe('useDrawingStore (slices combinées)', () => {
 
         expect(useDrawingStore.getState().importError).toBeNull();
     });
+
+    it('addShape seeds a straight joint chain when placing a tunnel', () => {
+        useDrawingStore.setState({ currentShapeType: 'tunnel5m' });
+
+        useDrawingStore.getState().addShape(100, 200);
+
+        const tunnel = useDrawingStore.getState().obstacles[0];
+
+        expect(tunnel.type).toBe('tunnel5m');
+        expect(tunnel.width).toBe(66); // outer diameter
+        expect(tunnel.height).toBe(500); // regulated length
+        expect(tunnel.points).toHaveLength(11); // 10 segments + first joint
+        expect(tunnel.points?.[0]).toEqual({ x: 0, y: -250 });
+        expect(tunnel.points?.[10]).toEqual({ x: 0, y: 250 });
+    });
+
+    it('addShape does not seed points for non-tunnel obstacles', () => {
+        useDrawingStore.setState({ currentShapeType: 'jump' });
+
+        useDrawingStore.getState().addShape(100, 200);
+
+        expect(useDrawingStore.getState().obstacles[0].points).toBeUndefined();
+    });
 });

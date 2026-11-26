@@ -19,6 +19,17 @@ export const obstacleSchema = z.object({
   height: z.number().positive('Obstacle height must be positive'),
   fill: z.string().regex(/^#[0-9A-Fa-f]{6}$/, 'Fill must be a valid hex color'),
   rotation: z.number().min(-180).max(180, 'Rotation must be between -180 and 180 degrees'),
+  // Optional backward-compatible field (US-020): tunnel joint chain in
+  // local centimeters (pre-ratio, may be negative). Legacy courses without
+  // it keep loading and render a straight tunnel.
+  points: z
+    .array(
+      z.object({
+        x: z.number().finite('Point x must be a finite number'),
+        y: z.number().finite('Point y must be a finite number'),
+      }),
+    )
+    .optional(),
 });
 
 /** Zod schema of a full course: obstacle array (.dacm.json format). */

@@ -3,6 +3,35 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { Sidebar } from '../../components/sidebar';
 import { useDrawingStore } from '../../store/useDrawingStore';
 
+describe('Sidebar tunnel tools (US-020)', () => {
+    beforeEach(() => {
+        useDrawingStore.setState({
+            obstacles: [],
+            selectedId: null,
+            currentColor: '#3b82f6',
+            currentShapeType: null,
+            importError: null,
+        });
+    });
+
+    it('offers one dedicated button per tunnel length', () => {
+        render(<Sidebar />);
+
+        for (const label of [/tunnel 6 m/i, /tunnel 5 m/i, /tunnel 4 m/i, /tunnel 3 m/i]) {
+            expect(screen.getByRole('button', { name: label })).toBeTruthy();
+        }
+    });
+
+    it('arms the matching tunnel tool when a tunnel button is clicked', () => {
+        render(<Sidebar />);
+
+        fireEvent.click(screen.getByRole('button', { name: /tunnel 5 m/i }));
+
+        expect(useDrawingStore.getState().currentShapeType).toBe('tunnel5m');
+        expect(screen.getByRole('button', { name: /tunnel 5 m/i }).getAttribute('aria-pressed')).toBe('true');
+    });
+});
+
 describe('Sidebar accessibilité', () => {
     beforeEach(() => {
         useDrawingStore.setState({

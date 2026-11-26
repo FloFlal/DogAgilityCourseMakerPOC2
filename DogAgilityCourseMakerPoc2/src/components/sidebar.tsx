@@ -9,7 +9,7 @@ import {
 } from '../store/selectors';
 import { Trash2, Download, Upload, AlertTriangle } from 'lucide-react';
 import { LanguageSwitcher } from './languageSwitcher';
-import { AFrameIcon, DogWalkIcon, JumpIcon, LongJumpIcon, OxerIcon, SemiWeavePolsIcon, SeesawIcon, TireIcon, WeavePolsIcon } from './obstacleIcons';
+import { AFrameIcon, DogWalkIcon, JumpIcon, LongJumpIcon, OxerIcon, SemiWeavePolsIcon, SeesawIcon, TireIcon, TunnelIcon, WeavePolsIcon } from './obstacleIcons';
 import { CollapsibleSection } from './collapsibleSection';
 import type { ObstacleType } from '../types/obstacleTypes';
 
@@ -207,6 +207,19 @@ export const Sidebar: React.FC = () => {
                         >
                             <SemiWeavePolsIcon /> {t('sidebar.semiWeavePols')}
                         </button>
+                        {/* One dedicated button per tunnel length (US-020),
+                            consistent with the rest of the tool grid. */}
+                        {(['tunnel6m', 'tunnel5m', 'tunnel4m', 'tunnel3m'] as ObstacleType[]).map((type) => (
+                            <button
+                                key={type}
+                                type="button"
+                                onClick={() => setShapeType(type)}
+                                aria-pressed={currentShapeType === type}
+                                className={toolButtonClass(type)}
+                            >
+                                <TunnelIcon /> {t(`sidebar.${type}`)}
+                            </button>
+                        ))}
                     </div>
                 </CollapsibleSection>
 

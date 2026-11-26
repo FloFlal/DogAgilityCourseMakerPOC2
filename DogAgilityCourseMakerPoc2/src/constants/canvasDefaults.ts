@@ -69,6 +69,24 @@ export const WEAVE_POLES_DEFAULTS = { poleCount: 12, poleSpacing: 60, poleDiamet
 /** Default dimensions of the semi weave poles: training-only weave limited to 6 poles, every other weave characteristic kept. */
 export const SEMI_WEAVE_POLES_DEFAULTS = { ...WEAVE_POLES_DEFAULTS, poleCount: 6 };
 
+/**
+ * Tunnel constants (US-020), FCI scale, expressed before the ratio:
+ * regulated 60 cm inner diameter plus a 3 cm wall, chain segments of
+ * ~50 cm hinged together, max curvature of +/- 20 deg between two
+ * consecutive segments (per-obstacle, no global constraint).
+ */
+export const TUNNEL_OUTER_DIAMETER = 60 + 2 * 3;
+export const TUNNEL_SEGMENT_LENGTH = 50;
+export const TUNNEL_MAX_BEND_DEG = 20;
+
+/** Regulated tunnel length per sub-type (FCI section 4.6: 300 to 600 cm). */
+export const TUNNEL_LENGTHS_BY_TYPE: Record<'tunnel6m' | 'tunnel5m' | 'tunnel4m' | 'tunnel3m', number> = {
+    tunnel6m: 600,
+    tunnel5m: 500,
+    tunnel4m: 400,
+    tunnel3m: 300,
+};
+
 // Visible horizontal lengths (slope projection) for the long
 // of length: the inclined body loses sqrt(length² - height²) in canvas px.
 const SEESAW_VISIBLE_LENGTH = Math.sqrt(SEESAW_DEFAULTS.length ** 2 - 120 ** 2);
@@ -102,4 +120,9 @@ export const OBSTACLE_SIZES: { [K in ObstacleType]?: { width: number; height: nu
         width: SEMI_WEAVE_POLES_DEFAULTS.poleSpacing,
         height: (SEMI_WEAVE_POLES_DEFAULTS.poleCount - 1) * SEMI_WEAVE_POLES_DEFAULTS.poleSpacing,
     },
+    // Tunnel footprints: outer diameter wide, regulated length long.
+    tunnel6m: { width: TUNNEL_OUTER_DIAMETER, height: TUNNEL_LENGTHS_BY_TYPE.tunnel6m },
+    tunnel5m: { width: TUNNEL_OUTER_DIAMETER, height: TUNNEL_LENGTHS_BY_TYPE.tunnel5m },
+    tunnel4m: { width: TUNNEL_OUTER_DIAMETER, height: TUNNEL_LENGTHS_BY_TYPE.tunnel4m },
+    tunnel3m: { width: TUNNEL_OUTER_DIAMETER, height: TUNNEL_LENGTHS_BY_TYPE.tunnel3m },
 };

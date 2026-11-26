@@ -219,6 +219,73 @@ describe('Course Schema Validation', () => {
         });
     });
 
+    describe('optional tunnel points (US-020)', () => {
+        it('should accept a tunnel carrying its joint chain', () => {
+            const tunnelJson = JSON.stringify([
+                {
+                    id: '550e8400-e29b-41d4-a716-446655440002',
+                    type: 'tunnel5m',
+                    x: 150,
+                    y: 250,
+                    width: 66,
+                    height: 500,
+                    fill: '#1155ff',
+                    rotation: 0,
+                    points: [
+                        { x: 0, y: -250 },
+                        { x: 12, y: -201 },
+                        { x: 0, y: -150 },
+                    ],
+                },
+            ]);
+
+            const result = validateCourseData(tunnelJson);
+
+            expect(result.success).toBe(true);
+            expect(result.data?.[0].points).toHaveLength(3);
+        });
+
+        it('should keep legacy obstacles without points valid', () => {
+            const legacyJson = JSON.stringify([
+                {
+                    id: '550e8400-e29b-41d4-a716-446655440003',
+                    type: 'tunnel3m',
+                    x: 150,
+                    y: 250,
+                    width: 66,
+                    height: 300,
+                    fill: '#1155ff',
+                    rotation: 0,
+                },
+            ]);
+
+            const result = validateCourseData(legacyJson);
+
+            expect(result.success).toBe(true);
+            expect(result.data?.[0].points).toBeUndefined();
+        });
+
+        it('should reject non-finite point coordinates', () => {
+            const badJson = JSON.stringify([
+                {
+                    id: '550e8400-e29b-41d4-a716-446655440004',
+                    type: 'tunnel3m',
+                    x: 150,
+                    y: 250,
+                    width: 66,
+                    height: 300,
+                    fill: '#1155ff',
+                    rotation: 0,
+                    points: [{ x: Number.NaN, y: 0 }],
+                },
+            ]);
+
+            const result = validateCourseData(badJson);
+
+            expect(result.success).toBe(false);
+        });
+    });
+
     describe('isValidObstacleType', () => {
         it('should return true for valid obstacle types', () => {
             VALID_OBSTACLE_TYPES.forEach(type => {

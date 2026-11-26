@@ -29,7 +29,23 @@ export interface Obstacle {
   height: number;
   fill: string;
   rotation: number;
+  /**
+   * Optional segment-chain geometry (tunnels only, US-020): joint points of
+   * the flexible tube, in local centimeters (pre-ratio), centered on (0, 0).
+   * Absent for legacy/straight obstacles: the tunnel then renders as a
+   * straight vertical chain derived from its regulated length.
+   */
+  points?: TunnelPoint[];
 }
+
+/** Joint point of the tunnel chain, in centimeters (pre-ratio). */
+export interface TunnelPoint {
+  x: number;
+  y: number;
+}
+
+/** Which extreme of the tunnel chain an interaction targets. */
+export type TunnelEnd = 'start' | 'end';
 
 /** Alias of Konva events exposed to component handlers. */
 export type KonvaMouseEvent = Konva.KonvaEventObject<MouseEvent>;
@@ -119,4 +135,18 @@ export interface WeavePolsProps extends BaseObstacleProps {
   poleCount: number;
   poleSpacing: number;
   poleDiameter: number;
+}
+
+/** Props specific to the tunnel: regulated length, tube diameter and segment chain. */
+export interface TunnelProps extends BaseObstacleProps {
+  /** Regulated total length of the tube in centimeters (300 to 600). */
+  length: number;
+  /** Outer tube diameter in centimeters (regulated 60 cm inner + wall). */
+  diameter: number;
+  /** Length of one chain segment in centimeters (~50 cm flexible slabs). */
+  segmentLength: number;
+  /** Joint chain in local centimeters; a straight vertical chain when absent. */
+  points?: TunnelPoint[];
+  /** Persists the new joint chain after an anchor drag. */
+  onPointsChange?: (id: string, points: TunnelPoint[]) => void;
 }
