@@ -1,4 +1,4 @@
-import type { Obstacle } from './obstacleTypes';
+import type { Obstacle, TunnelPoint } from './obstacleTypes';
 
 /** Drawing area dimensions (Konva Stage), in px. */
 export interface CanvasDimensions {
@@ -19,6 +19,8 @@ export interface ObstaclesLayerProps {
   onDragStart: (id: string) => void;
   onDragEnd: (id: string, x: number, y: number) => void;
   onTransformEnd: (id: string, x: number, y: number, rotation: number) => void;
+  /** Tunnel-only (US-020): persists the new joint chain after an anchor drag. */
+  onPointsChange?: (id: string, points: TunnelPoint[]) => void;
 }
 
 /** Transformer component props: the selected identifier (or null). */

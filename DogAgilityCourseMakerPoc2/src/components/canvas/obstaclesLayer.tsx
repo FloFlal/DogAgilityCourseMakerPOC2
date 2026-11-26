@@ -7,6 +7,7 @@ import { AFrame } from '../../obstacles/aFrame';
 import { Oxer } from '../../obstacles/oxer';
 import { LongJump } from '../../obstacles/longJump';
 import { Tire } from '../../obstacles/tire';
+import { Tunnel } from '../../obstacles/tunnel';
 import { WeavePols } from '../../obstacles/weavePols';
 import {
     A_FRAME_DEFAULTS,
@@ -20,6 +21,9 @@ import {
     SEMI_WEAVE_POLES_DEFAULTS,
     SEESAW_DEFAULTS,
     TIRE_DEFAULTS,
+    TUNNEL_LENGTHS_BY_TYPE,
+    TUNNEL_OUTER_DIAMETER,
+    TUNNEL_SEGMENT_LENGTH,
     WEAVE_POLES_DEFAULTS,
 } from '../../constants/canvasDefaults';
 import type { BaseObstacleProps } from '../../types/obstacleTypes';
@@ -36,6 +40,7 @@ export const ObstaclesLayer: React.FC<ObstaclesLayerProps> = ({
     onDragStart,
     onDragEnd,
     onTransformEnd,
+    onPointsChange,
 }) => {
     const buildCommonProps = (shape: ObstaclesLayerProps['shapes'][number]): BaseObstacleProps => {
         const isSelected = shape.id === selectedId;
@@ -90,6 +95,14 @@ export const ObstaclesLayer: React.FC<ObstaclesLayerProps> = ({
                         return <WeavePols {...commonProps} key={shape.id} {...WEAVE_POLES_DEFAULTS} />;
                     case 'semiWeavePols':
                         return <WeavePols {...commonProps} key={shape.id} {...SEMI_WEAVE_POLES_DEFAULTS} />;
+                    case 'tunnel6m':
+                        return <Tunnel {...commonProps} key={shape.id} length={TUNNEL_LENGTHS_BY_TYPE.tunnel6m} diameter={TUNNEL_OUTER_DIAMETER} segmentLength={TUNNEL_SEGMENT_LENGTH} points={shape.points} onPointsChange={onPointsChange} />;
+                    case 'tunnel5m':
+                        return <Tunnel {...commonProps} key={shape.id} length={TUNNEL_LENGTHS_BY_TYPE.tunnel5m} diameter={TUNNEL_OUTER_DIAMETER} segmentLength={TUNNEL_SEGMENT_LENGTH} points={shape.points} onPointsChange={onPointsChange} />;
+                    case 'tunnel4m':
+                        return <Tunnel {...commonProps} key={shape.id} length={TUNNEL_LENGTHS_BY_TYPE.tunnel4m} diameter={TUNNEL_OUTER_DIAMETER} segmentLength={TUNNEL_SEGMENT_LENGTH} points={shape.points} onPointsChange={onPointsChange} />;
+                    case 'tunnel3m':
+                        return <Tunnel {...commonProps} key={shape.id} length={TUNNEL_LENGTHS_BY_TYPE.tunnel3m} diameter={TUNNEL_OUTER_DIAMETER} segmentLength={TUNNEL_SEGMENT_LENGTH} points={shape.points} onPointsChange={onPointsChange} />;
                     default:
                         return null;
                 }

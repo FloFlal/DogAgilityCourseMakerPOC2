@@ -37,6 +37,8 @@ describe('ObstaclesLayer', () => {
                 makeObstacle('aframe-1', 'aFrame'),
                 makeObstacle('weave-1', 'weavePols'),
                 makeObstacle('semi-weave-1', 'semiWeavePols'),
+                makeObstacle('tunnel-6m', 'tunnel6m'),
+                makeObstacle('tunnel-3m', 'tunnel3m'),
             ],
         });
 
@@ -65,6 +67,8 @@ describe('ObstaclesLayer', () => {
             'aframe-1',
             'weave-1',
             'semi-weave-1',
+            'tunnel-6m',
+            'tunnel-3m',
         ]);
     });
 

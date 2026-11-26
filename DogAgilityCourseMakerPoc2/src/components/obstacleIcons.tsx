@@ -102,3 +102,10 @@ export const SemiWeavePolsIcon: React.FC<ObstacleIconProps> = (props) => (
         ))}
     </svg>
 );
+
+/** Tunnel: flexible curved tube seen from above, shared by the 4 lengths. */
+export const TunnelIcon: React.FC<ObstacleIconProps> = (props) => (
+    <svg viewBox="0 0 20 20" data-testid="obstacle-icon-tunnel" {...ICON_PATHS} strokeWidth={2.5} {...props}>
+        <path d="M4 17 C 4 9, 16 11, 16 3" />
+    </svg>
+);

@@ -19,6 +19,18 @@ const VERTICAL_OBSTACLE_TYPES: ReadonlySet<ObstacleType> = new Set<ObstacleType>
 ]);
 
 /**
+ * Tunnel types (US-020): the flexible tube is manipulated only through its
+ * two end anchors (rope physics), so it is selectable without any transformer
+ * frame or rotate handle - the transformer must not attach to it.
+ */
+const TUNNEL_TYPES: ReadonlySet<ObstacleType> = new Set<ObstacleType>([
+    'tunnel6m',
+    'tunnel5m',
+    'tunnel4m',
+    'tunnel3m',
+]);
+
+/**
  * Transformer component: surrounds the selected obstacle and applies
  * the transform constraints (minimum size, rotation).
  */
@@ -26,9 +38,11 @@ export const TransformerComponent: React.FC<TransformerComponentProps> = ({ sele
     const transformerRef = useRef<Konva.Transformer>(null);
     const shapes = useDrawingStore((state) => state.obstacles);
 
-    // Vertical obstacles get their rotate handle on the side of the box.
+    // Vertical obstacles get their rotate handle on the side of the box;
+    // tunnels get no transformer at all (anchor-based manipulation only).
     const selectedType = shapes.find((shape) => shape.id === selectedId)?.type;
     const rotateAnchorAngle = selectedType !== undefined && VERTICAL_OBSTACLE_TYPES.has(selectedType) ? 90 : 0;
+    const skipTransformer = selectedType !== undefined && TUNNEL_TYPES.has(selectedType);
 
     useEffect((): void => {
         const transformer = transformerRef.current;
@@ -39,7 +53,7 @@ export const TransformerComponent: React.FC<TransformerComponentProps> = ({ sele
 
         if (!stage) return;
 
-        if (selectedId) {
+        if (selectedId && !skipTransformer) {
             const selectedNode = stage.findOne('#' + selectedId);
 
             if (selectedNode) {
@@ -52,7 +66,7 @@ export const TransformerComponent: React.FC<TransformerComponentProps> = ({ sele
 
         transformer.nodes([]);
         transformer.getLayer()?.batchDraw();
-    }, [selectedId, shapes]);
+    }, [selectedId, shapes, skipTransformer]);
 
     return (
         <Layer>

@@ -1,6 +1,7 @@
 import type { StateCreator } from 'zustand';
 import type { Obstacle } from '../../types/obstacleTypes';
-import { OBSTACLE_SIZES } from '../../constants/canvasDefaults';
+import { OBSTACLE_SIZES, TUNNEL_LENGTHS_BY_TYPE } from '../../constants/canvasDefaults';
+import { createStraightChain } from '../../services/tunnelChain';
 import type { DrawingState } from '../storeTypes';
 
 /**
@@ -51,6 +52,12 @@ export const createDrawingSlice: StateCreator<DrawingState, [], [], DrawingSlice
             fill: currentColor,
             rotation: 0,
         };
+
+        // Tunnels (US-020): seed the straight joint chain for their regulated
+        // length; bending then rewrites this field through the end anchors.
+        if (currentShapeType in TUNNEL_LENGTHS_BY_TYPE) {
+            newShape.points = createStraightChain(TUNNEL_LENGTHS_BY_TYPE[currentShapeType as keyof typeof TUNNEL_LENGTHS_BY_TYPE]);
+        }
 
         // Placement does not select the obstacle: selection goes through the
         // obstacle click (which also disarms the tool, mutual exclusion).
