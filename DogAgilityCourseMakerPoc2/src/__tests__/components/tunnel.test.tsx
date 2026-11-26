@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { TUNNEL_DRAG_STEP_CM } from '../../constants/canvasDefaults';
 import { Tunnel } from '../../obstacles/tunnel';
 import type { BaseObstacleProps, TunnelPoint } from '../../types/obstacleTypes';
 
@@ -56,7 +55,7 @@ describe('Tunnel', () => {
         expect(queryAllByTestId('konva-circle')).toHaveLength(2);
     });
 
-    it('propagates a capped anchor drag as a new chain through onPointsChange', () => {
+    it('translates the whole tunnel 1:1 on a free anchor drag', () => {
         const onPointsChange = vi.fn();
         const props = { ...makeProps({ isSelected: true }), onPointsChange };
         const { getAllByTestId } = render(
@@ -64,18 +63,49 @@ describe('Tunnel', () => {
         );
 
         // The mock feeds the drag handler a local target of (7, 14) px, i.e.
-        // (7 * 2.5, 14 * 2.5) = (17.5, 35) cm - further than the per-event
-        // step cap: the tip must advance by exactly one capped step toward it.
+        // (7 * 2.5, 14 * 2.5) = (17.5, 35) cm: a free drag must move the
+        // WHOLE chain by that exact delta, no lag and no bending.
         fireEvent.drag(getAllByTestId('konva-circle')[0]);
 
         expect(onPointsChange).toHaveBeenCalledTimes(1);
         expect(onPointsChange).toHaveBeenCalledWith('tunnel-1', expect.any(Array));
 
         const chain = onPointsChange.mock.calls[0][1] as TunnelPoint[];
-        const dx = chain[0].x;
-        const dy = chain[0].y + 150; // initial start joint is (0, -150)
 
-        expect(Math.hypot(dx, dy)).toBeCloseTo(TUNNEL_DRAG_STEP_CM, 5);
+        expect(chain[0]).toEqual({ x: 17.5, y: 35 });
+        expect(chain[6]).toEqual({ x: 17.5, y: 335 });
+    });
+
+    it('bends the chain around a pinned end without moving the pin', () => {
+        const onPointsChange = vi.fn();
+        const props = { ...makeProps({ isSelected: true }), onPointsChange };
+        const { getAllByTestId } = render(
+            <Tunnel {...props} length={300} diameter={66} segmentLength={50} />,
+        );
+
+        // Pin the far (end) anchor, then drag the near (start) one: the pin
+        // stays exactly at (0, 150) and the chain bends within +/- 25 deg.
+        const anchors = getAllByTestId('konva-circle');
+
+        fireEvent.contextMenu(anchors[1]);
+        expect(anchors[1].getAttribute('data-fill')).toBe('#EF4444');
+
+        fireEvent.drag(anchors[0]);
+
+        expect(onPointsChange).toHaveBeenCalledTimes(1);
+
+        const chain = onPointsChange.mock.calls[0][1] as TunnelPoint[];
+
+        expect(chain[6]).toEqual({ x: 0, y: 150 });
+
+        for (let i = 0; i < chain.length - 2; i += 1) {
+            const v1 = { x: chain[i + 1].x - chain[i].x, y: chain[i + 1].y - chain[i].y };
+            const v2 = { x: chain[i + 2].x - chain[i + 1].x, y: chain[i + 2].y - chain[i + 1].y };
+            const dot = (v1.x * v2.x + v1.y * v2.y) / (Math.hypot(v1.x, v1.y) * Math.hypot(v2.x, v2.y));
+            const angle = (Math.acos(Math.min(1, Math.max(-1, dot))) * 180) / Math.PI;
+
+            expect(angle).toBeLessThanOrEqual(25 + 1e-6);
+        }
     });
 
     it('ignores anchor drags on a pinned end', () => {

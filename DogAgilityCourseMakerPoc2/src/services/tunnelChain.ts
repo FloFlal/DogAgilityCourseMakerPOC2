@@ -8,6 +8,17 @@ import type { TunnelEnd, TunnelPoint } from '../types/obstacleTypes';
  * expressed in local centimeters (pre-ratio), centered on (0, 0) when
  * created. All computations are pure and framework-free so they can be
  * unit-tested without Konva.
+ *
+ * Interaction model (validated on #64, refined after on-grid testing):
+ * - dragging a FREE end simply moves the whole tunnel: rigid translation,
+ *   1:1 with the cursor, no lag and no bending;
+ * - dragging the free end while the OTHER end is pinned curves the tunnel
+ *   like a rope around the pin: each segment keeps its length and bends by
+ *   at most +/- 25 deg relative to the previous one. The bend side of every
+ *   joint is remembered from the pre-drag chain (hysteresis): a saturated
+ *   joint stays on its boundary instead of flipping to the opposite one,
+ *   which is what made the tunnel swing wildly when over-curving. Saturated
+ *   elements then travel sideways with the chain (slip) instead of rotating.
  */
 
 const EPSILON = 1e-6;
@@ -23,7 +34,7 @@ export function createStraightChain(lengthCm: number): TunnelPoint[] {
     }));
 }
 
-/** Chebyshev-free vector helpers. */
+/** Vector helpers. */
 const subtract = (a: TunnelPoint, b: TunnelPoint): TunnelPoint => ({ x: a.x - b.x, y: a.y - b.y });
 const add = (a: TunnelPoint, b: TunnelPoint): TunnelPoint => ({ x: a.x + b.x, y: a.y + b.y });
 const scale = (a: TunnelPoint, k: number): TunnelPoint => ({ x: a.x * k, y: a.y * k });
@@ -38,31 +49,59 @@ function normalize(v: TunnelPoint): TunnelPoint | null {
 }
 
 /**
- * Rotates `direction` so it stays within `maxBendRad` of `reference`
- * (clockwise rotation when the direction is clockwise from the reference,
- * counter-clockwise otherwise, in the y-down screen frame).
+ * Rotates `direction` so it stays within `maxBendRad` of `reference`.
+ * `side` is the bend orientation remembered from the pre-drag chain
+ * (1 clockwise, -1 counter-clockwise, 0 unknown): a saturated joint is held
+ * on the remembered side so the pull cannot make it flip to the opposite
+ * boundary in one event.
  */
-function clampDirection(direction: TunnelPoint, reference: TunnelPoint, maxBendRad: number): TunnelPoint {
+function clampDirection(direction: TunnelPoint, reference: TunnelPoint, maxBendRad: number, side: number): TunnelPoint {
     const dot = Math.min(1, Math.max(-1, direction.x * reference.x + direction.y * reference.y));
     const angle = Math.acos(dot);
 
     if (angle <= maxBendRad) return direction;
 
-    // Positive cross product means direction is clockwise from reference.
     const cross = direction.x * reference.y - direction.y * reference.x;
-    const sin = (cross >= 0 ? 1 : -1) * Math.sin(maxBendRad);
+    // Positive cross product means direction is clockwise from reference;
+    // fall back to the geometric side when the chain was straight there.
+    const sign = side !== 0 ? side : cross >= 0 ? 1 : -1;
+    const sin = sign * Math.sin(maxBendRad);
     const cos = Math.cos(maxBendRad);
 
     return { x: reference.x * cos - reference.y * sin, y: reference.x * sin + reference.y * cos };
+}
+
+/** Unit direction of every segment (segment k joins joints k and k+1). */
+function segmentDirections(joints: TunnelPoint[]): TunnelPoint[] {
+    return joints.slice(0, -1).map((joint, i) => normalize(subtract(joints[i + 1], joint)) ?? { x: 0, y: 1 });
+}
+
+/**
+ * Bend orientation remembered at every interior joint (index = joint index,
+ * between segment j-1 and segment j): 1 clockwise, -1 counter-clockwise,
+ * 0 straight. Used as hysteresis by the pull passes.
+ */
+function bendSides(joints: TunnelPoint[]): number[] {
+    const dirs = segmentDirections(joints);
+    const sides = new Array<number>(joints.length).fill(0);
+
+    for (let j = 1; j < joints.length - 1; j += 1) {
+        const cross = dirs[j - 1].x * dirs[j].y - dirs[j - 1].y * dirs[j].x;
+
+        sides[j] = cross > EPSILON ? 1 : cross < -EPSILON ? -1 : 0;
+    }
+
+    return sides;
 }
 
 /**
  * Rope pass: starting from `startIndex` and walking `step` by `step`, each
  * segment keeps exactly one segment length (rope does not stretch nor
  * compress) and its direction is clamped to +/- `maxBendRad` relative to the
- * previous segment, so a pull propagates through the whole chain like a string.
+ * previous segment, with the bend side remembered in `sides` (index = joint
+ * where the pair meets).
  */
-function propagate(joints: TunnelPoint[], startIndex: number, step: number, maxBendRad: number): void {
+function propagate(joints: TunnelPoint[], startIndex: number, step: number, sides: number[], maxBendRad: number): void {
     let previousDirection: TunnelPoint | null = null;
     let current = startIndex;
 
@@ -77,7 +116,7 @@ function propagate(joints: TunnelPoint[], startIndex: number, step: number, maxB
         }
 
         if (previousDirection) {
-            direction = clampDirection(direction, previousDirection, maxBendRad);
+            direction = clampDirection(direction, previousDirection, maxBendRad, sides[current] ?? 0);
         }
 
         joints[next] = add(joints[current], scale(direction, TUNNEL_SEGMENT_LENGTH));
@@ -86,28 +125,21 @@ function propagate(joints: TunnelPoint[], startIndex: number, step: number, maxB
     }
 }
 
-/** Pin state and motion tuning of the two tunnel ends during an anchor drag. */
+/** Pin state of the two tunnel ends during an anchor drag. */
 export interface TunnelPinOptions {
     pinnedStart?: boolean;
     pinnedEnd?: boolean;
-    /**
-     * Max travel (cm) of the dragged tip toward the cursor for this call.
-     * Capping the tip travel per drag event keeps the pull fluid: the tip
-     * smoothly lags behind the cursor instead of snapping the whole chain
-     * when the mouse moves fast. Omit (or pass a value >= the distance) to
-     * reach the target exactly (used for the settle pass on drag end).
-     */
-    maxTipStepCm?: number;
 }
 
 /**
- * Rope interaction (US-020): dragging one end anchor pulls the whole tunnel
- * like a string - the first segment follows the cursor, pulls the second one,
- * and so on, each segment being clamped to +/- 25 deg relative to the previous
- * one. The other end follows along when free; when it is pinned, the pinned
- * end is authoritative and the dragged tip may land slightly away from the
- * cursor when the two constraints conflict. Dragging a pinned end does nothing.
- * `maxTipStepCm` caps the tip travel per call for a fluid pull.
+ * Rope interaction (US-020): dragging one end anchor with the other end FREE
+ * moves the whole tunnel by rigid translation (1:1 with the cursor, the far
+ * end follows exactly). When the far end is PINNED, the pull curves the
+ * tunnel like a rope: segments keep their length and bend by at most
+ * +/- 25 deg relative to the previous one, with the bend side held stable
+ * (hysteresis) so over-curving resists smoothly instead of swinging. The
+ * pinned end is authoritative: the dragged tip may land away from the cursor
+ * when the chain cannot reach it. Dragging a pinned end does nothing.
  *
  * @param joints - current joint chain, in local centimeters
  * @param draggedEnd - which extreme anchor the user is dragging
@@ -121,47 +153,41 @@ export function dragChainEnd(
     target: TunnelPoint,
     options: TunnelPinOptions = {},
 ): TunnelPoint[] {
-    const result = joints.map((point) => ({ ...point }));
-    const count = result.length;
+    const count = joints.length;
 
-    if (count < 2) return result;
+    if (count < 2) return joints.map((point) => ({ ...point }));
 
     const isStart = draggedEnd === 'start';
 
     // A pinned end cannot be dragged: it stays exactly where it is.
-    if (isStart && options.pinnedStart) return result;
-    if (!isStart && options.pinnedEnd) return result;
+    if (isStart && options.pinnedStart) return joints.map((point) => ({ ...point }));
+    if (!isStart && options.pinnedEnd) return joints.map((point) => ({ ...point }));
 
     const tip = isStart ? 0 : count - 1;
     const far = isStart ? count - 1 : 0;
     const step = isStart ? 1 : -1;
     const farPinned = isStart ? options.pinnedEnd : options.pinnedStart;
 
-    // Fluid pull: cap the tip travel toward the cursor per drag event so a
-    // fast mouse swing cannot snap the whole chain in a single move.
-    let effectiveTarget = target;
+    // Free far end (default): dragging an end MOVES the whole tunnel.
+    if (!farPinned) {
+        const dx = target.x - joints[tip].x;
+        const dy = target.y - joints[tip].y;
 
-    if (options.maxTipStepCm !== undefined) {
-        const remaining = normalize(subtract(target, result[tip]));
-
-        if (remaining) {
-            const distance = Math.hypot(target.x - result[tip].x, target.y - result[tip].y);
-
-            if (distance > options.maxTipStepCm) {
-                effectiveTarget = add(result[tip], scale(remaining, options.maxTipStepCm));
-            }
-        }
+        return joints.map((point) => ({ x: point.x + dx, y: point.y + dy }));
     }
 
-    result[tip] = { ...effectiveTarget };
-    propagate(result, tip, step, (TUNNEL_MAX_BEND_DEG * Math.PI) / 180);
+    // Pinned far end: rope curving around the pin, bend sides held stable.
+    const sides = bendSides(joints);
+    const result = joints.map((point) => ({ ...point }));
+    const maxBendRad = (TUNNEL_MAX_BEND_DEG * Math.PI) / 180;
 
-    if (farPinned) {
-        // Second pass from the pinned end: re-anchors the chain while keeping
-        // the segment lengths and the +/- 20 deg clamp.
-        result[far] = { ...joints[far] };
-        propagate(result, far, -step, (TUNNEL_MAX_BEND_DEG * Math.PI) / 180);
-    }
+    result[tip] = { ...target };
+    propagate(result, tip, step, sides, maxBendRad);
+
+    // Second pass from the pinned end: re-anchors the chain while keeping
+    // the segment lengths and the +/- 25 deg clamp.
+    result[far] = { ...joints[far] };
+    propagate(result, far, -step, sides, maxBendRad);
 
     return result;
 }

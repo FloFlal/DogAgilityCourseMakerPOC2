@@ -74,13 +74,14 @@ export const SEMI_WEAVE_POLES_DEFAULTS = { ...WEAVE_POLES_DEFAULTS, poleCount: 6
  * regulated 60 cm inner diameter plus a 3 cm wall, chain segments of
  * ~50 cm hinged together, max curvature of +/- 25 deg between two
  * consecutive segments (per-obstacle, no global constraint, raised from
- * 20 deg after on-grid testing), and a max tip travel per drag event
- * (cm) that keeps the rope pull fluid instead of snapping the chain.
+ * 20 deg after on-grid testing). Interaction: dragging a free end moves
+ * the whole tunnel (rigid 1:1 translation); curving only happens while
+ * the opposite end is pinned (right-click), with a bend-side hysteresis
+ * in the rope solve so over-curving resists smoothly instead of jumping.
  */
 export const TUNNEL_OUTER_DIAMETER = 60 + 2 * 3;
 export const TUNNEL_SEGMENT_LENGTH = 50;
 export const TUNNEL_MAX_BEND_DEG = 25;
-export const TUNNEL_DRAG_STEP_CM = 15;
 
 /** Regulated tunnel length per sub-type (FCI section 4.6: 300 to 600 cm). */
 export const TUNNEL_LENGTHS_BY_TYPE: Record<'tunnel6m' | 'tunnel5m' | 'tunnel4m' | 'tunnel3m', number> = {
