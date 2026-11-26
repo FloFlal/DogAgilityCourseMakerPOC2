@@ -86,19 +86,28 @@ function propagate(joints: TunnelPoint[], startIndex: number, step: number, maxB
     }
 }
 
-/** Pin state of the two tunnel ends during an anchor drag. */
+/** Pin state and motion tuning of the two tunnel ends during an anchor drag. */
 export interface TunnelPinOptions {
     pinnedStart?: boolean;
     pinnedEnd?: boolean;
+    /**
+     * Max travel (cm) of the dragged tip toward the cursor for this call.
+     * Capping the tip travel per drag event keeps the pull fluid: the tip
+     * smoothly lags behind the cursor instead of snapping the whole chain
+     * when the mouse moves fast. Omit (or pass a value >= the distance) to
+     * reach the target exactly (used for the settle pass on drag end).
+     */
+    maxTipStepCm?: number;
 }
 
 /**
  * Rope interaction (US-020): dragging one end anchor pulls the whole tunnel
  * like a string - the first segment follows the cursor, pulls the second one,
- * and so on, each segment being clamped to +/- 20 deg relative to the previous
+ * and so on, each segment being clamped to +/- 25 deg relative to the previous
  * one. The other end follows along when free; when it is pinned, the pinned
  * end is authoritative and the dragged tip may land slightly away from the
  * cursor when the two constraints conflict. Dragging a pinned end does nothing.
+ * `maxTipStepCm` caps the tip travel per call for a fluid pull.
  *
  * @param joints - current joint chain, in local centimeters
  * @param draggedEnd - which extreme anchor the user is dragging
@@ -128,7 +137,23 @@ export function dragChainEnd(
     const step = isStart ? 1 : -1;
     const farPinned = isStart ? options.pinnedEnd : options.pinnedStart;
 
-    result[tip] = { ...target };
+    // Fluid pull: cap the tip travel toward the cursor per drag event so a
+    // fast mouse swing cannot snap the whole chain in a single move.
+    let effectiveTarget = target;
+
+    if (options.maxTipStepCm !== undefined) {
+        const remaining = normalize(subtract(target, result[tip]));
+
+        if (remaining) {
+            const distance = Math.hypot(target.x - result[tip].x, target.y - result[tip].y);
+
+            if (distance > options.maxTipStepCm) {
+                effectiveTarget = add(result[tip], scale(remaining, options.maxTipStepCm));
+            }
+        }
+    }
+
+    result[tip] = { ...effectiveTarget };
     propagate(result, tip, step, (TUNNEL_MAX_BEND_DEG * Math.PI) / 180);
 
     if (farPinned) {

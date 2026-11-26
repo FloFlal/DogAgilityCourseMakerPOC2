@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { TUNNEL_DRAG_STEP_CM } from '../../constants/canvasDefaults';
 import { Tunnel } from '../../obstacles/tunnel';
 import type { BaseObstacleProps, TunnelPoint } from '../../types/obstacleTypes';
 
@@ -55,7 +56,7 @@ describe('Tunnel', () => {
         expect(queryAllByTestId('konva-circle')).toHaveLength(2);
     });
 
-    it('propagates an anchor drag as a new chain through onPointsChange', () => {
+    it('propagates a capped anchor drag as a new chain through onPointsChange', () => {
         const onPointsChange = vi.fn();
         const props = { ...makeProps({ isSelected: true }), onPointsChange };
         const { getAllByTestId } = render(
@@ -63,15 +64,18 @@ describe('Tunnel', () => {
         );
 
         // The mock feeds the drag handler a local target of (7, 14) px, i.e.
-        // (7 * 2.5, 14 * 2.5) = (17.5, 35) cm: the first joint must land there.
+        // (7 * 2.5, 14 * 2.5) = (17.5, 35) cm - further than the per-event
+        // step cap: the tip must advance by exactly one capped step toward it.
         fireEvent.drag(getAllByTestId('konva-circle')[0]);
 
         expect(onPointsChange).toHaveBeenCalledTimes(1);
         expect(onPointsChange).toHaveBeenCalledWith('tunnel-1', expect.any(Array));
 
         const chain = onPointsChange.mock.calls[0][1] as TunnelPoint[];
+        const dx = chain[0].x;
+        const dy = chain[0].y + 150; // initial start joint is (0, -150)
 
-        expect(chain[0]).toEqual({ x: 17.5, y: 35 });
+        expect(Math.hypot(dx, dy)).toBeCloseTo(TUNNEL_DRAG_STEP_CM, 5);
     });
 
     it('ignores anchor drags on a pinned end', () => {
