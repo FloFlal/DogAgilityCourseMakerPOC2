@@ -37,9 +37,9 @@ describe('Slice parcours (import/export via le store)', () => {
         const result = useDrawingStore.getState().importFromJson('not json');
 
         expect(result.success).toBe(false);
-        expect(result.error).toBe('Invalid JSON syntax');
+        expect(result.error).toEqual({ code: 'import.errors.invalidJson' });
         const state = useDrawingStore.getState();
-        expect(state.importError).toBe('Invalid JSON syntax');
+        expect(state.importError).toEqual({ code: 'import.errors.invalidJson' });
         expect(state.obstacles).toHaveLength(0);
     });
 
@@ -53,7 +53,7 @@ describe('Slice parcours (import/export via le store)', () => {
     });
 
     it('efface l\'erreur d\'import courante', () => {
-        useDrawingStore.setState({ importError: 'Invalid JSON syntax' });
+        useDrawingStore.setState({ importError: { code: 'import.errors.invalidJson' } });
 
         useDrawingStore.getState().clearImportError();
 

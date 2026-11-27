@@ -1,6 +1,7 @@
 import { createSelector } from './createSelector';
 import type { DrawingState } from './storeTypes';
 import type { Obstacle } from '../types/obstacleTypes';
+import type { ImportError } from '../schemas/courseSchema';
 
 /**
  * Store selectors: to be used with `useDrawingStore(selector)`.
@@ -20,8 +21,8 @@ export const selectCurrentColor = (state: DrawingState): string => state.current
 /** Returns the current obstacle type selected in the toolbar. */
 export const selectCurrentShapeType = (state: DrawingState): DrawingState['currentShapeType'] =>
     state.currentShapeType;
-/** Returns the last course import error, or null when none. */
-export const selectImportError = (state: DrawingState): string | null => state.importError;
+/** Returns the last course import error (structured i18n code), or null. */
+export const selectImportError = (state: DrawingState): ImportError | null => state.importError;
 
 // Derived data: the obstacle matching the current selection
 /**

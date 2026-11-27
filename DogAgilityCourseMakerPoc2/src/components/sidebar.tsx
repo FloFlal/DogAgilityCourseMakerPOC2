@@ -101,17 +101,34 @@ export const Sidebar: React.FC = () => {
                 <p className="text-sm text-slate-400">{t('app.subtitle')}</p>
             </div>
 
-            {/* Import error display */}
+            {/* Import error display: the store holds a structured i18n code
+                (schema/service produce codes, A5 review), translated here in
+                the current language; the detailed validation issues stay
+                available in a collapsed <details> list. */}
             {importError && (
                 <div
                     role="alert"
                     aria-live="assertive"
-                    className="flex items-center gap-2 p-3 bg-red-900/30 border border-red-600 rounded-lg"
+                    className="flex items-start gap-2 p-3 bg-red-900/30 border border-red-600 rounded-lg"
                 >
-                    <AlertTriangle size={16} aria-hidden="true" className="text-red-400 flex-shrink-0" />
+                    <AlertTriangle size={16} aria-hidden="true" className="text-red-400 flex-shrink-0 mt-0.5" />
                     <div className="flex-1">
                         <p className="text-sm text-red-300 font-medium">{t('sidebar.importError')}</p>
-                        <p className="text-xs text-red-400/80 truncate">{importError}</p>
+                        <p className="text-xs text-red-400/80">{t(importError.code)}</p>
+                        {importError.issues && importError.issues.length > 0 && (
+                            <details className="mt-1">
+                                <summary className="text-xs text-red-300 cursor-pointer hover:text-red-200">
+                                    {t('import.detailsSummary', { count: importError.issues.length })}
+                                </summary>
+                                <ul className="mt-1 list-disc pl-4 space-y-0.5">
+                                    {importError.issues.map((issue, index) => (
+                                        <li key={`${issue.path}-${index}`} className="text-xs text-red-400/80 break-all">
+                                            {issue.path}: {t(issue.code)}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </details>
+                        )}
                     </div>
                     <button
                         onClick={clearImportError}

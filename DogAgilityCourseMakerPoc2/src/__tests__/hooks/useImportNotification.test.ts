@@ -14,16 +14,18 @@ describe('useImportNotification', () => {
         useDrawingStore.setState({ importError: null, obstacles: [] });
     });
 
-    it("affiche un toast puis réinitialise l'erreur d'import", () => {
+    it("affiche un toast traduit puis réinitialise l'erreur d'import", () => {
         renderHook(() => useImportNotification());
 
         act(() => {
-            useDrawingStore.setState({ importError: 'Invalid JSON syntax' });
+            useDrawingStore.setState({ importError: { code: 'import.errors.invalidJson' } });
         });
 
         expect(toast.error).toHaveBeenCalledTimes(1);
+        // The structured i18n code is translated in the current language
+        // (the test suite seeds French).
         expect(toast.error).toHaveBeenCalledWith(
-            'Invalid JSON syntax',
+            'Syntaxe JSON invalide',
             expect.objectContaining({ position: 'top-right' }),
         );
         expect(useDrawingStore.getState().importError).toBeNull();

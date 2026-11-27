@@ -100,7 +100,7 @@ describe('useDrawingStore (slices combinées)', () => {
         const result = useDrawingStore.getState().importFromJson('{oops');
 
         expect(result.success).toBe(false);
-        expect(useDrawingStore.getState().importError).toBe('Invalid JSON syntax');
+        expect(useDrawingStore.getState().importError).toEqual({ code: 'import.errors.invalidJson' });
     });
 
     it('setCurrentColor / setCurrentShapeType modifient les préférences', () => {
@@ -120,7 +120,7 @@ describe('useDrawingStore (slices combinées)', () => {
     });
 
     it("clearImportError réinitialise l'erreur d'import", () => {
-        useDrawingStore.setState({ importError: 'oops' });
+        useDrawingStore.setState({ importError: { code: 'import.errors.parseFailed' } });
 
         useDrawingStore.getState().clearImportError();
 

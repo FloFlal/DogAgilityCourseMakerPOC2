@@ -1,10 +1,13 @@
 import type { StateCreator } from 'zustand';
 import { exportCourse, importCourse } from '../../services/courseService';
+import { IMPORT_ERROR_CODES } from '../../schemas/courseSchema';
+import type { ImportError } from '../../schemas/courseSchema';
 import type { DrawingState } from '../storeTypes';
 
 /**
  * Course slice: course import/export, delegated to the courseService service.
- * The slice only manages the application state (imported obstacles, current error).
+ * The slice only manages the application state (imported obstacles, current
+ * error). The error is a structured i18n code: the UI translates it.
  */
 
 /**
@@ -12,16 +15,16 @@ import type { DrawingState } from '../storeTypes';
  * for export, import and error reset.
  */
 export interface CourseSlice {
-    importError: string | null;
+    importError: ImportError | null;
 
     exportToJson: () => string;
-    importFromJson: (jsonString: string) => { success: boolean; error?: string };
+    importFromJson: (jsonString: string) => { success: boolean; error?: ImportError };
     clearImportError: () => void;
 }
 
 /**
  * Creates the course slice: course import/export, delegated to the
- * courseService, plus the current import error message.
+ * courseService, plus the current import error (structured i18n code).
  * @param set - Zustand state setter
  * @param get - Zustand state getter
  * @returns the course slice properties
@@ -33,7 +36,7 @@ export const createCourseSlice: StateCreator<DrawingState, [], [], CourseSlice> 
         return exportCourse(get().obstacles);
     },
 
-    importFromJson: (jsonString: string): { success: boolean; error?: string } => {
+    importFromJson: (jsonString: string): { success: boolean; error?: ImportError } => {
         const result = importCourse(jsonString);
 
         if (result.success) {
@@ -46,11 +49,11 @@ export const createCourseSlice: StateCreator<DrawingState, [], [], CourseSlice> 
             return { success: true };
         }
 
-        const errorMessage = result.error ?? 'Failed to import course data';
+        const error = result.error ?? { code: IMPORT_ERROR_CODES.importFailed };
 
-        set({ importError: errorMessage });
+        set({ importError: error });
 
-        return { success: false, error: errorMessage };
+        return { success: false, error };
     },
 
     clearImportError: (): void => {

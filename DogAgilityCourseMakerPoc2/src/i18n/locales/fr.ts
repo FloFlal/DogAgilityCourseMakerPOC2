@@ -66,5 +66,30 @@ export const fr = {
             type: 'Sélection : {{type}}',
             position: 'x {{x}} px — y {{y}} px',
         },
+        // Erreurs d'import de parcours : le schéma/le service renvoient des
+        // codes (review A5), l'interface les traduit dans la langue courante.
+        import: {
+            errors: {
+                invalidFormat: 'Format invalide : un tableau d’obstacles est attendu',
+                invalidJson: 'Syntaxe JSON invalide',
+                parseFailed: 'Échec de la lecture des données du parcours',
+                importFailed: 'Échec de l’import du parcours',
+                validationFailed: 'Le fichier de parcours contient des données invalides',
+                invalidValue: 'Valeur invalide',
+                obstacleId: 'Format de l’identifiant de l’obstacle invalide',
+                obstacleType: 'Type d’obstacle inconnu',
+                xFinite: 'La position x de l’obstacle doit être un nombre fini',
+                xNonNegative: 'La position x de l’obstacle doit être positive ou nulle',
+                yFinite: 'La position y de l’obstacle doit être un nombre fini',
+                yNonNegative: 'La position y de l’obstacle doit être positive ou nulle',
+                widthPositive: 'La largeur de l’obstacle doit être positive',
+                heightPositive: 'La hauteur de l’obstacle doit être positive',
+                fillHexColor: 'La couleur de remplissage doit être un code hexadécimal valide',
+                rotationRange: 'La rotation doit être comprise entre -180 et 180 degrés',
+                pointXFinite: 'La coordonnée x du point doit être un nombre fini',
+                pointYFinite: 'La coordonnée y du point doit être un nombre fini',
+            },
+            detailsSummary: 'Détails de la validation ({{count}})',
+        },
     },
 };
