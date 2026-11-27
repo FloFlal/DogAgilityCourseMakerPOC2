@@ -144,13 +144,45 @@ describe('Sidebar accessibilité', () => {
     });
 
     it("l'erreur d'import est une alerte accessible avec bouton labellisé", () => {
-        useDrawingStore.setState({ importError: 'Invalid JSON syntax' });
+        useDrawingStore.setState({ importError: { code: 'import.errors.invalidJson' } });
         render(<Sidebar />);
 
         const alert = screen.getByRole('alert');
 
-        expect(alert.textContent).toContain('Invalid JSON syntax');
+        // Le code i18n structuré est traduit dans la langue de la suite (fr).
+        expect(alert.textContent).toContain('Syntaxe JSON invalide');
         expect(screen.getByRole('button', { name: /fermer le message/i })).toBeTruthy();
+    });
+
+    it("l'erreur de validation liste ses détails repliés (path + message traduit)", () => {
+        useDrawingStore.setState({
+            importError: {
+                code: 'import.errors.validationFailed',
+                issues: [
+                    { path: '0.width', code: 'import.errors.widthPositive' },
+                    { path: '1.fill', code: 'import.errors.fillHexColor' },
+                ],
+            },
+        });
+        render(<Sidebar />);
+
+        const alert = screen.getByRole('alert');
+
+        expect(alert.textContent).toContain('Le fichier de parcours contient des données invalides');
+        const summary = screen.getByText(/Détails de la validation \(2\)/);
+        const details = summary.closest('details');
+        expect(details).toBeTruthy();
+        // Details are collapsed by default: the summary click expands them.
+        expect(details?.hasAttribute('open')).toBe(false);
+
+        fireEvent.click(summary);
+
+        expect(details?.hasAttribute('open')).toBe(true);
+        // Each issue keeps its dotted path and its translated message.
+        expect(screen.getByText(/0\.width:/)).toBeTruthy();
+        expect(screen.getByText(/La largeur de l’obstacle doit être positive/)).toBeTruthy();
+        expect(screen.getByText(/1\.fill:/)).toBeTruthy();
+        expect(screen.getByText(/La couleur de remplissage doit être un code hexadécimal valide/)).toBeTruthy();
     });
 
     it('le champ couleur a un label associé', () => {

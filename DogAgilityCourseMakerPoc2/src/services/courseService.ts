@@ -1,16 +1,18 @@
-import { validateCourseData } from '../schemas/courseSchema';
+import { validateCourseData, IMPORT_ERROR_CODES } from '../schemas/courseSchema';
+import type { ImportError } from '../schemas/courseSchema';
 import type { Obstacle } from '../types/obstacleTypes';
 
-/** Result of a course import: validated data or an error message. */
+/** Result of a course import: validated data or a structured error. */
 export interface CourseImportResult {
     success: boolean;
     data?: Obstacle[];
-    error?: string;
+    error?: ImportError;
 }
 
 /**
  * Course import/export service.
- * Pure logic, independent of the Zustand store and the UI.
+ * Pure logic, independent of the Zustand store and the UI. Errors are
+ * structured i18n codes (translated by the UI), never user-facing strings.
  */
 
 /**
@@ -25,7 +27,8 @@ export function exportCourse(obstacles: Obstacle[]): string {
 /**
  * Validates and parses a course JSON.
  * @param jsonString - the JSON string to import
- * @returns the validated obstacles on success, otherwise an error message
+ * @returns the validated obstacles on success, otherwise a structured
+ *          error (i18n code + optional detailed validation issues)
  */
 export function importCourse(jsonString: string): CourseImportResult {
     const result = validateCourseData(jsonString);
@@ -34,5 +37,5 @@ export function importCourse(jsonString: string): CourseImportResult {
         return { success: true, data: result.data as Obstacle[] };
     }
 
-    return { success: false, error: result.error ?? 'Failed to import course data' };
+    return { success: false, error: result.error ?? { code: IMPORT_ERROR_CODES.importFailed } };
 }

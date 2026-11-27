@@ -42,21 +42,22 @@ describe('courseService', () => {
             const result = importCourse('{not json');
 
             expect(result.success).toBe(false);
-            expect(result.error).toBe('Invalid JSON syntax');
+            expect(result.error).toEqual({ code: 'import.errors.invalidJson' });
         });
 
         it('rejette un format non tableau', () => {
             const result = importCourse('{"id": "a"}');
 
             expect(result.success).toBe(false);
-            expect(result.error).toBe('Invalid format: expected an array of obstacles');
+            expect(result.error).toEqual({ code: 'import.errors.invalidFormat' });
         });
 
         it('rejette un obstacle invalide', () => {
             const result = importCourse('[{"id": "not-a-uuid", "type": "jump"}]');
 
             expect(result.success).toBe(false);
-            expect(result.error).toContain('Validation errors');
+            expect(result.error?.code).toBe('import.errors.validationFailed');
+            expect(result.error?.issues?.length).toBeGreaterThan(0);
         });
     });
 });

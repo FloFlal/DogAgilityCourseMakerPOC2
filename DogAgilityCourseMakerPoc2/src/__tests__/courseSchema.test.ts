@@ -43,14 +43,14 @@ describe('Course Schema Validation', () => {
             const invalidJson = '{ invalid json }';
             const result = validateCourseData(invalidJson);
             expect(result.success).toBe(false);
-            expect(result.error).toContain('Invalid JSON syntax');
+            expect(result.error?.code).toBe('import.errors.invalidJson');
         });
 
         it('should reject non-array data', () => {
             const nonArrayJson = JSON.stringify({ obstacles: [] });
             const result = validateCourseData(nonArrayJson);
             expect(result.success).toBe(false);
-            expect(result.error).toContain('expected an array');
+            expect(result.error?.code).toBe('import.errors.invalidFormat');
         });
 
         it('should reject obstacle with invalid ID format', () => {
@@ -69,7 +69,11 @@ describe('Course Schema Validation', () => {
 
             const result = validateCourseData(invalidIdJson);
             expect(result.success).toBe(false);
-            expect(result.error).toContain('Invalid obstacle ID format');
+            expect(result.error?.code).toBe('import.errors.validationFailed');
+            expect(result.error?.issues?.[0]).toEqual({
+                path: '0.id',
+                code: 'import.errors.obstacleId'
+            });
         });
 
         it('should reject obstacle with invalid type', () => {
@@ -88,7 +92,11 @@ describe('Course Schema Validation', () => {
 
             const result = validateCourseData(invalidTypeJson);
             expect(result.success).toBe(false);
-            expect(result.error).toContain('Invalid option');
+            expect(result.error?.code).toBe('import.errors.validationFailed');
+            expect(result.error?.issues?.[0]).toEqual({
+                path: '0.type',
+                code: 'import.errors.obstacleType'
+            });
         });
 
         it('should reject obstacle with negative width', () => {
@@ -107,7 +115,10 @@ describe('Course Schema Validation', () => {
 
             const result = validateCourseData(negativeWidthJson);
             expect(result.success).toBe(false);
-            expect(result.error).toContain('must be positive');
+            expect(result.error?.issues?.[0]).toEqual({
+                path: '0.width',
+                code: 'import.errors.widthPositive'
+            });
         });
 
         it('should reject obstacle with invalid color format', () => {
@@ -126,7 +137,10 @@ describe('Course Schema Validation', () => {
 
             const result = validateCourseData(invalidColorJson);
             expect(result.success).toBe(false);
-            expect(result.error).toContain('valid hex color');
+            expect(result.error?.issues?.[0]).toEqual({
+                path: '0.fill',
+                code: 'import.errors.fillHexColor'
+            });
         });
 
         it('should reject obstacle with rotation > 360', () => {
@@ -145,7 +159,10 @@ describe('Course Schema Validation', () => {
 
             const result = validateCourseData(invalidRotationJson);
             expect(result.success).toBe(false);
-            expect(result.error).toContain('between -180 and 180');
+            expect(result.error?.issues?.[0]).toEqual({
+                path: '0.rotation',
+                code: 'import.errors.rotationRange'
+            });
         });
 
         it('should reject obstacle with negative x position', () => {
@@ -164,7 +181,10 @@ describe('Course Schema Validation', () => {
 
             const result = validateCourseData(negativeXJson);
             expect(result.success).toBe(false);
-            expect(result.error).toContain('must be non-negative');
+            expect(result.error?.issues?.[0]).toEqual({
+                path: '0.x',
+                code: 'import.errors.xNonNegative'
+            });
         });
 
         it('should reject obstacle with negative y position', () => {
@@ -183,7 +203,10 @@ describe('Course Schema Validation', () => {
 
             const result = validateCourseData(negativeYJson);
             expect(result.success).toBe(false);
-            expect(result.error).toContain('must be non-negative');
+            expect(result.error?.issues?.[0]).toEqual({
+                path: '0.y',
+                code: 'import.errors.yNonNegative'
+            });
         });
     });
 
