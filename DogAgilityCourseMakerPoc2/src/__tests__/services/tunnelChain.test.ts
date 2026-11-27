@@ -123,6 +123,67 @@ describe('tunnelChain', () => {
             expect(new Set(bendSigns).size).toBeLessThanOrEqual(1);
         });
 
+        it('behaves identically on both anchors (180 deg rotation symmetry)', () => {
+            // The user's complaint: the bottom anchor jumped while the top one
+            // behaved. A drag of the 'end' anchor must equal the same drag of
+            // the 'start' anchor rotated by 180 deg (the solver is equivariant
+            // under point reflection).
+            const chain = createStraightChain(300);
+            const rotated = (points: TunnelPoint[]): TunnelPoint[] =>
+                points.map((point) => ({ x: -point.x, y: -point.y })).reverse();
+
+            // Two saturated pulls so the bend-side hysteresis (the piece that
+            // was asymmetric) is exercised on both anchors.
+            let endDrag = dragChainEnd(chain, 'end', { x: 75, y: 145 });
+            endDrag = dragChainEnd(endDrag, 'end', { x: 120, y: 260 });
+
+            let startDrag = dragChainEnd(chain, 'start', { x: -75, y: -145 });
+            startDrag = dragChainEnd(startDrag, 'start', { x: -120, y: -260 });
+
+            expect(rotated(endDrag)).toEqual(startDrag);
+        });
+
+        it('holds the bend side of saturated joints on successive bottom-anchor pulls', () => {
+            const chain = createStraightChain(300);
+            const saturatedSigns = (joints: TunnelPoint[]) =>
+                new Set(
+                    signedBends(joints)
+                        .map((angle) => (angle * 180) / Math.PI)
+                        .filter((angle) => Math.abs(angle) >= MAX_BEND_DEG - 0.1)
+                        .map(Math.sign),
+                );
+
+            // Pull the bottom anchor twice in the same direction: joints
+            // saturated at the bend limit must KEEP the side they saturated
+            // on, instead of flipping to the opposite boundary (which swung
+            // the whole chain to the other side).
+            const firstPull = dragChainEnd(chain, 'end', { x: 75, y: 145 });
+            const secondPull = dragChainEnd(firstPull, 'end', { x: 90, y: 140 });
+            const firstSigns = saturatedSigns(firstPull);
+
+            expect(firstSigns.size).toBe(1);
+            expect(saturatedSigns(secondPull)).toEqual(firstSigns);
+        });
+
+        it('folds smoothly when the cursor crosses the tunnel body', () => {
+            // Pull the bottom anchor up across the body: each joint must move
+            // by a bounded amount per event (the rope reconnects beyond the
+            // crossed joints instead of hairpinning and jumping).
+            let chain = createStraightChain(300);
+            let worst = 0;
+
+            for (let i = 1; i <= 24; i += 1) {
+                const next = dragChainEnd(chain, 'end', { x: i * 12.5, y: 150 - i * 20 });
+                const maxMove = Math.max(...next.map((point, k) => Math.hypot(point.x - chain[k].x, point.y - chain[k].y)));
+
+                worst = Math.max(worst, maxMove);
+                chain = next;
+            }
+
+            expect(worst).toBeLessThan(100);
+            expect(bendAngles(chain).every((angle) => angle <= MAX_BEND_DEG + 1e-6)).toBe(true);
+        });
+
         it('never mutates the input chain', () => {
             const chain = createStraightChain(300);
             const snapshot = JSON.stringify(chain);
