@@ -26,9 +26,12 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run build && npm run preview',
+    // Explicit 127.0.0.1 binding: the default 'localhost' host can bind
+    // IPv6 only on some runners, while the url probe uses IPv4.
+    command: 'npm run build && npx vite preview --host 127.0.0.1 --port 4173 --strictPort',
     url: 'http://127.0.0.1:4173/',
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    timeout: 240_000,
+    stdout: 'pipe',
   },
 });
