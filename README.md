@@ -74,6 +74,7 @@ npm run dev
 | `npm test` | Vitest tests in watch mode |
 | `npx vitest run` | one-shot run of the whole test suite |
 | `npm run test:coverage` | tests with coverage report (thresholds: 80% lines/statements/functions, 70% branches) |
+| `npm run test:e2e` | end-to-end tests with Playwright (build + `vite preview` + Chromium) |
 
 ## Project structure
 
@@ -89,7 +90,32 @@ DogAgilityCourseMakerPoc2/src/
 ├── store/              # Zustand store (slices) + memoized selectors
 ├── types/              # shared TypeScript types
 └── __tests__/          # unit and integration tests (Vitest)
+DogAgilityCourseMakerPoc2/e2e/ # end-to-end tests (Playwright, real Chromium)
 ```
+
+### End-to-end tests (US-032)
+
+The critical user journeys are covered by Playwright specs in `e2e/`, run
+against the production build served by `vite preview` (Chromium by default,
+retries in CI, `E2E_BASE_URL` to target a deployed environment instead):
+
+```bash
+# first run only: download the Chromium browser
+npx playwright install chromium
+
+# run the whole e2e suite (builds the app, serves it and runs the specs)
+npm run test:e2e
+
+# open the last HTML report (playwright-report/)
+npx playwright show-report
+```
+
+Covered journeys: obstacle placement (tool then canvas click), selection
+(tool deactivation + delete button), deletion (button and `Delete` key),
+keyboard moves (arrow = 1 px, `Shift` + arrow = one grid cell) and course
+import/export of a valid `.dacm.json` (including the translated error on an
+invalid file). A dedicated CI job (`E2E (Playwright)` in `ci.yml`) runs the
+suite on Chromium with cached browsers.
 
 ## Deployment
 
