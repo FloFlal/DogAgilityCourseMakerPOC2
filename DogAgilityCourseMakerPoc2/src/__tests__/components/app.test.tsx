@@ -1,10 +1,24 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../../App';
 import { useDrawingStore } from '../../store/useDrawingStore';
 
 vi.mock('react-konva', async () => await import('../mocks/reactKonva'));
+
+/** Stubs window.matchMedia for a fixed viewport width class (US-026). */
+const stubViewport = (width: number): void => {
+    window.matchMedia = ((query: string): MediaQueryList => ({
+        matches: query.includes(String(width)),
+        media: query,
+        onchange: null,
+        addListener: (): void => {},
+        removeListener: (): void => {},
+        addEventListener: (): void => {},
+        removeEventListener: (): void => {},
+        dispatchEvent: (): boolean => false,
+    })) as unknown as typeof window.matchMedia;
+};
 
 const OBSTACLE_UUID = '11111111-1111-4111-8111-111111111111';
 
@@ -108,5 +122,43 @@ describe('App (intégration)', () => {
         expect(useDrawingStore.getState().obstacles[0].x).toBe(36);
 
         await user.click(screen.getByRole('group', { name: "Zone de dessin du parcours d'agility" }));
+    });
+
+    it('tablette : rail d\'icônes toujours visible, sidebar en overlay (US-026)', () => {
+        stubViewport(768);
+        render(<App />);
+
+        // The icon rail replaces the static sidebar.
+        expect(screen.getByRole('button', { name: 'Outils' })).toBeTruthy();
+        expect(screen.queryByRole('group', { name: "Choix de l'outil" })).toBeNull();
+        // The drawing area is still there.
+        expect(screen.getByRole('group', { name: "Zone de dessin du parcours d'agility" })).toBeTruthy();
+
+        // Tapping a rail icon opens the sidebar overlay on that section.
+        fireEvent.click(screen.getByRole('button', { name: 'Outils' }));
+        expect(screen.getByRole('group', { name: "Choix de l'outil" })).toBeTruthy();
+
+        // The close button hides the overlay again.
+        fireEvent.click(screen.getByRole('button', { name: 'Fermer le panneau d’outils' }));
+        expect(screen.queryByRole('group', { name: "Choix de l'outil" })).toBeNull();
+    });
+
+    it('mobile : menu déroulant avec aria-expanded (US-026)', () => {
+        stubViewport(390);
+        render(<App />);
+
+        const toggle = screen.getByRole('button', { name: 'Ouvrir ou fermer le panneau d’outils' });
+        expect(toggle.getAttribute('aria-expanded')).toBe('false');
+        expect(screen.queryByRole('group', { name: "Choix de l'outil" })).toBeNull();
+
+        fireEvent.click(toggle);
+
+        expect(toggle.getAttribute('aria-expanded')).toBe('true');
+        expect(screen.getByRole('group', { name: "Choix de l'outil" })).toBeTruthy();
+
+        fireEvent.click(toggle);
+
+        expect(toggle.getAttribute('aria-expanded')).toBe('false');
+        expect(screen.queryByRole('group', { name: "Choix de l'outil" })).toBeNull();
     });
 });
