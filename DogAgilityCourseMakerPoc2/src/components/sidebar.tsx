@@ -2,8 +2,11 @@ import React, { useRef, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDrawingStore } from '../store/useDrawingStore';
 import {
+    selectCellSizeMeters,
     selectCurrentColor,
     selectCurrentShapeType,
+    selectFieldLengthMeters,
+    selectFieldWidthMeters,
     selectImportError,
     selectSelectedId,
 } from '../store/selectors';
@@ -39,6 +42,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, initialOpenSection = 
     const currentShapeType = useDrawingStore(selectCurrentShapeType);
     const setCurrentShapeType = useDrawingStore((state) => state.setCurrentShapeType);
     const selectedId = useDrawingStore(selectSelectedId);
+    // Field dimensions and grid cell size (US-033), in meters.
+    const fieldWidthMeters = useDrawingStore(selectFieldWidthMeters);
+    const setFieldWidthMeters = useDrawingStore((state) => state.setFieldWidthMeters);
+    const fieldLengthMeters = useDrawingStore(selectFieldLengthMeters);
+    const setFieldLengthMeters = useDrawingStore((state) => state.setFieldLengthMeters);
+    const cellSizeMeters = useDrawingStore(selectCellSizeMeters);
+    const setCellSizeMeters = useDrawingStore((state) => state.setCellSizeMeters);
     const deleteShape = useDrawingStore((state) => state.deleteShape);
     const exportToJson = useDrawingStore((state) => state.exportToJson);
     const importFromJson = useDrawingStore((state) => state.importFromJson);
@@ -262,6 +272,64 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, initialOpenSection = 
                                 <TunnelIcon /> {t(`sidebar.${type}`)}
                             </button>
                         ))}
+                    </div>
+                </CollapsibleSection>
+
+                {/*field dimensions (US-033): the field is the physical ring,
+                   freely resizable, drawn as a rectangle around the grid*/}
+                <CollapsibleSection
+                    id="field"
+                    label={t('sidebar.fieldGroup')}
+                    title={t('sidebar.fieldTitle')}
+                    isOpen={openSection === 'field'}
+                    onToggle={() => toggleSection('field')}
+                >
+                    <div role="group" aria-label={t('sidebar.fieldGroup')} className="flex flex-col gap-2">
+                        <div className="flex items-center gap-3 bg-slate-700 p-2 rounded-lg border border-slate-600">
+                            <label htmlFor="field-width" className="flex-1 text-sm text-slate-300">
+                                {t('sidebar.fieldWidthLabel')}
+                            </label>
+                            <input
+                                type="number"
+                                id="field-width"
+                                min={1}
+                                step={1}
+                                value={fieldWidthMeters}
+                                onChange={(e) => setFieldWidthMeters(Number(e.target.value))}
+                                aria-label={t('sidebar.fieldWidthLabel')}
+                                className="w-20 p-1.5 rounded bg-slate-800 border border-slate-600 text-sm text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
+                            />
+                        </div>
+                        <div className="flex items-center gap-3 bg-slate-700 p-2 rounded-lg border border-slate-600">
+                            <label htmlFor="field-length" className="flex-1 text-sm text-slate-300">
+                                {t('sidebar.fieldLengthLabel')}
+                            </label>
+                            <input
+                                type="number"
+                                id="field-length"
+                                min={1}
+                                step={1}
+                                value={fieldLengthMeters}
+                                onChange={(e) => setFieldLengthMeters(Number(e.target.value))}
+                                aria-label={t('sidebar.fieldLengthLabel')}
+                                className="w-20 p-1.5 rounded bg-slate-800 border border-slate-600 text-sm text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
+                            />
+                        </div>
+                        <div className="flex items-center gap-3 bg-slate-700 p-2 rounded-lg border border-slate-600">
+                            <label htmlFor="cell-size" className="flex-1 text-sm text-slate-300">
+                                {t('sidebar.cellSizeLabel')}
+                            </label>
+                            <input
+                                type="number"
+                                id="cell-size"
+                                min={1}
+                                step={1}
+                                value={cellSizeMeters}
+                                onChange={(e) => setCellSizeMeters(Number(e.target.value))}
+                                aria-label={t('sidebar.cellSizeLabel')}
+                                className="w-20 p-1.5 rounded bg-slate-800 border border-slate-600 text-sm text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
+                            />
+                        </div>
                     </div>
                 </CollapsibleSection>
 

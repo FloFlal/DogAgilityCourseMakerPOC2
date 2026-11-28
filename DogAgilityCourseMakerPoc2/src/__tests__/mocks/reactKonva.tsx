@@ -36,6 +36,8 @@ function renderNode(testId: string, props: AnyProps): React.ReactElement {
         'data-points': props.points ? JSON.stringify(props.points) : undefined,
         'data-x': props.x as number | undefined,
         'data-y': props.y as number | undefined,
+        'data-width': props.width as number | undefined,
+        'data-height': props.height as number | undefined,
         'data-fill': props.fill as string | undefined,
         'data-text': props.text as string | undefined,
         ...(click ? { onClick: click } : {}),

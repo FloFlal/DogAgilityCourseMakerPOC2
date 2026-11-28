@@ -1,41 +1,73 @@
-import { describe, expect, it, beforeEach, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { GridLayer } from '../../components/canvas/gridLayer';
 
 vi.mock('react-konva', async () => await import('./../mocks/reactKonva'));
 
-describe('GridLayer', () => {
-    beforeEach(() => {
-        window.innerWidth = 1024;
-        window.innerHeight = 768;
+// US-033: the grid layer draws the field rectangle, the grid lines
+// inside it only, and the dimension rulers in the dead zone.
+// Scale: 1 m = 40 px (METERS_TO_PX = 100 / OBSTACLE_RATIO).
+
+describe('GridLayer (US-033 field)', () => {
+    // 4 m x 3 m field with 1 m cells: 800... no, simplified px scale below.
+    const props = { fieldX: 60, fieldY: 60, fieldWidth: 160, fieldHeight: 120, cellPx: 40 };
+
+    it('dessine le rectangle peripherique du terrain', () => {
+        render(<GridLayer {...props} />);
+
+        const rect = screen.getByTestId('konva-rect');
+
+        expect(rect.getAttribute('data-x')).toBe('60');
+        expect(rect.getAttribute('data-y')).toBe('60');
+        expect(rect.getAttribute('data-width')).toBe('160');
+        expect(rect.getAttribute('data-height')).toBe('120');
     });
 
-    it('génère les lignes verticales et horizontales selon la grille', () => {
-        render(<GridLayer width={1000} height={700} gridSize={100} />);
+    it('genere les lignes de grille uniquement a l\'interieur du terrain', () => {
+        render(<GridLayer {...props} />);
 
         const lines = screen.getAllByTestId('konva-line');
 
-        // vertical: x = 0..1000 (step 100) -> 11; horizontal: y = 0..700 -> 8
-        expect(lines).toHaveLength(19);
+        // vertical: x = 60..220 (step 40) -> 5; horizontal: y = 60..180 -> 4
+        expect(lines).toHaveLength(9);
 
         const firstVertical = lines[0];
-        expect(firstVertical.getAttribute('data-x')).toBe('0');
-        expect(JSON.parse(firstVertical.getAttribute('data-points') ?? '[]')).toEqual([0, 0, 0, 700]);
+        expect(firstVertical.getAttribute('data-x')).toBe('60');
+        expect(firstVertical.getAttribute('data-y')).toBe('60');
+        expect(JSON.parse(firstVertical.getAttribute('data-points') ?? '[]')).toEqual([0, 0, 0, 120]);
     });
 
-    it('ne génère qu\'une ligne par axe quand la grille dépasse la zone', () => {
-        render(<GridLayer width={50} height={50} gridSize={100} />);
+    it('affiche les cotes des lignes horizontales a gauche en partant du haut-gauche', () => {
+        render(<GridLayer {...props} />);
 
-        expect(screen.getAllByTestId('konva-line')).toHaveLength(2);
+        const rowLabels = screen.getAllByTestId('konva-text').filter((node) => node.getAttribute('data-x') === '20');
+
+        // 4 horizontal lines (y = 0, 1, 2, 3 m), labels right-aligned before the field
+        expect(rowLabels).toHaveLength(4);
+        expect(rowLabels.map((node) => node.getAttribute('data-text'))).toEqual(['0', '1', '2', '3']);
+        expect(rowLabels[0].getAttribute('data-y')).toBe('54');
     });
 
-    it('se redessine quand la taille de grille change', () => {
-        const { rerender } = render(<GridLayer width={100} height={100} gridSize={25} />);
+    it('affiche les cotes des lignes verticales en haut en partant du haut-gauche', () => {
+        render(<GridLayer {...props} />);
 
-        expect(screen.getAllByTestId('konva-line')).toHaveLength(10);
+        const colLabels = screen.getAllByTestId('konva-text').filter((node) => node.getAttribute('data-y') === '46');
 
-        rerender(<GridLayer width={100} height={100} gridSize={50} />);
+        // 5 vertical lines (x = 0, 1, 2, 3, 4 m), labels above the field
+        expect(colLabels).toHaveLength(5);
+        expect(colLabels.map((node) => node.getAttribute('data-text'))).toEqual(['0', '1', '2', '3', '4']);
+        expect(colLabels[0].getAttribute('data-x')).toBe('63');
+    });
 
-        expect(screen.getAllByTestId('konva-line')).toHaveLength(6);
+    it('suit la taille de cellule (metres entiers) pour la grille et les cotes', () => {
+        // 4 m x 3 m field with 2 m cells: 3 vertical lines, 2 horizontal lines,
+        // labels every 2 m.
+        render(<GridLayer fieldX={60} fieldY={60} fieldWidth={160} fieldHeight={120} cellPx={80} />);
+
+        const lines = screen.getAllByTestId('konva-line');
+        expect(lines).toHaveLength(5);
+
+        const rowLabels = screen.getAllByTestId('konva-text').filter((node) => node.getAttribute('data-x') === '20');
+        expect(rowLabels.map((node) => node.getAttribute('data-text'))).toEqual(['0', '2']);
     });
 });

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FileDown, Languages, Palette, Wrench } from 'lucide-react';
+import { FileDown, Languages, Palette, Ruler, Wrench } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 /**
@@ -18,6 +18,7 @@ interface SidebarRailProps {
 
 const RAIL_SECTIONS: Array<{ id: string; icon: LucideIcon }> = [
     { id: 'tools', icon: Wrench },
+    { id: 'field', icon: Ruler },
     { id: 'color', icon: Palette },
     { id: 'language', icon: Languages },
     { id: 'importExport', icon: FileDown },

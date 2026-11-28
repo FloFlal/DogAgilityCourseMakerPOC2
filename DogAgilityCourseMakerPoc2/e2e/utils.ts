@@ -3,8 +3,8 @@ import { expect, type Page } from '@playwright/test';
 /** Accessible name of the drawing area (canvas.groupLabel, en locale). */
 export const CANVAS_LABEL = 'Agility course drawing area';
 
-/** Size of one grid cell (toolSlice.ts gridSize default). */
-export const GRID_SIZE = 25;
+/** Size of one grid cell in px (fieldSlice default: 1 m x METERS_TO_PX = 40, US-033). */
+export const GRID_SIZE = 40;
 
 /**
  * Activates the given tool button then places one obstacle with a canvas

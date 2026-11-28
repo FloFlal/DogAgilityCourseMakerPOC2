@@ -3,12 +3,12 @@ import type { ObstacleType } from '../../types/obstacleTypes';
 import type { DrawingState } from '../storeTypes';
 
 /**
- * Tools slice: drawing tool preferences (grid, color, obstacle type).
+ * Tools slice: drawing tool preferences (color, obstacle type).
+ * The grid cell size lives in the field slice since US-033.
  */
 
 /** Tools slice state: drawing preferences and related setters. */
 export interface ToolSlice {
-    gridSize: number;
     currentColor: string;
     /** Active placement tool: `null` means "no tool" (nothing placed on click). */
     currentShapeType: ObstacleType | null;
@@ -18,13 +18,12 @@ export interface ToolSlice {
 }
 
 /**
- * Creates the tools slice: drawing preferences (grid size, obstacle
- * current color, current obstacle type) and their setters.
+ * Creates the tools slice: drawing preferences (obstacle current
+ * color, current obstacle type) and their setters.
  * @param set - Zustand state setter
  * @returns the tools slice properties
  */
 export const createToolSlice: StateCreator<DrawingState, [], [], ToolSlice> = (set) => ({
-    gridSize: 25,
     currentColor: '#3b82f6',
     currentShapeType: 'jump',
 

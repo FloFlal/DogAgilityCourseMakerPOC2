@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { cellSizePx } from '../constants/canvasDefaults';
 import { useDrawingStore } from '../store/useDrawingStore';
 
 // Fine step by default, in px (the Shift key gives the fast step)
@@ -30,7 +31,7 @@ function isTextEntryTarget(target: EventTarget | null): boolean {
  *   the active placement tool
  * - Delete / Backspace: deletes the selected obstacle
  * - Arrows: fine move of the selected obstacle (one pixel)
- *   (Shift + arrow: fast move of one gridSize cell), clamped to
+ *   (Shift + arrow: fast move of one grid cell), clamped to
  *   coords positives
  *
  * Ignored when the focus is inside an input field. The listener is
@@ -70,7 +71,7 @@ export function useCanvasKeyboard(): void {
             if (!direction) return;
 
             // Fine step by default; Shift moves a whole grid cell.
-            const step = e.shiftKey ? store.gridSize : FINE_STEP_PX;
+            const step = e.shiftKey ? cellSizePx(store.cellSizeMeters) : FINE_STEP_PX;
             const obstacle = store.obstacles.find((o) => o.id === selectedId);
 
             if (!obstacle) return;

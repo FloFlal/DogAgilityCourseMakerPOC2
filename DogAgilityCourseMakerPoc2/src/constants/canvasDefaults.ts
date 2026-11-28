@@ -6,6 +6,34 @@ export const SIDEBAR_WIDTH_PX = 320;
 /** Drawing ratio dividing all obstacle lengths on the canvas. */
 export const OBSTACLE_RATIO = 2.5;
 
+/**
+ * Conversion metres -> px canvas (US-033): les longueurs reelles sont
+ * exprimees en cm (echelle FCI) et divisees par OBSTACLE_RATIO, donc
+ * 1 m = 100 / OBSTACLE_RATIO px (40 px).
+ */
+export const METERS_TO_PX = 100 / OBSTACLE_RATIO;
+
+/** Dimensions par defaut du terrain (ring officiel recommande) : 20 m x 40 m (US-033). */
+export const DEFAULT_FIELD_WIDTH_METERS = 20;
+export const DEFAULT_FIELD_LENGTH_METERS = 40;
+
+/** Taille de cellule de grille par defaut, en metres entiers (US-033). */
+export const DEFAULT_CELL_SIZE_METERS = 1;
+
+/**
+ * Zone morte (px) maintenue libre autour du rectangle du terrain (US-033) :
+ * reservee aux futures informations peripheriques (legende, notes...).
+ */
+export const FIELD_DEAD_ZONE_PX = 60;
+
+/**
+ * Convertit une taille de cellule exprimee en metres (entier) en px canvas,
+ * avec la meme echelle que les obstacles (METERS_TO_PX).
+ * @param meters - taille de cellule en metres (valeur entiere attendue)
+ * @returns la taille de cellule en px
+ */
+export const cellSizePx = (meters: number): number => meters * METERS_TO_PX;
+
 /** Default drawing colors for obstacles on the canvas. */
 export const OBSTACLE_PRIMARY_COLOR = '#1155FF';
 /** Secondary color (contact zones and details), readable on the light background. */
