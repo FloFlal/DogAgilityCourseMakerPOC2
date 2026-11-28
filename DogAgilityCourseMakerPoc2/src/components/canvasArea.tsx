@@ -3,9 +3,16 @@ import { Stage } from 'react-konva';
 import Konva from 'konva';
 import { useTranslation } from 'react-i18next';
 import { useDrawingStore } from '../store/useDrawingStore';
-import { CANVAS_BACKGROUND } from '../constants/canvasDefaults';
 import {
-    selectGridSize,
+    CANVAS_BACKGROUND,
+    cellSizePx,
+    FIELD_DEAD_ZONE_PX,
+    METERS_TO_PX,
+} from '../constants/canvasDefaults';
+import {
+    selectCellSizeMeters,
+    selectFieldLengthMeters,
+    selectFieldWidthMeters,
     selectObstacles,
     selectSelectedId,
 } from '../store/selectors';
@@ -32,7 +39,10 @@ export const CanvasArea: React.FC = () => {
     const selectedId = useDrawingStore(selectSelectedId);
     const setSelectedId = useDrawingStore((state) => state.setSelectedId);
     const addShape = useDrawingStore((state) => state.addShape);
-    const gridSize = useDrawingStore(selectGridSize);
+    // Field and grid cell (US-033): both live in the field slice, in meters.
+    const fieldWidthMeters = useDrawingStore(selectFieldWidthMeters);
+    const fieldLengthMeters = useDrawingStore(selectFieldLengthMeters);
+    const cellSizeMeters = useDrawingStore(selectCellSizeMeters);
     const { handleDragStart, handleDragEnd } = useObstacleDrag();
     const handleTransformEnd = useObstacleTransform();
     const updateShape = useDrawingStore((state) => state.updateShape);
@@ -81,8 +91,15 @@ export const CanvasArea: React.FC = () => {
                 ref={stageRef}
                 onClick={handleStageClick}
             >
-                {/* Grid layer - limited to drawing area */}
-                <GridLayer width={width} height={height} gridSize={gridSize} />
+                {/* Field + grid layer (US-033): grid limited to the field
+                    rectangle, rulers in the dead zone around it. */}
+                <GridLayer
+                    fieldX={FIELD_DEAD_ZONE_PX}
+                    fieldY={FIELD_DEAD_ZONE_PX}
+                    fieldWidth={fieldWidthMeters * METERS_TO_PX}
+                    fieldHeight={fieldLengthMeters * METERS_TO_PX}
+                    cellPx={cellSizePx(cellSizeMeters)}
+                />
 
                 <ObstaclesLayer
                     shapes={obstacles}

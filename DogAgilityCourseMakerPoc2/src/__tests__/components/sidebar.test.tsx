@@ -212,3 +212,50 @@ describe('Sidebar accessibilité', () => {
         expect(icons.length).toBeGreaterThan(0);
     });
 });
+
+describe('Sidebar field section (US-033)', () => {
+    beforeEach(() => {
+        useDrawingStore.setState({
+            obstacles: [],
+            selectedId: null,
+            currentShapeType: null,
+            importError: null,
+            fieldWidthMeters: 20,
+            fieldLengthMeters: 40,
+            cellSizeMeters: 1,
+        });
+    });
+
+    it('exposes the field dimensions with the default official ring (20 m x 40 m)', () => {
+        render(<Sidebar />);
+
+        const width = screen.getByLabelText(/Largeur \(m\)/i) as HTMLInputElement;
+        const length = screen.getByLabelText(/Longueur \(m\)/i) as HTMLInputElement;
+
+        expect(width.value).toBe('20');
+        expect(length.value).toBe('40');
+    });
+
+    it('updates the field dimensions through the inputs', () => {
+        render(<Sidebar />);
+
+        const width = screen.getByLabelText(/Largeur \(m\)/i) as HTMLInputElement;
+        const length = screen.getByLabelText(/Longueur \(m\)/i) as HTMLInputElement;
+
+        fireEvent.change(width, { target: { value: '15' } });
+        fireEvent.change(length, { target: { value: '30' } });
+
+        expect(useDrawingStore.getState().fieldWidthMeters).toBe(15);
+        expect(useDrawingStore.getState().fieldLengthMeters).toBe(30);
+    });
+
+    it('updates the grid cell size in whole meters', () => {
+        render(<Sidebar />);
+
+        const cell = screen.getByLabelText(/Cellule de grille \(m\)/i) as HTMLInputElement;
+
+        fireEvent.change(cell, { target: { value: '2' } });
+
+        expect(useDrawingStore.getState().cellSizeMeters).toBe(2);
+    });
+});

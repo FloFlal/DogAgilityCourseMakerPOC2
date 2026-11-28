@@ -18,7 +18,7 @@ describe('useDrawingStore (slices combinées)', () => {
         useDrawingStore.setState({
             obstacles: [],
             selectedId: null,
-            gridSize: 25,
+            cellSizeMeters: 1,
             currentColor: '#3b82f6',
             currentShapeType: 'jump',
             importError: null,

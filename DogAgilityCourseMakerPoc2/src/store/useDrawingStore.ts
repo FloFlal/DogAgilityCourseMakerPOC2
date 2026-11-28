@@ -3,6 +3,7 @@ import { logger } from './middleware/logger';
 import { createDrawingSlice } from './slices/drawingSlice';
 import { createToolSlice } from './slices/toolSlice';
 import { createCourseSlice } from './slices/courseSlice';
+import { createFieldSlice } from './slices/fieldSlice';
 import type { DrawingState } from './storeTypes';
 
 /**
@@ -11,6 +12,7 @@ import type { DrawingState } from './storeTypes';
  * Made of three slices to separate responsibilities:
  * - drawingSlice: obstacles and selection (see src/store/slices/drawingSlice.ts)
  * - toolSlice: tool preferences (grid, color, obstacle type)
+ * - fieldSlice: field dimensions and grid cell size in meters (US-033)
  * - courseSlice: course import/export via src/services/courseService.ts
  *
  * Mutations are traced in development by the logger middleware
@@ -23,6 +25,7 @@ export const useDrawingStore = create<DrawingState>()(
     logger((...a) => ({
         ...createDrawingSlice(...a),
         ...createToolSlice(...a),
+        ...createFieldSlice(...a),
         ...createCourseSlice(...a),
     })),
 );

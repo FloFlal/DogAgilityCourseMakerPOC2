@@ -1,6 +1,6 @@
 import type { StateCreator } from 'zustand';
 import type { Obstacle } from '../../types/obstacleTypes';
-import { OBSTACLE_SIZES, TUNNEL_LENGTHS_BY_TYPE } from '../../constants/canvasDefaults';
+import { cellSizePx, OBSTACLE_SIZES, TUNNEL_LENGTHS_BY_TYPE } from '../../constants/canvasDefaults';
 import { createStraightChain } from '../../services/tunnelChain';
 import type { DrawingState } from '../storeTypes';
 
@@ -33,7 +33,7 @@ export const createDrawingSlice: StateCreator<DrawingState, [], [], DrawingSlice
 
     // Actions
     addShape: (x: number, y: number): void => {
-        const { gridSize, currentColor, currentShapeType } = get();
+        const { cellSizeMeters, currentColor, currentShapeType } = get();
 
         // No active tool: clicking the background places nothing.
         if (currentShapeType === null) return;
@@ -47,8 +47,8 @@ export const createDrawingSlice: StateCreator<DrawingState, [], [], DrawingSlice
             type: currentShapeType,
             x: x,
             y: y,
-            width: size?.width ?? gridSize,
-            height: size?.height ?? gridSize,
+            width: size?.width ?? cellSizePx(cellSizeMeters),
+            height: size?.height ?? cellSizePx(cellSizeMeters),
             fill: currentColor,
             rotation: 0,
         };

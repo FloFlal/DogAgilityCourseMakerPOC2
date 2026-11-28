@@ -118,8 +118,8 @@ describe('App (intégration)', () => {
             window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', shiftKey: true }));
         });
 
-        // Shift: fast move of one grid cell (25 px)
-        expect(useDrawingStore.getState().obstacles[0].x).toBe(36);
+        // Shift: fast move of one grid cell (1 m = 40 px, US-033)
+        expect(useDrawingStore.getState().obstacles[0].x).toBe(51);
 
         await user.click(screen.getByRole('group', { name: "Zone de dessin du parcours d'agility" }));
     });

@@ -26,7 +26,7 @@ describe('useCanvasKeyboard', () => {
         useDrawingStore.setState({
             obstacles: [makeObstacle(UUID)],
             selectedId: UUID,
-            gridSize: 25,
+            cellSizeMeters: 1,
             importError: null,
         });
     });
@@ -87,8 +87,9 @@ describe('useCanvasKeyboard', () => {
 
         const moved = useDrawingStore.getState().obstacles[0];
 
-        expect(moved.x).toBe(25);
-        expect(moved.y).toBe(35);
+        // One grid cell = cellSizeMeters (1 m) * METERS_TO_PX (40 px).
+        expect(moved.x).toBe(10);
+        expect(moved.y).toBe(20);
     });
 
     it('ne descend pas en dessous de zéro', () => {

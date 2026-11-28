@@ -6,7 +6,7 @@ describe('SidebarRail (tablet, US-026)', () => {
     it('renders one icon button per sidebar section', () => {
         render(<SidebarRail isOpen={false} onOpen={() => {}} />);
 
-        const labels = ['Outils', 'Couleurs', 'Langue', 'Import/Export'];
+        const labels = ['Outils', 'Terrain', 'Couleurs', 'Langue', 'Import/Export'];
 
         labels.forEach((label) => {
             const button = screen.getByRole('button', { name: label });

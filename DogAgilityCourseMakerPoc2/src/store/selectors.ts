@@ -14,8 +14,12 @@ import type { ImportError } from '../schemas/courseSchema';
 export const selectObstacles = (state: DrawingState): Obstacle[] => state.obstacles;
 /** Returns the identifier of the selected obstacle, or null when none. */
 export const selectSelectedId = (state: DrawingState): string | null => state.selectedId;
-/** Returns the grid size (in px) for the grid overlay and keyboard moves. */
-export const selectGridSize = (state: DrawingState): number => state.gridSize;
+/** Returns the grid cell size, in whole meters (US-033). */
+export const selectCellSizeMeters = (state: DrawingState): number => state.cellSizeMeters;
+/** Returns the field width, in meters (US-033). */
+export const selectFieldWidthMeters = (state: DrawingState): number => state.fieldWidthMeters;
+/** Returns the field length, in meters (US-033). */
+export const selectFieldLengthMeters = (state: DrawingState): number => state.fieldLengthMeters;
 /** Returns the current color applied to new obstacles. */
 export const selectCurrentColor = (state: DrawingState): string => state.currentColor;
 /** Returns the current obstacle type selected in the toolbar. */
