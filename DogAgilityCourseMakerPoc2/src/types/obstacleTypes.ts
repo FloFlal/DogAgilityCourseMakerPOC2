@@ -51,6 +51,8 @@ export type TunnelEnd = 'start' | 'end';
 export type KonvaMouseEvent = Konva.KonvaEventObject<MouseEvent>;
 /** Konva tap (touch) event. */
 export type KonvaTapEvent = Konva.KonvaEventObject<TouchEvent>;
+/** Konva wheel event (pan of the drawing view). */
+export type KonvaWheelEvent = Konva.KonvaEventObject<WheelEvent>;
 /** Konva drag event. */
 export type KonvaDragEvent = Konva.KonvaEventObject<DragEvent>;
 /** Konva transform (resize/rotation) event. */

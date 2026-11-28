@@ -47,7 +47,7 @@ export const fr = {
         },
         canvas: {
             groupLabel: "Zone de dessin du parcours d'agility",
-            keyboardHelp: "Cliquez sur le canvas pour poser l'outil actif. Utilisez les flèches pour déplacer finement (1 px) l'obstacle sélectionné (Maj + flèche pour un déplacement rapide d'une case de grille), Suppr pour le supprimer et Échap pour désélectionner l'obstacle ou désactiver l'outil.",
+            keyboardHelp: "Cliquez sur le canvas pour poser l'outil actif. Faites glisser le fond ou utilisez la molette pour déplacer la vue. Utilisez les flèches pour déplacer finement (1 px) l'obstacle sélectionné (Maj + flèche pour un déplacement rapide d'une case de grille), Suppr pour le supprimer et Échap pour désélectionner l'obstacle ou désactiver l'outil.",
         },
         language: {
             groupLabel: 'Choix de la langue',

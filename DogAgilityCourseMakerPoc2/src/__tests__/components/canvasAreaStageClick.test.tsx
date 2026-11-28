@@ -13,13 +13,21 @@ vi.mock('react-konva', async () => {
     let pointer: { x: number; y: number } | null = { x: 40, y: 60 };
     const fakeStage = {
         getPointerPosition: (): { x: number; y: number } | null => pointer,
+        // World coordinates (pan-aware, US-033 review)
+        getRelativePointerPosition: (): { x: number; y: number } | null => pointer,
         findOne: (): undefined => undefined,
     };
 
     let clickHandler: ((e: unknown) => void) | undefined;
+    let wheelHandler: ((e: unknown) => void) | undefined;
+    let dragMoveHandler: ((e: unknown) => void) | undefined;
+    let stageProps: Record<string, unknown> = {};
 
     const Stage = (props: Record<string, unknown>): ReactElement => {
         clickHandler = props.onClick as ((e: unknown) => void) | undefined;
+        wheelHandler = props.onWheel as ((e: unknown) => void) | undefined;
+        dragMoveHandler = props.onDragMove as ((e: unknown) => void) | undefined;
+        stageProps = props;
         const ref = props.ref as { current: unknown } | undefined;
 
         React.useEffect(() => {
@@ -37,6 +45,9 @@ vi.mock('react-konva', async () => {
                 pointer = value;
             },
             getClick: (): ((e: unknown) => void) | undefined => clickHandler,
+            getWheel: (): ((e: unknown) => void) | undefined => wheelHandler,
+            getDragMove: (): ((e: unknown) => void) | undefined => dragMoveHandler,
+            getStageProps: (): Record<string, unknown> => stageProps,
         },
     };
 });
@@ -44,6 +55,9 @@ vi.mock('react-konva', async () => {
 interface StageKonvaMock {
     setPointer: (value: { x: number; y: number } | null) => void;
     getClick: () => ((e: unknown) => void) | undefined;
+    getWheel: () => ((e: unknown) => void) | undefined;
+    getDragMove: () => ((e: unknown) => void) | undefined;
+    getStageProps: () => Record<string, unknown>;
 }
 
 const makeObstacle = (id: string): Obstacle => ({
@@ -154,5 +168,67 @@ describe('CanvasArea - clic sur la scène', () => {
         });
 
         expect(useDrawingStore.getState().obstacles).toHaveLength(0);
+    });
+});
+
+describe('CanvasArea - panoramique de la vue (revision US-033)', () => {
+    beforeEach(() => {
+        window.innerWidth = 1024;
+        window.innerHeight = 768;
+        useDrawingStore.setState({
+            obstacles: [],
+            selectedId: null,
+            currentShapeType: null,
+            fieldWidthMeters: 20,
+            fieldLengthMeters: 40,
+        });
+    });
+
+    it('rend la scène draggable quand aucun outil n\'est armé', () => {
+        render(<CanvasArea />);
+
+        expect(konvaMock.getStageProps().draggable).toBe(true);
+    });
+
+    it('gèle le panoramique quand un outil est armé (le clic pose l\'obstacle)', () => {
+        useDrawingStore.setState({ currentShapeType: 'jump' });
+
+        render(<CanvasArea />);
+
+        expect(konvaMock.getStageProps().draggable).toBe(false);
+    });
+
+    it('la molette déplace la vue en respectant les bornes du monde', () => {
+        render(<CanvasArea />);
+
+        const wheel = konvaMock.getWheel();
+
+        act(() => {
+            wheel?.({ evt: { deltaX: 500, deltaY: 0, preventDefault: (): void => {} } });
+        });
+
+        // Monde : 60 px x2 + 20 m x 40 = 920 px de large ; vue : 1024 - 320 = 704 px
+        expect(konvaMock.getStageProps().x).toBe(-216);
+
+        act(() => {
+            wheel?.({ evt: { deltaX: 500, deltaY: 3000, preventDefault: (): void => {} } });
+        });
+
+        // Monde : 60 px x2 + 40 m x 40 = 1720 px de haut ; vue : 768 px
+        expect(konvaMock.getStageProps().x).toBe(-216);
+        expect(konvaMock.getStageProps().y).toBe(-952);
+    });
+
+    it('le glisser du fond déplace la vue avec bornes', () => {
+        render(<CanvasArea />);
+
+        const dragMove = konvaMock.getDragMove();
+
+        act(() => {
+            dragMove?.({ target: { position: (): { x: number; y: number } => ({ x: 50, y: -2000 }) } });
+        });
+
+        expect(konvaMock.getStageProps().x).toBe(0);
+        expect(konvaMock.getStageProps().y).toBe(-952);
     });
 });

@@ -37,26 +37,28 @@ describe('GridLayer (US-033 field)', () => {
         expect(JSON.parse(firstVertical.getAttribute('data-points') ?? '[]')).toEqual([0, 0, 0, 120]);
     });
 
-    it('affiche les cotes des lignes horizontales a gauche en partant du haut-gauche', () => {
+    it('affiche les cotes des lignes horizontales a gauche en partant du haut-gauche, sans le 0 du coin', () => {
         render(<GridLayer {...props} />);
 
         const rowLabels = screen.getAllByTestId('konva-text').filter((node) => node.getAttribute('data-x') === '20');
 
-        // 4 horizontal lines (y = 0, 1, 2, 3 m), labels right-aligned before the field
-        expect(rowLabels).toHaveLength(4);
-        expect(rowLabels.map((node) => node.getAttribute('data-text'))).toEqual(['0', '1', '2', '3']);
-        expect(rowLabels[0].getAttribute('data-y')).toBe('54');
+        // 4 horizontal lines; the origin (0) is shown once by the column
+        // ruler in the top-left corner, so the row ruler starts at 1 m.
+        expect(rowLabels.map((node) => node.getAttribute('data-text'))).toEqual(['1', '2', '3']);
+        expect(rowLabels[0].getAttribute('data-y')).toBe('94');
     });
 
-    it('affiche les cotes des lignes verticales en haut en partant du haut-gauche', () => {
+    it('affiche les cotes des lignes verticales en haut, centrees sur leurs lignes', () => {
         render(<GridLayer {...props} />);
 
         const colLabels = screen.getAllByTestId('konva-text').filter((node) => node.getAttribute('data-y') === '46');
 
-        // 5 vertical lines (x = 0, 1, 2, 3, 4 m), labels above the field
+        // 5 vertical lines (x = 0, 1, 2, 3, 4 m), labels centered on their
+        // line (label box width 24 px) above the field.
         expect(colLabels).toHaveLength(5);
         expect(colLabels.map((node) => node.getAttribute('data-text'))).toEqual(['0', '1', '2', '3', '4']);
-        expect(colLabels[0].getAttribute('data-x')).toBe('63');
+        expect(colLabels[0].getAttribute('data-x')).toBe('48');
+        expect(colLabels[1].getAttribute('data-x')).toBe('88');
     });
 
     it('suit la taille de cellule (metres entiers) pour la grille et les cotes', () => {
@@ -68,6 +70,7 @@ describe('GridLayer (US-033 field)', () => {
         expect(lines).toHaveLength(5);
 
         const rowLabels = screen.getAllByTestId('konva-text').filter((node) => node.getAttribute('data-x') === '20');
-        expect(rowLabels.map((node) => node.getAttribute('data-text'))).toEqual(['0', '2']);
+        // The origin (0) is shown once, by the column ruler.
+        expect(rowLabels.map((node) => node.getAttribute('data-text'))).toEqual(['2']);
     });
 });
