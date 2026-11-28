@@ -6,6 +6,8 @@ import type { GridLayerProps } from '../../types/canvasTypes';
 /** Ruler label style: dark gray, readable on the light "course-plan" background. */
 const RULER_FONT_SIZE = 10;
 const RULER_TEXT_COLOR = '#475569';
+/** Width of a top ruler label box, centered on its vertical line. */
+const RULER_LABEL_WIDTH = 24;
 
 /**
  * Canvas grid layer (US-033): draws the physical field as a peripheral
@@ -67,7 +69,9 @@ export const GridLayer: React.FC<GridLayerProps> = ({ fieldX, fieldY, fieldWidth
         // left, each vertical line carries its dimension on the top, both
         // counted from the top-left corner of the field. The labels live in
         // the dead zone and follow the field when it is resized.
-        for (let y = 0; y <= fieldHeight; y += cellPx) {
+        // The origin (0) is displayed once, in the top-left corner (column
+        // ruler): the row ruler starts at the first line below it.
+        for (let y = cellPx; y <= fieldHeight; y += cellPx) {
             elements.push(
                 <Text
                     key={`row-${y}`}
@@ -87,8 +91,11 @@ export const GridLayer: React.FC<GridLayerProps> = ({ fieldX, fieldY, fieldWidth
             elements.push(
                 <Text
                     key={`col-${x}`}
-                    x={fieldX + x + 3}
+                    // Centered on its vertical line (review of US-033).
+                    x={fieldX + x - RULER_LABEL_WIDTH / 2}
                     y={fieldY - RULER_FONT_SIZE - 4}
+                    width={RULER_LABEL_WIDTH}
+                    align="center"
                     text={`${x / METERS_TO_PX}`}
                     fontSize={RULER_FONT_SIZE}
                     fill={RULER_TEXT_COLOR}
