@@ -26,6 +26,8 @@ import type { KonvaMouseEvent, TunnelPoint } from '../types/obstacleTypes';
  */
 export const CanvasArea: React.FC = () => {
     const { t } = useTranslation();
+    // Responsive (US-026): the stage is measured on the real container.
+    const canvasRef = useRef<HTMLDivElement>(null);
     const obstacles = useDrawingStore(selectObstacles);
     const selectedId = useDrawingStore(selectSelectedId);
     const setSelectedId = useDrawingStore((state) => state.setSelectedId);
@@ -38,7 +40,7 @@ export const CanvasArea: React.FC = () => {
     const handlePointsChange = useCallback((id: string, points: TunnelPoint[]): void => {
         updateShape(id, { points });
     }, [updateShape]);
-    const { width, height } = useStageDimensions();
+    const { width, height } = useStageDimensions(canvasRef);
     const stageRef = useRef<Konva.Stage>(null);
 
     useCanvasKeyboard();
@@ -58,10 +60,13 @@ export const CanvasArea: React.FC = () => {
 
     return (
         <div
-            className="flex-1 h-screen relative overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400"
+            ref={canvasRef}
+            className="flex-1 h-full min-h-0 relative overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400"
             // Light "course-plan sheet" background (US-030): value driven by the
             // constante CANVAS_BACKGROUND (canvasDefaults.ts).
-            style={{ backgroundColor: CANVAS_BACKGROUND }}
+            // touch-action: none (US-026): touch dragging an obstacle must not
+            // scroll the page on mobile/tablet.
+            style={{ backgroundColor: CANVAS_BACKGROUND, touchAction: 'none' }}
             tabIndex={0}
             role="group"
             aria-label={t('canvas.groupLabel')}

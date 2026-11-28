@@ -36,6 +36,9 @@ export const fr = {
             import: 'Importer',
             fileAria: 'Fichier de parcours à importer',
             languageTitle: 'Langue',
+            menuButton: 'Menu',
+            menuToggleAria: 'Ouvrir ou fermer le panneau d’outils',
+            closeMenuAria: 'Fermer le panneau d’outils',
         },
         canvas: {
             groupLabel: "Zone de dessin du parcours d'agility",

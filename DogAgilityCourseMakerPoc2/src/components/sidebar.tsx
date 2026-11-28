@@ -7,19 +7,30 @@ import {
     selectImportError,
     selectSelectedId,
 } from '../store/selectors';
-import { Trash2, Download, Upload, AlertTriangle } from 'lucide-react';
+import { Trash2, Download, Upload, AlertTriangle, X } from 'lucide-react';
 import { LanguageSwitcher } from './languageSwitcher';
 import { AFrameIcon, DogWalkIcon, JumpIcon, LongJumpIcon, OxerIcon, SemiWeavePolsIcon, SeesawIcon, TireIcon, TunnelIcon, WeavePolsIcon } from './obstacleIcons';
 import { CollapsibleSection } from './collapsibleSection';
 import type { ObstacleType } from '../types/obstacleTypes';
+
+interface SidebarProps {
+    /** When provided, a close button is rendered in the header (overlay
+     * layouts on tablet / mobile, US-026). Absent on desktop. */
+    onClose?: () => void;
+    /** Section opened initially (used when the overlay is opened from a
+     * tablet rail icon, US-026). Defaults to 'tools'. */
+    initialOpenSection?: string | null;
+}
 
 /**
  * Accordion side panel (US-028): collapsible sections (only one
  * open at a time, tool selection open by default) grouping the
  * tool and color choice, selection actions (deletion), language
  * choice, course import/export and an accessible alert on import error.
+ * Responsive (US-026): rendered statically on desktop, or inside an
+ * overlay panel / dropdown when `onClose` is provided.
  */
-export const Sidebar: React.FC = () => {
+export const Sidebar: React.FC<SidebarProps> = ({ onClose, initialOpenSection = 'tools' }) => {
     const { t } = useTranslation();
 
     // Atomic selectors: each field is subscribed individually
@@ -38,7 +49,7 @@ export const Sidebar: React.FC = () => {
 
     // Accordion: only one section open at a time; the tools section is
     // open by default on every load (state intentionally not persisted).
-    const [openSection, setOpenSection] = useState<string | null>('tools');
+    const [openSection, setOpenSection] = useState<string | null>(initialOpenSection);
 
     const toggleSection = (id: string): void => {
         setOpenSection((open) => (open === id ? null : id));
@@ -93,12 +104,26 @@ export const Sidebar: React.FC = () => {
 
     return (
         <aside
-            className="w-80 h-screen bg-slate-800 border-r border-slate-700 p-6 flex flex-col select-none z-10"
+            className="w-80 h-full bg-slate-800 border-r border-slate-700 p-6 flex flex-col select-none z-10"
             aria-label={t('sidebar.ariaLabel')}
         >
-            <div>
-                <h1 className="text-xl font-bold text-white mb-1">{t('app.title')}</h1>
-                <p className="text-sm text-slate-400">{t('app.subtitle')}</p>
+            <div className="flex items-start justify-between gap-2">
+                <div>
+                    <h1 className="text-xl font-bold text-white mb-1">{t('app.title')}</h1>
+                    <p className="text-sm text-slate-400">{t('app.subtitle')}</p>
+                </div>
+                {/* Overlay layouts (tablet / mobile, US-026): a close button
+                    returns to the drawing. Desktop keeps no close button. */}
+                {onClose && (
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        aria-label={t('sidebar.closeMenuAria')}
+                        className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
+                    >
+                        <X size={18} aria-hidden="true" />
+                    </button>
+                )}
             </div>
 
             {/* Import error display: the store holds a structured i18n code

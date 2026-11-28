@@ -13,6 +13,35 @@ window.localStorage.setItem('dogagility.language', 'fr');
 // Initialize i18next (dynamic import: respects ordering with the seed above)
 await import('../i18n');
 
+// matchMedia stub (jsdom does not implement it): desktop by default so
+// the pre-responsive tests keep rendering the static sidebar layout.
+// Responsive tests override window.matchMedia per test (US-026).
+if (!window.matchMedia) {
+  window.matchMedia = ((query: string): MediaQueryList => ({
+    matches: query.includes('1024'),
+    media: query,
+    onchange: null,
+    addListener: (): void => {},
+    removeListener: (): void => {},
+    addEventListener: (): void => {},
+    removeEventListener: (): void => {},
+    dispatchEvent: (): boolean => false,
+  })) as unknown as typeof window.matchMedia;
+}
+
+// ResizeObserver stub (jsdom does not implement it): inert by default, so
+// useStageDimensions keeps its window-based fallback. Container-based
+// tests replace it with a controllable mock.
+if (!globalThis.ResizeObserver) {
+  globalThis.ResizeObserver = class ResizeObserverStub {
+    observe(): void {}
+
+    unobserve(): void {}
+
+    disconnect(): void {}
+  } as unknown as typeof ResizeObserver;
+}
+
 // crypto.randomUUID mock for the tests
 beforeAll(() => {
   if (!globalThis.crypto) {

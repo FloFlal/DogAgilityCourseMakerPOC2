@@ -36,6 +36,9 @@ export const en = {
             import: 'Import',
             fileAria: 'Course file to import',
             languageTitle: 'Language',
+            menuButton: 'Menu',
+            menuToggleAria: 'Open or close the tool panel',
+            closeMenuAria: 'Close the tool panel',
         },
         canvas: {
             groupLabel: 'Agility course drawing area',
